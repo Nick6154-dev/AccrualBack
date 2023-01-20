@@ -1,5 +1,6 @@
 package uce.edu.ec.devengamiento.models.service;
 
+
 import uce.edu.ec.devengamiento.models.entity.TipoActividad;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface ITipoActividadService {
 
     void save(TipoActividad tipoActividad);
 
-    void delete(Long id);
+    void deleteById(Long id);
+
+    void update(Long id, TipoActividad tipoActividad);
 
 }

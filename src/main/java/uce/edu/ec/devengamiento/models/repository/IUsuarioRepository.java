@@ -5,4 +5,6 @@ import uce.edu.ec.devengamiento.models.entity.Usuario;
 
 public interface IUsuarioRepository extends CrudRepository<Usuario, Long> {
 
+    Usuario findUsuarioByUsername(String nickName);
+
 }

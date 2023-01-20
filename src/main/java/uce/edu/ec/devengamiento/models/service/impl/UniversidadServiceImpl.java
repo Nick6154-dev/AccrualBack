@@ -2,7 +2,6 @@ package uce.edu.ec.devengamiento.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.devengamiento.models.entity.Universidad;
 import uce.edu.ec.devengamiento.models.repository.IUniversidadRepository;
 import uce.edu.ec.devengamiento.models.service.IUniversidadService;
@@ -15,27 +14,30 @@ public class UniversidadServiceImpl implements IUniversidadService {
     @Autowired
     private IUniversidadRepository repository;
 
-    @Transactional(readOnly = true)
     @Override
     public List<Universidad> findAll() {
         return (List<Universidad>) repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Universidad findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(new Universidad());
     }
 
-    @Transactional
     @Override
     public void save(Universidad universidad) {
         repository.save(universidad);
     }
 
-    @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void update(Long id, Universidad universidad) {
+        if (repository.existsById(id)) {
+            repository.save(universidad);
+        }
     }
 }

@@ -1,32 +1,37 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "PLAN_DEVENGAMIENTO")
+@Table(name = "plan_devengamiento")
 public class PlanDevengamiento {
     @Id
-    @Column(name = "ID_PLAN", nullable = false)
+    @Column(name = "id_plan_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "FECHA_INICIO")
+    @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
-    @Column(name = "PERIODO", length = 256)
+    @Column(name = "periodo")
     private String periodo;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_DOCENTE", nullable = false)
+    @Column(name = "estado_plan")
+    private boolean estadoPlan;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_docente")
     private Docente idDocente;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,4 +59,11 @@ public class PlanDevengamiento {
         this.idDocente = idDocente;
     }
 
+    public boolean isEstadoPlan() {
+        return estadoPlan;
+    }
+
+    public void setEstadoPlan(boolean estadoPlan) {
+        this.estadoPlan = estadoPlan;
+    }
 }

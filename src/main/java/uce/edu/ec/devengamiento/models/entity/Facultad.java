@@ -1,26 +1,29 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "FACULTAD")
+@Table(name = "facultad")
 public class Facultad {
     @Id
-    @Column(name = "ID_FACULTAD", nullable = false)
+    @Column(name = "id_facultad", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE_FACULTAD", length = 256)
+    @Column(name = "nombre_facultad")
     private String nombreFacultad;
 
-    @Column(name = "ID_UNIVERSIDAD", nullable = false)
-    private Long idUniversidad;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_universidad")
+    private Universidad idUniversidad;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,11 +35,11 @@ public class Facultad {
         this.nombreFacultad = nombreFacultad;
     }
 
-    public Long getIdUniversidad() {
+    public Universidad getIdUniversidad() {
         return idUniversidad;
     }
 
-    public void setIdUniversidad(Long idUniversidad) {
+    public void setIdUniversidad(Universidad idUniversidad) {
         this.idUniversidad = idUniversidad;
     }
 

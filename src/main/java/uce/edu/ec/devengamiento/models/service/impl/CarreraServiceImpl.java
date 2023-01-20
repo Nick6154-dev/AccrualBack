@@ -2,7 +2,6 @@ package uce.edu.ec.devengamiento.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.devengamiento.models.entity.Carrera;
 import uce.edu.ec.devengamiento.models.repository.ICarreraRepository;
 import uce.edu.ec.devengamiento.models.service.ICarreraService;
@@ -15,32 +14,35 @@ public class CarreraServiceImpl implements ICarreraService {
     @Autowired
     private ICarreraRepository repository;
 
-    @Transactional(readOnly = true)
     @Override
     public List<Carrera> findAll() {
         return (List<Carrera>) repository.findAll();
     }
 
     @Override
-    public List<Carrera> findByFacultad(Long idFacultad) {
-        return repository.findCarreraByIdFacultad(idFacultad);
+    public List<Carrera> findCarrerasByIdFacultad(Long idFacultad) {
+        return repository.findCarrerasByIdFacultad(idFacultad);
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Carrera findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(new Carrera());
     }
 
-    @Transactional
     @Override
     public void save(Carrera carrera) {
         repository.save(carrera);
     }
 
-    @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void update(Long id, Carrera carrera) {
+        if (repository.existsById(id)) {
+            repository.save(carrera);
+        }
     }
 }

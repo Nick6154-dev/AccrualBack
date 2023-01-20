@@ -4,5 +4,4 @@ import org.springframework.data.repository.CrudRepository;
 import uce.edu.ec.devengamiento.models.entity.RedSocialInvestigacion;
 
 public interface IRedSocialInvestigacionRepository extends CrudRepository<RedSocialInvestigacion, Long> {
-
 }

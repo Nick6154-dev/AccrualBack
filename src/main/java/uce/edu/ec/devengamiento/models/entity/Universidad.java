@@ -1,23 +1,23 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "UNIVERSIDAD")
+@Table(name = "universidad")
 public class Universidad {
     @Id
-    @Column(name = "ID_UNIVERSIDAD", nullable = false)
+    @Column(name = "id_universidad", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE_UNIVERSIDAD", length = 256)
+    @Column(name = "nombre_universidad")
     private String nombreUniversidad;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,27 +1,31 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name = "TIPO_INSTITUCION")
+@Table(name = "tipo_institucion")
 public class TipoInstitucion {
     @Id
-    @Column(name = "ID_TIPO_INSTITUCION", nullable = false)
+    @Column(name = "id_tipo_institucion", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE_INSTITUCION", length = 256)
+    @Column(name = "nombre_institucion")
     private String nombreInstitucion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_ACTIVIDAD", nullable = false)
-    private ActividadDevengamiento idActividad;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_actividad_devengamiento")
+    private PlanDevengamiento idPlanDevengamiento;
+    private Integer idActividad;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,12 +37,19 @@ public class TipoInstitucion {
         this.nombreInstitucion = nombreInstitucion;
     }
 
-    public ActividadDevengamiento getIdActividad() {
+    public Integer getIdActividad() {
         return idActividad;
     }
 
-    public void setIdActividad(ActividadDevengamiento idActividad) {
+    public void setIdActividad(Integer idActividad) {
         this.idActividad = idActividad;
     }
 
+    public PlanDevengamiento getIdPlanDevengamiento() {
+        return idPlanDevengamiento;
+    }
+
+    public void setIdPlanDevengamiento(PlanDevengamiento idPlanDevengamiento) {
+        this.idPlanDevengamiento = idPlanDevengamiento;
+    }
 }

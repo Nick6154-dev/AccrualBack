@@ -2,7 +2,6 @@ package uce.edu.ec.devengamiento.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.devengamiento.models.entity.RedSocialInvestigacion;
 import uce.edu.ec.devengamiento.models.repository.IRedSocialInvestigacionRepository;
 import uce.edu.ec.devengamiento.models.service.IRedSocialInvestigacionService;
@@ -15,27 +14,30 @@ public class RedSocialInvestigacionServiceImpl implements IRedSocialInvestigacio
     @Autowired
     private IRedSocialInvestigacionRepository repository;
 
-    @Transactional(readOnly = true)
     @Override
     public List<RedSocialInvestigacion> findAll() {
         return (List<RedSocialInvestigacion>) repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public RedSocialInvestigacion findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(new RedSocialInvestigacion());
     }
 
-    @Transactional
     @Override
     public void save(RedSocialInvestigacion redSocialInvestigacion) {
         repository.save(redSocialInvestigacion);
     }
 
-    @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void update(Long id, RedSocialInvestigacion redSocialInvestigacion) {
+        if (repository.existsById(id)) {
+            repository.save(redSocialInvestigacion);
+        }
     }
 }

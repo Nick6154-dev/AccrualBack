@@ -1,5 +1,6 @@
 package uce.edu.ec.devengamiento.models.service;
 
+
 import uce.edu.ec.devengamiento.models.entity.RedSocialInvestigacion;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface IRedSocialInvestigacionService {
 
     void save(RedSocialInvestigacion redSocialInvestigacion);
 
-    void delete(Long id);
+    void deleteById(Long id);
+
+    void update(Long id, RedSocialInvestigacion redSocialInvestigacion);
 
 }

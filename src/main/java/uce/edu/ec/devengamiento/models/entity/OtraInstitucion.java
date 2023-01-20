@@ -1,47 +1,38 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "OTRA_INSTITUCION")
+@Table(name = "otra_institucion")
 public class OtraInstitucion {
     @Id
-    @Column(name = "ID_OTRA_INSTITUCION", nullable = false)
+    @Column(name = "id_otra_institucion", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE", length = 256)
-    private String nombre;
+    @Column(name = "nombre_otra_institucion")
+    private String nombreOtraInstitucion;
 
-    @Column(name = "ARCHIVO_VERIFICACION", length = 256)
-    private String archivoVerificacion;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_TIPO_INSTITUCION", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_tipo_institucion")
     private TipoInstitucion idTipoInstitucion;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombreOtraInstitucion() {
+        return nombreOtraInstitucion;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getArchivoVerificacion() {
-        return archivoVerificacion;
-    }
-
-    public void setArchivoVerificacion(String archivoVerificacion) {
-        this.archivoVerificacion = archivoVerificacion;
+    public void setNombreOtraInstitucion(String nombreOtraInstitucion) {
+        this.nombreOtraInstitucion = nombreOtraInstitucion;
     }
 
     public TipoInstitucion getIdTipoInstitucion() {

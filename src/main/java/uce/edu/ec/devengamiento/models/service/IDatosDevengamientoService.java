@@ -12,6 +12,8 @@ public interface IDatosDevengamientoService {
 
     void save(DatosDevengamiento datosDevengamiento);
 
-    void delete(Long id);
+    void deleteById(Long id);
+
+    void update(Long id, DatosDevengamiento datosDevengamiento);
 
 }

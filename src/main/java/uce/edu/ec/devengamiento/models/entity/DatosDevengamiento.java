@@ -1,48 +1,57 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "DATOS_DEVENGAMIENTO")
+@Table(name = "datos_devengamiento")
 public class DatosDevengamiento {
     @Id
-    @Column(name = "ID_DOC_DEV", nullable = false)
+    @Column(name = "id_datos_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "ESTADO_DOCENTE", length = 256)
+    @Column(name = "estado_docente")
     private String estadoDocente;
 
-    @Column(name = "REDI_CDI")
-    private Boolean rediCdi;
+    @Column(name = "categoria_docente")
+    private String categoriaDocente;
 
-    @Column(name = "RNI_SENESYT")
+    @Column(name = "modalidad")
+    private String modalidad;
+
+    @Column(name = "redi_cedia")
+    private Boolean rediCedia;
+
+    @Column(name = "rni_senesyt")
     private Boolean rniSenesyt;
 
-    @Column(name = "FECHA_REINTEGRO")
+    @Column(name = "fecha_reintegro")
     private LocalDate fechaReintegro;
 
-    @Column(name = "FECHA_LECTURA_TESIS")
+    @Column(name = "fecha_lectura_tesis")
     private LocalDate fechaLecturaTesis;
 
-    @Column(name = "TIENE_ORCID")
-    private Boolean tieneOrcid;
+    @Column(name = "enlace_tesis")
+    private String enlaceTesis;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_RED_SOCIAL", nullable = false)
-    private RedSocialInvestigacion idRedSocial;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_DOCENTE", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_docente")
     private Docente idDocente;
 
-    public Long getId() {
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_codigo_orcid")
+    private CodigoOrcid idCodigoOrcid;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,12 +63,12 @@ public class DatosDevengamiento {
         this.estadoDocente = estadoDocente;
     }
 
-    public Boolean getRediCdi() {
-        return rediCdi;
+    public Boolean getRediCedia() {
+        return rediCedia;
     }
 
-    public void setRediCdi(Boolean rediCdi) {
-        this.rediCdi = rediCdi;
+    public void setRediCedia(Boolean rediCedia) {
+        this.rediCedia = rediCedia;
     }
 
     public Boolean getRniSenesyt() {
@@ -86,28 +95,20 @@ public class DatosDevengamiento {
         this.fechaLecturaTesis = fechaLecturaTesis;
     }
 
-    public Boolean getTieneOrcid() {
-        return tieneOrcid;
-    }
-
-    public void setTieneOrcid(Boolean tieneOrcid) {
-        this.tieneOrcid = tieneOrcid;
-    }
-
-    public RedSocialInvestigacion getIdRedSocial() {
-        return idRedSocial;
-    }
-
-    public void setIdRedSocial(RedSocialInvestigacion idRedSocial) {
-        this.idRedSocial = idRedSocial;
-    }
-
     public Docente getIdDocente() {
         return idDocente;
     }
 
     public void setIdDocente(Docente idDocente) {
         this.idDocente = idDocente;
+    }
+
+    public CodigoOrcid getIdCodigoOrcid() {
+        return idCodigoOrcid;
+    }
+
+    public void setIdCodigoOrcid(CodigoOrcid idCodigoOrcid) {
+        this.idCodigoOrcid = idCodigoOrcid;
     }
 
 }

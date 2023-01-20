@@ -1,26 +1,32 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "RED_SOCIAL_INVESTIGACION")
+@Table(name = "red_social_investigacion")
 public class RedSocialInvestigacion {
     @Id
-    @Column(name = "ID_RED_SOCIAL", nullable = false)
+    @Column(name = "id_red_social_investigacion", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE_RED_SOCIAL", length = 256)
+    @Column(name = "nombre_red_social")
     private String nombreRedSocial;
 
-    @Column(name = "LINK_RED_SOCIAL", length = 256)
+    @Column(name = "link_red_social")
     private String linkRedSocial;
 
-    public Long getId() {
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_datos_devengamiento")
+    private DatosDevengamiento idDatosDevengamiento;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -38,6 +44,14 @@ public class RedSocialInvestigacion {
 
     public void setLinkRedSocial(String linkRedSocial) {
         this.linkRedSocial = linkRedSocial;
+    }
+
+    public DatosDevengamiento getIdDatosDevengamiento() {
+        return idDatosDevengamiento;
+    }
+
+    public void setIdDatosDevengamiento(DatosDevengamiento idDatosDevengamiento) {
+        this.idDatosDevengamiento = idDatosDevengamiento;
     }
 
 }

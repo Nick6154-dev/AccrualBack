@@ -1,5 +1,7 @@
 package uce.edu.ec.devengamiento.models.service;
 
+
+
 import uce.edu.ec.devengamiento.models.entity.Usuario;
 
 import java.util.List;
@@ -10,8 +12,12 @@ public interface IUsuarioService {
 
     Usuario findById(Long id);
 
+    Usuario findUserByNickname(String nickName);
+
     void save(Usuario usuario);
 
-    void delete(Long id);
+    void deleteById(Long id);
+
+    void update(Long id, Usuario usuario);
 
 }

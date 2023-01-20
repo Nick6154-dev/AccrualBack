@@ -1,5 +1,6 @@
 package uce.edu.ec.devengamiento.models.service;
 
+
 import uce.edu.ec.devengamiento.models.entity.OtraInstitucion;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface IOtraInstitucionService {
 
     void save(OtraInstitucion otraInstitucion);
 
-    void delete(Long id);
+    void deleteById(Long id);
+
+    void update(Long id, OtraInstitucion otraInstitucion);
 
 }

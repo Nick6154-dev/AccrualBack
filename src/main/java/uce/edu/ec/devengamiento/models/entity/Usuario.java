@@ -1,43 +1,55 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "USUARIO")
+@Table(name = "usuario")
 public class Usuario {
     @Id
-    @Column(name = "ID_USUARIO", nullable = false)
+    @Column(name = "id_usuario", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "USUARIO", length = 256)
-    private String usuario;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "PASSWORD", length = 256)
+    @Column(name = "password")
     private String password;
 
-    public Usuario() {
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_docente")
+    private Docente idDocente;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Role> roles;
+
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public Usuario(String usuario, String password) {
-        this.usuario = usuario;
-        this.password = password;
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -46,5 +58,13 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Docente getIdDocente() {
+        return idDocente;
+    }
+
+    public void setIdDocente(Docente idDocente) {
+        this.idDocente = idDocente;
     }
 }

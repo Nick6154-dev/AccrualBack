@@ -1,43 +1,45 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name = "ACTIVIDAD_DEVENGAMIENTO")
+@Table(name = "actividad_devengamiento")
 public class ActividadDevengamiento {
     @Id
-    @Column(name = "ID_ACTIVIDAD", nullable = false)
+    @Column(name = "id_actividad_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "FECHA_INICIO_ACTIVIDAD")
+    @Column(name = "fecha_inicio_actividad")
     private LocalDate fechaInicioActividad;
 
-    @Column(name = "FECHA_FIN_ACTIVIDAD")
-    private LocalDate fechaFinActividad;
+    @Column(name = "fecha_fin_actividad")
+    private Integer fechaFinActividad;
 
-    @Lob
-    @Column(name = "DESCRIPCION_ACTIVIDAD")
+    @Column(name = "descripcion_actividad")
     private String descripcionActividad;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_TIPO_ACTIVIDAD", nullable = false)
-    private TipoActividad idTipoActividad;
-
-    @Column(name = "EVIDENCIAS_LINK", length = 256)
+    @Column(name = "evidencias_link")
     private String evidenciasLink;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_PLAN", nullable = false)
-    private PlanDevengamiento idPlan;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_plan_devengamiento")
+    private PlanDevengamiento idPlanDevengamiento;
 
-    public Long getId() {
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<TipoActividad> tipoActividades;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -49,11 +51,11 @@ public class ActividadDevengamiento {
         this.fechaInicioActividad = fechaInicioActividad;
     }
 
-    public LocalDate getFechaFinActividad() {
+    public Integer getFechaFinActividad() {
         return fechaFinActividad;
     }
 
-    public void setFechaFinActividad(LocalDate fechaFinActividad) {
+    public void setFechaFinActividad(Integer fechaFinActividad) {
         this.fechaFinActividad = fechaFinActividad;
     }
 
@@ -65,14 +67,6 @@ public class ActividadDevengamiento {
         this.descripcionActividad = descripcionActividad;
     }
 
-    public TipoActividad getIdTipoActividad() {
-        return idTipoActividad;
-    }
-
-    public void setIdTipoActividad(TipoActividad idTipoActividad) {
-        this.idTipoActividad = idTipoActividad;
-    }
-
     public String getEvidenciasLink() {
         return evidenciasLink;
     }
@@ -81,12 +75,12 @@ public class ActividadDevengamiento {
         this.evidenciasLink = evidenciasLink;
     }
 
-    public PlanDevengamiento getIdPlan() {
-        return idPlan;
+    public PlanDevengamiento getIdPlanDevengamiento() {
+        return idPlanDevengamiento;
     }
 
-    public void setIdPlan(PlanDevengamiento idPlan) {
-        this.idPlan = idPlan;
+    public void setIdPlanDevengamiento(PlanDevengamiento idPlanDevengamiento) {
+        this.idPlanDevengamiento = idPlanDevengamiento;
     }
 
 }

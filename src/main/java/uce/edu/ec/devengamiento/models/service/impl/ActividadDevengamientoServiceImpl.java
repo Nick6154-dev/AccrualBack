@@ -2,40 +2,42 @@ package uce.edu.ec.devengamiento.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.devengamiento.models.entity.ActividadDevengamiento;
 import uce.edu.ec.devengamiento.models.repository.IActividadDevengamientoRepository;
-import uce.edu.ec.devengamiento.models.service.IActividadDevengamientoService;
+import uce.edu.ec.devengamiento.models.service.IActividadDevengamietoService;
 
 import java.util.List;
 
 @Service
-public class ActividadDevengamientoServiceImpl implements IActividadDevengamientoService {
+public class ActividadDevengamientoServiceImpl implements IActividadDevengamietoService {
 
     @Autowired
     private IActividadDevengamientoRepository repository;
 
-    @Transactional(readOnly = true)
     @Override
     public List<ActividadDevengamiento> findAll() {
         return (List<ActividadDevengamiento>) repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public ActividadDevengamiento findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(new ActividadDevengamiento());
     }
 
-    @Transactional
     @Override
     public void save(ActividadDevengamiento actividadDevengamiento) {
         repository.save(actividadDevengamiento);
     }
 
-    @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void update(Long id, ActividadDevengamiento actividadDevengamiento) {
+        if (repository.existsById(id)) {
+            repository.save(actividadDevengamiento);
+        }
     }
 }

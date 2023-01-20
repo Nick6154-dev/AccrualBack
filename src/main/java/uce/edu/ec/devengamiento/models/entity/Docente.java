@@ -1,52 +1,39 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "DOCENTE")
+@Table(name = "docente")
 public class Docente {
+
     @Id
-    @Column(name = "ID_DOCENTE", nullable = false)
+    @Column(name = "id_docente", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
-    @Column(name = "NOMBRE", length = 256)
-    private String nombre;
+    @Column(name = "nombres")
+    private String nombres;
 
-    @Column(name = "APELLIDOS", length = 256)
+    @Column(name = "apellidos")
     private String apellidos;
 
-    @Column(name = "CEDULA", length = 256)
+    @Column(name = "cedula")
     private String cedula;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_USUARIO", nullable = false)
-    private Usuario idUsuario;
-
-    public Docente() {
-    }
-
-    public Docente(String nombre, String apellidos, String cedula, Usuario idUsuario) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.cedula = cedula;
-        this.idUsuario = idUsuario;
-    }
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
     }
 
     public String getApellidos() {
@@ -63,14 +50,6 @@ public class Docente {
 
     public void setCedula(String cedula) {
         this.cedula = cedula;
-    }
-
-    public Usuario getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
 }

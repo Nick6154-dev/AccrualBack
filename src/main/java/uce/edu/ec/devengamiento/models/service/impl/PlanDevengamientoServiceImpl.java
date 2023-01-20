@@ -2,7 +2,6 @@ package uce.edu.ec.devengamiento.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.devengamiento.models.entity.PlanDevengamiento;
 import uce.edu.ec.devengamiento.models.repository.IPlanDevengamientoRepository;
 import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
@@ -15,27 +14,30 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
     @Autowired
     private IPlanDevengamientoRepository repository;
 
-    @Transactional(readOnly = true)
     @Override
     public List<PlanDevengamiento> findAll() {
         return (List<PlanDevengamiento>) repository.findAll();
     }
 
-    @Transactional(readOnly = true)
     @Override
     public PlanDevengamiento findById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(new PlanDevengamiento());
     }
 
-    @Transactional
     @Override
     public void save(PlanDevengamiento planDevengamiento) {
         repository.save(planDevengamiento);
     }
 
-    @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public void update(Long id, PlanDevengamiento planDevengamiento) {
+        if (repository.existsById(id)) {
+            repository.save(planDevengamiento);
+        }
     }
 }

@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://containers-us-west-133.railway.app:6837/doctorado_devengamiento
+    username: postgres
+    password: 69caK1Ih87N7t0F5usm3
+  jpa:
+    hibernate:
+      ddl-auto: update

@@ -1,44 +1,32 @@
 package uce.edu.ec.devengamiento.models.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "CODIGO_ORCID")
+@Table(name = "codigo_orcid")
 public class CodigoOrcid {
     @Id
-    @Column(name = "ID_CODIGO_ORCID", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_codigo_orcid", nullable = false)
+    private Integer id;
 
-    @Column(name = "NUMERO_ORCID", length = 256)
-    private String numeroOrcid;
+    @Column(name = "codigo_orcid")
+    private String codigoOrcid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "ID_DOCENTE_DEVENGAMIENTO", nullable = false)
-    private DatosDevengamiento idDocenteDevengamiento;
-
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getNumeroOrcid() {
-        return numeroOrcid;
+    public String getCodigoOrcid() {
+        return codigoOrcid;
     }
 
-    public void setNumeroOrcid(String numeroOrcid) {
-        this.numeroOrcid = numeroOrcid;
-    }
-
-    public DatosDevengamiento getIdDocenteDevengamiento() {
-        return idDocenteDevengamiento;
-    }
-
-    public void setIdDocenteDevengamiento(DatosDevengamiento idDocenteDevengamiento) {
-        this.idDocenteDevengamiento = idDocenteDevengamiento;
+    public void setCodigoOrcid(String codigoOrcid) {
+        this.codigoOrcid = codigoOrcid;
     }
 
 }
