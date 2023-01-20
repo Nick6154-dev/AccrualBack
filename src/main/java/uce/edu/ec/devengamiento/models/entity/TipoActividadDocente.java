@@ -18,6 +18,14 @@ public class TipoActividadDocente {
     @JoinColumn(name = "ID_ACTIV_DOCE", nullable = false)
     private ActividadDocente idActivDoce;
 
+    public TipoActividadDocente() {
+    }
+
+    public TipoActividadDocente(TipoActividad idTipoActividad, ActividadDocente idActivDoce) {
+        this.idTipoActividad = idTipoActividad;
+        this.idActivDoce = idActivDoce;
+    }
+
     public Long getId() {
         return id;
     }

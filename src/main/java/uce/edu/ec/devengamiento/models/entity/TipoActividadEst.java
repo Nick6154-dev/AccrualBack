@@ -18,6 +18,14 @@ public class TipoActividadEst {
     @JoinColumn(name = "ID_ESTRUCTURA", nullable = false)
     private EstructurasID idEstructura;
 
+    public TipoActividadEst() {
+    }
+
+    public TipoActividadEst(TipoActividad idTipoActividad, EstructurasID idEstructura) {
+        this.idTipoActividad = idTipoActividad;
+        this.idEstructura = idEstructura;
+    }
+
     public Long getId() {
         return id;
     }

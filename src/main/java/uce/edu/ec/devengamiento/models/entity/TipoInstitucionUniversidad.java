@@ -26,6 +26,16 @@ public class TipoInstitucionUniversidad {
     @JoinColumn(name = "ID_CARRERA", nullable = false)
     private Carrera idCarrera;
 
+    public TipoInstitucionUniversidad() {
+    }
+
+    public TipoInstitucionUniversidad(TipoInstitucion idTipoInstitucion, Universidad idUniversidad, Facultad idFacultad, Carrera idCarrera) {
+        this.idTipoInstitucion = idTipoInstitucion;
+        this.idUniversidad = idUniversidad;
+        this.idFacultad = idFacultad;
+        this.idCarrera = idCarrera;
+    }
+
     public Long getId() {
         return id;
     }

@@ -18,6 +18,14 @@ public class ActividadDocenteDetalle {
     @JoinColumn(name = "ID_ACTIVIDAD_DOCENTE", nullable = false)
     private ActividadDocente idActividadDocente;
 
+    public ActividadDocenteDetalle() {
+    }
+
+    public ActividadDocenteDetalle(DetalleActividad detActIdDet, ActividadDocente idActividadDocente) {
+        this.detActIdDet = detActIdDet;
+        this.idActividadDocente = idActividadDocente;
+    }
+
     public Long getId() {
         return id;
     }
