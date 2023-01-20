@@ -13,14 +13,4 @@ public class DevengamientoDoctoradoApplication {
         SpringApplication.run(DevengamientoDoctoradoApplication.class, args);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/").allowedOrigins("http://localhost:5502");
-            }
-        };
-    }
-
 }

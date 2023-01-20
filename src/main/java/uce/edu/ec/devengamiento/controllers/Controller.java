@@ -9,10 +9,9 @@ import java.util.List;
 
 @RestController
 @SessionAttributes({"docente", "planDevengamiento"})
-@CrossOrigin
+@CrossOrigin(origins = "http://127.0.0.1:5502/")
 public class Controller {
 
-    private Docente docente;
     private PlanDevengamiento planDevengamiento;
     private DetalleActividad detalleActividad;
     private ActividadInvestigadora actividadInvestigadora;
@@ -150,14 +149,14 @@ public class Controller {
     public void guardarDocente(@RequestBody Docente docente) {
         Usuario usuario = new Usuario(docente.getCedula(), docente.getCedula());
         usuarioService.save(usuario);
-        this.docente.setIdUsuario(usuario);
-        docenteService.save(this.docente);
+        docente.setIdUsuario(usuario);
+        docenteService.save(docente);
     }
 
     @PostMapping("/plan/add/")
     public void guardarPlan(@RequestBody PlanDevengamiento planDevengamiento) {
         this.planDevengamiento = planDevengamiento;
-        this.planDevengamiento.setIdDocente(docente);
+//        this.planDevengamiento.setIdDocente(docente);
         planDevengamientoService.save(planDevengamiento);
     }
 
