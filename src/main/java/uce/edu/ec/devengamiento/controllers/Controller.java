@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @SessionAttributes({"docente", "planDevengamiento"})
+@CrossOrigin(origins = "http://localhost:5502")
 public class Controller {
 
     private Docente docente;
