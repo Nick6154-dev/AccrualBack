@@ -1,12 +1,16 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "datos_devengamiento")
+@Getter
+@Setter
 public class DatosDevengamiento {
     @Id
     @Column(name = "id_datos_devengamiento", nullable = false)
@@ -46,69 +50,5 @@ public class DatosDevengamiento {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_codigo_orcid")
     private CodigoOrcid idCodigoOrcid;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getEstadoDocente() {
-        return estadoDocente;
-    }
-
-    public void setEstadoDocente(String estadoDocente) {
-        this.estadoDocente = estadoDocente;
-    }
-
-    public Boolean getRediCedia() {
-        return rediCedia;
-    }
-
-    public void setRediCedia(Boolean rediCedia) {
-        this.rediCedia = rediCedia;
-    }
-
-    public Boolean getRniSenesyt() {
-        return rniSenesyt;
-    }
-
-    public void setRniSenesyt(Boolean rniSenesyt) {
-        this.rniSenesyt = rniSenesyt;
-    }
-
-    public LocalDate getFechaReintegro() {
-        return fechaReintegro;
-    }
-
-    public void setFechaReintegro(LocalDate fechaReintegro) {
-        this.fechaReintegro = fechaReintegro;
-    }
-
-    public LocalDate getFechaLecturaTesis() {
-        return fechaLecturaTesis;
-    }
-
-    public void setFechaLecturaTesis(LocalDate fechaLecturaTesis) {
-        this.fechaLecturaTesis = fechaLecturaTesis;
-    }
-
-    public Docente getIdDocente() {
-        return idDocente;
-    }
-
-    public void setIdDocente(Docente idDocente) {
-        this.idDocente = idDocente;
-    }
-
-    public CodigoOrcid getIdCodigoOrcid() {
-        return idCodigoOrcid;
-    }
-
-    public void setIdCodigoOrcid(CodigoOrcid idCodigoOrcid) {
-        this.idCodigoOrcid = idCodigoOrcid;
-    }
 
 }

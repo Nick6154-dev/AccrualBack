@@ -1,6 +1,8 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "actividad_devengamiento")
+@Getter
+@Setter
 public class ActividadDevengamiento {
     @Id
     @Column(name = "id_actividad_devengamiento", nullable = false)
@@ -34,53 +38,5 @@ public class ActividadDevengamiento {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<TipoActividad> tipoActividades;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getFechaInicioActividad() {
-        return fechaInicioActividad;
-    }
-
-    public void setFechaInicioActividad(LocalDate fechaInicioActividad) {
-        this.fechaInicioActividad = fechaInicioActividad;
-    }
-
-    public Integer getFechaFinActividad() {
-        return fechaFinActividad;
-    }
-
-    public void setFechaFinActividad(Integer fechaFinActividad) {
-        this.fechaFinActividad = fechaFinActividad;
-    }
-
-    public String getDescripcionActividad() {
-        return descripcionActividad;
-    }
-
-    public void setDescripcionActividad(String descripcionActividad) {
-        this.descripcionActividad = descripcionActividad;
-    }
-
-    public String getEvidenciasLink() {
-        return evidenciasLink;
-    }
-
-    public void setEvidenciasLink(String evidenciasLink) {
-        this.evidenciasLink = evidenciasLink;
-    }
-
-    public PlanDevengamiento getIdPlanDevengamiento() {
-        return idPlanDevengamiento;
-    }
-
-    public void setIdPlanDevengamiento(PlanDevengamiento idPlanDevengamiento) {
-        this.idPlanDevengamiento = idPlanDevengamiento;
-    }
 
 }

@@ -1,12 +1,16 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "act_docente")
+@Getter
+@Setter
 public class ActDocente {
     @Id
     @Column(name = "id_act_docente", nullable = false)
@@ -24,35 +28,4 @@ public class ActDocente {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actividadesDocente")
     private List<DetalleDocente> detallesDocente;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTipoActDocente() {
-        return tipoActDocente;
-    }
-
-    public void setTipoActDocente(String tipoActDocente) {
-        this.tipoActDocente = tipoActDocente;
-    }
-
-    public List<TipoActividad> getTiposActividad() {
-        return tiposActividad;
-    }
-
-    public void setTiposActividad(List<TipoActividad> tiposActividad) {
-        this.tiposActividad = tiposActividad;
-    }
-
-    public List<DetalleDocente> getDetallesDocente() {
-        return detallesDocente;
-    }
-
-    public void setDetallesDocente(List<DetalleDocente> detallesDocente) {
-        this.detallesDocente = detallesDocente;
-    }
 }

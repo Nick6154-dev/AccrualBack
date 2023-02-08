@@ -1,9 +1,14 @@
 package uce.edu.ec.devengamiento.models.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "codigo_orcid")
+@Getter
+@Setter
 public class CodigoOrcid {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,21 +17,5 @@ public class CodigoOrcid {
 
     @Column(name = "codigo_orcid")
     private String codigoOrcid;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCodigoOrcid() {
-        return codigoOrcid;
-    }
-
-    public void setCodigoOrcid(String codigoOrcid) {
-        this.codigoOrcid = codigoOrcid;
-    }
 
 }

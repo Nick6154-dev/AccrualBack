@@ -1,12 +1,16 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "tipo_actividad")
+@Getter
+@Setter
 public class TipoActividad {
     @Id
     @Column(name = "id_tipo_actividad", nullable = false)
@@ -36,59 +40,4 @@ public class TipoActividad {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<ActInvestigadora> actividadesInvestigadora;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombreTipoActividad() {
-        return nombreTipoActividad;
-    }
-
-    public void setNombreTipoActividad(String nombreTipoActividad) {
-        this.nombreTipoActividad = nombreTipoActividad;
-    }
-
-    public List<ActividadDevengamiento> getActividadDevengamientos() {
-        return actividadDevengamientos;
-    }
-
-    public void setActividadDevengamientos(List<ActividadDevengamiento> actividadDevengamientos) {
-        this.actividadDevengamientos = actividadDevengamientos;
-    }
-
-    public List<ActDocente> getActividadesDocentes() {
-        return actividadesDocentes;
-    }
-
-    public void setActividadesDocentes(List<ActDocente> actividadesDocentes) {
-        this.actividadesDocentes = actividadesDocentes;
-    }
-
-    public List<ActEstructuraID> getActividadesEstructura() {
-        return actividadesEstructura;
-    }
-
-    public void setActividadesEstructura(List<ActEstructuraID> actividadesEstructura) {
-        this.actividadesEstructura = actividadesEstructura;
-    }
-
-    public List<ActInnovacion> getActividadesInnovacion() {
-        return actividadesInnovacion;
-    }
-
-    public void setActividadesInnovacion(List<ActInnovacion> actividadesInnovacion) {
-        this.actividadesInnovacion = actividadesInnovacion;
-    }
-
-    public List<ActInvestigadora> getActividadesInvestigadora() {
-        return actividadesInvestigadora;
-    }
-
-    public void setActividadesInvestigadora(List<ActInvestigadora> actividadesInvestigadora) {
-        this.actividadesInvestigadora = actividadesInvestigadora;
-    }
 }

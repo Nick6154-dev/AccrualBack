@@ -1,12 +1,16 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "role")
+@Getter
+@Setter
 public class Role {
     @Id
     @Column(name = "id_rol", nullable = false)
@@ -19,21 +23,5 @@ public class Role {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private List<Usuario> usuarios;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombreRol() {
-        return nombreRol;
-    }
-
-    public void setNombreRol(String nombreRol) {
-        this.nombreRol = nombreRol;
-    }
 
 }

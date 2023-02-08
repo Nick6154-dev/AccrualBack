@@ -1,11 +1,15 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "universidad_institucion")
+@Getter
+@Setter
 public class UniversidadInstitucion {
     @Id
     @Column(name = "id_universidad_institucion", nullable = false)
@@ -31,45 +35,5 @@ public class UniversidadInstitucion {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_carrera")
     private Carrera idCarrera;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public TipoInstitucion getIdTipoInstitucion() {
-        return idTipoInstitucion;
-    }
-
-    public void setIdTipoInstitucion(TipoInstitucion idTipoInstitucion) {
-        this.idTipoInstitucion = idTipoInstitucion;
-    }
-
-    public Universidad getIdUniversidad() {
-        return idUniversidad;
-    }
-
-    public void setIdUniversidad(Universidad idUniversidad) {
-        this.idUniversidad = idUniversidad;
-    }
-
-    public Facultad getIdFacultad() {
-        return idFacultad;
-    }
-
-    public void setIdFacultad(Facultad idFacultad) {
-        this.idFacultad = idFacultad;
-    }
-
-    public Carrera getIdCarrera() {
-        return idCarrera;
-    }
-
-    public void setIdCarrera(Carrera idCarrera) {
-        this.idCarrera = idCarrera;
-    }
 
 }

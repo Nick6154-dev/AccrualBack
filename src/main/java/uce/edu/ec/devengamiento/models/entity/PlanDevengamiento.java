@@ -1,12 +1,16 @@
 package uce.edu.ec.devengamiento.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "plan_devengamiento")
+@Getter
+@Setter
 public class PlanDevengamiento {
     @Id
     @Column(name = "id_plan_devengamiento", nullable = false)
@@ -27,43 +31,4 @@ public class PlanDevengamiento {
     @JoinColumn(name = "id_docente")
     private Docente idDocente;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public String getPeriodo() {
-        return periodo;
-    }
-
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
-    }
-
-    public Docente getIdDocente() {
-        return idDocente;
-    }
-
-    public void setIdDocente(Docente idDocente) {
-        this.idDocente = idDocente;
-    }
-
-    public boolean isEstadoPlan() {
-        return estadoPlan;
-    }
-
-    public void setEstadoPlan(boolean estadoPlan) {
-        this.estadoPlan = estadoPlan;
-    }
 }
