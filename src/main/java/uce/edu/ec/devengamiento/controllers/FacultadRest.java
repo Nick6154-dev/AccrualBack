@@ -8,8 +8,8 @@ import uce.edu.ec.devengamiento.models.service.IFacultadService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accrual/api/docente")
-public class FacutladRest {
+@RequestMapping("/accrual/api/facultad")
+public class FacultadRest {
 
     @Autowired
     private IFacultadService service;

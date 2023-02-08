@@ -17,6 +17,9 @@ public class PlanDevengamiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "numero_plan")
+    private Integer numeroPlan;
+
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
