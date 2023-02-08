@@ -12,7 +12,7 @@ public interface IUsuarioService {
 
     Usuario findById(Long id);
 
-    Usuario findUserByNickname(String nickName);
+    Usuario findUserByUsername(String username);
 
     void save(Usuario usuario);
 

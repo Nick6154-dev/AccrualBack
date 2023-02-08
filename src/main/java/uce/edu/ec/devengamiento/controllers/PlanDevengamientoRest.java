@@ -18,6 +18,11 @@ public class PlanDevengamientoRest {
         return service.findAll();
     }
 
+    @GetMapping("/planDevengamiento/listByIdDocente/{id}")
+    public List<PlanDevengamiento> listByIdDocente(Long id) {
+        return service.findByIdDocente(id);
+    }
+
     @GetMapping("/planDevengamiento/listById/{id}")
     public PlanDevengamiento listById(@PathVariable Long id) {
         return service.findById(id);

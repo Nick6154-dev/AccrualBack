@@ -20,7 +20,7 @@ public class UsuarioRest {
 
     @GetMapping("/usuario/listByUsername/{username}")
     public Usuario listByUsername(@PathVariable String username) {
-        return service.findUserByNickname(username);
+        return service.findUserByUsername(username);
     }
 
     @PostMapping({"/usuario/save", "/usuario/save/"})

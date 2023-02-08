@@ -9,6 +9,8 @@ public interface IPlanDevengamientoService {
 
     List<PlanDevengamiento> findAll();
 
+    List<PlanDevengamiento> findByIdDocente(Long idDocente);
+
     PlanDevengamiento findById(Long id);
 
     void save(PlanDevengamiento planDevengamiento);

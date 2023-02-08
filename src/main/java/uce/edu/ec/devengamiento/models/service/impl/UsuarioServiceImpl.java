@@ -26,7 +26,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
 
     @Override
-    public Usuario findUserByNickname(String username) {
+    public Usuario findUserByUsername(String username) {
         return repository.findUsuarioByUsername(username);
     }
 
@@ -48,4 +48,5 @@ public class UsuarioServiceImpl implements IUsuarioService {
             repository.save(usuario);
         }
     }
+
 }
