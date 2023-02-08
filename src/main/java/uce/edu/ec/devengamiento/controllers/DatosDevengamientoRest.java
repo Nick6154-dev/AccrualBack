@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.IDatosDevengamientoService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/datosDevengamiento")
 public class DatosDevengamientoRest {
 
     @Autowired
     private IDatosDevengamientoService service;
 
-    @GetMapping({"/datosDevengamiento/listALl", "/datosDevengamiento/listAll/"})
+    @GetMapping({"/findALl", "/findAll/"})
     public List<DatosDevengamiento> listAll() {
         return service.findAll();
     }
 
-    @GetMapping("/datosDevengamiento/listById/{id}")
+    @GetMapping("/findById/{id}")
     public DatosDevengamiento listById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/datosDevengamiento/save", "/datosDevengamiento/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody DatosDevengamiento datosDevengamiento) {
         service.save(datosDevengamiento);
     }
 
-    @DeleteMapping("/datosDevengamiento/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/datosDevengamiento/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody DatosDevengamiento datosDevengamiento) {
         service.update(id, datosDevengamiento);
     }

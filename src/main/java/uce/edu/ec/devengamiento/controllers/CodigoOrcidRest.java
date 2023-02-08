@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.ICodigoOrcidService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/codigoOrcid")
 public class CodigoOrcidRest {
 
     @Autowired
     private ICodigoOrcidService service;
 
-    @GetMapping({"/codigoOrcid/listAll", "/codigoOrcid/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<CodigoOrcid> listAllCodigoOrcid() {
         return service.findAll();
     }
 
-    @GetMapping("/codigoOrcid/listById/{id}")
+    @GetMapping("/findById/{id}")
     public CodigoOrcid listById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/codigoOrcid/save", "/codigoOrcid/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody CodigoOrcid codigoOrcid) {
         service.save(codigoOrcid);
     }
 
-    @DeleteMapping("/codigoOrcid/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/codigoOrcid/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody CodigoOrcid codigoOrcid) {
         service.update(id, codigoOrcid);
     }

@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.IActInnovacionService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/actInnovacion")
 public class ActInnovacionRest {
 
     @Autowired
     private IActInnovacionService service;
 
-    @GetMapping({"/actInnovacion/listAll", "/actInnovacion/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<ActInnovacion> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/actInnovacion/findById/{id}")
+    @GetMapping("/findById/{id}")
     public ActInnovacion findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/actInnovacion/save", "/actInnovacion/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody ActInnovacion actInnovacion) {
         service.save(actInnovacion);
     }
 
-    @DeleteMapping("/actInnovacion/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/actInnovacion/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody ActInnovacion actInnovacion) {
         service.update(id, actInnovacion);
     }

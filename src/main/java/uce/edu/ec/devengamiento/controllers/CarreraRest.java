@@ -8,37 +8,38 @@ import uce.edu.ec.devengamiento.models.service.ICarreraService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/carrera")
 public class CarreraRest {
 
     @Autowired
     private ICarreraService service;
 
-    @GetMapping({"/carrera/listAll", "/carrera/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<Carrera> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/carrera/findByIdFacultad/{idFacultad}")
+    @GetMapping("/findAllByIdFacultad/{idFacultad}")
     public List<Carrera> findCarreraByIdFacultad(@PathVariable Long idFacultad) {
         return service.findCarrerasByIdFacultad(idFacultad);
     }
 
-    @GetMapping("/carrera/findById/{id}")
+    @GetMapping("/findById/{id}")
     public Carrera findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/carrera/save", "/carrera/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody Carrera carrera) {
         service.save(carrera);
     }
 
-    @DeleteMapping("/carrera/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/carrera/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody Carrera carrera) {
         service.update(id, carrera);
     }

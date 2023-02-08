@@ -8,37 +8,38 @@ import uce.edu.ec.devengamiento.models.service.IFacultadService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/docente")
 public class FacutladRest {
 
     @Autowired
     private IFacultadService service;
 
-    @GetMapping({"/facultad/listAll", "/facultad/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<Facultad> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/facultad/findByIdUniversidad/{idUniversidad}")
+    @GetMapping("/findAllByIdUniversidad/{idUniversidad}")
     public List<Facultad> findFacultadsByIdUniversidad(@PathVariable Long idUniversidad) {
         return service.findFacultadsByIdUniversidad(idUniversidad);
     }
 
-    @GetMapping("/facultad/findById/{id}")
+    @GetMapping("/findById/{id}")
     public Facultad findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/facultad/save", "/facultad/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody Facultad facultad) {
         service.save(facultad);
     }
 
-    @DeleteMapping("/facultad/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/facultad/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody Facultad facultad) {
         service.update(id, facultad);
     }

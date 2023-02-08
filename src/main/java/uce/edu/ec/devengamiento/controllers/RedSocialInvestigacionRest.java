@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.IRedSocialInvestigacionService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/redSocialInvestigacion")
 public class RedSocialInvestigacionRest {
 
     @Autowired
     private IRedSocialInvestigacionService service;
 
-    @GetMapping({"/redSocialInvestigacion/listAll", "/redSocialIvestigacion/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<RedSocialInvestigacion> listAll() {
         return service.findAll();
     }
 
-    @GetMapping("/redSocialInvestigacion/listById/{id}")
+    @GetMapping("/findById/{id}")
     public RedSocialInvestigacion listById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/redSocialInvestigacion/save", "/redSocialInvestigacion/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody RedSocialInvestigacion redSocialInvestigacion) {
         service.save(redSocialInvestigacion);
     }
 
-    @DeleteMapping("/redSocialInvestigacion/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/redSocialInvestigacion/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody RedSocialInvestigacion redSocialInvestigacion) {
         service.update(id, redSocialInvestigacion);
     }

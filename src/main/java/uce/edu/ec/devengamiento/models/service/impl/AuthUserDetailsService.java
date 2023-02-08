@@ -23,17 +23,17 @@ public class AuthUserDetailsService implements UserDetailsService {
     private IUsuarioRepository repository;
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = repository.findUsuarioByUsername(username);
-        if(usuario == null) {
+        if (usuario == null) {
             throw new UsernameNotFoundException("Username: " + username + " no existe en el sistema!");
         }
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for(Role role: usuario.getRoles()) {
+        for (Role role : usuario.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getNombreRol()));
         }
-        if(authorities.isEmpty()) {
+        if (authorities.isEmpty()) {
             throw new UsernameNotFoundException("Error en el Login: usuario '" + username + "' no tiene roles asignados!");
         }
         return new User(usuario.getUsername(), usuario.getPassword(), true, true, true, true, authorities);

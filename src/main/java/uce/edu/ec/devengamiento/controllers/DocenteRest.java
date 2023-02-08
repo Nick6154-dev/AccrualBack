@@ -14,12 +14,12 @@ public class DocenteRest {
     @Autowired
     private IDocenteService service;
 
-    @GetMapping({"/listAll", "/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<Docente> listAll() {
         return service.findAll();
     }
 
-    @GetMapping("/listById/{id}")
+    @GetMapping("/findById/{id}")
     public Docente listById(@PathVariable Long id) {
         return service.findById(id);
     }

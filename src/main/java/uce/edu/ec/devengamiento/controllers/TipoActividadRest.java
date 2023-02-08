@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.ITipoActividadService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/tipoActividad")
 public class TipoActividadRest {
 
     @Autowired
     private ITipoActividadService service;
 
-    @GetMapping({"/tipoActividad/listAll", "/tipoActividad/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<TipoActividad> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/tipoActividad/findById/{id}")
+    @GetMapping("/findById/{id}")
     public TipoActividad findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/tipoActividad/save", "/tipoActividad/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody TipoActividad tipoActividad) {
         service.save(tipoActividad);
     }
 
-    @DeleteMapping("/tipoActividad/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/tipoActividad/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody TipoActividad tipoActividad) {
         service.update(id, tipoActividad);
     }

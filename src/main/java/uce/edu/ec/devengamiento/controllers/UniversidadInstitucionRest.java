@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.IUniversidadInstitucionService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/universidadInstitucion")
 public class UniversidadInstitucionRest {
 
     @Autowired
     private IUniversidadInstitucionService service;
 
-    @GetMapping({"/universidadInstitucion/listAll", "/universidadInstitucion/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<UniversidadInstitucion> findAll() {
         return service.findAll();
     }
 
-    @GetMapping("/universidadInstitucion/findById/{id}")
+    @GetMapping("/findById/{id}")
     public UniversidadInstitucion findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/universidadInstitucion/save", "/universidadInstitucion/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody UniversidadInstitucion universidadInstitucion) {
         service.save(universidadInstitucion);
     }
 
-    @DeleteMapping("/universidadInstitucion/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/universidadInstitucion/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody UniversidadInstitucion universidadInstitucion) {
         service.update(id, universidadInstitucion);
     }

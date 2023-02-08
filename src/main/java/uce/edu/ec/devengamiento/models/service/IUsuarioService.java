@@ -1,7 +1,6 @@
 package uce.edu.ec.devengamiento.models.service;
 
 
-
 import uce.edu.ec.devengamiento.models.entity.Usuario;
 
 import java.util.List;

@@ -8,32 +8,33 @@ import uce.edu.ec.devengamiento.models.service.IRoleService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/accrual/api/rol")
 public class RoleRest {
 
     @Autowired
     private IRoleService service;
 
-    @GetMapping({"/rol/listAll", "/rol/listAll/"})
+    @GetMapping({"/findAll", "/findAll/"})
     public List<Role> listAll() {
         return service.findAll();
     }
 
-    @GetMapping("/rol/listById/{id}")
+    @GetMapping("/findById/{id}")
     public Role listById(@PathVariable Long id) {
         return service.findById(id);
     }
 
-    @PostMapping({"/rol/save", "/rol/save/"})
+    @PostMapping({"/save", "/save/"})
     public void save(@RequestBody Role rol) {
         service.save(rol);
     }
 
-    @DeleteMapping("/rol/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable Long id) {
         service.deleteById(id);
     }
 
-    @PutMapping("/rol/update/{id}")
+    @PutMapping("/update/{id}")
     public void update(@PathVariable Long id, @RequestBody Role rol) {
         service.update(id, rol);
     }

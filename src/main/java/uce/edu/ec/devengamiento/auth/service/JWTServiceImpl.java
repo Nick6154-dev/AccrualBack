@@ -23,12 +23,12 @@ import java.util.Date;
 @Component
 public class JWTServiceImpl implements JWTService {
 
-    @Autowired
-    private IUsuarioService service;
     public static final String SECRET = Base64Utils.encodeToString("YPS_SYSTEMS_DEVENGAMIENTO".getBytes());
     public static final long EXPIRATION_DATE = 14000000L;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
+    @Autowired
+    private IUsuarioService service;
 
     @Override
     public String create(Authentication auth) throws IOException {
