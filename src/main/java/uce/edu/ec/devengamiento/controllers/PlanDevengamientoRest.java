@@ -20,9 +20,9 @@ public class PlanDevengamientoRest {
         return service.findAll();
     }
 
-    @GetMapping("/findByIdDocente/{id}")
-    public List<PlanDevengamiento> listByIdDocente(Long id) {
-        return service.findByIdDocente(id);
+    @GetMapping("/findByIdDocente/{idDocente}")
+    public List<PlanDevengamiento> listByIdDocente(Long idDocente) {
+        return service.findByIdDocente(idDocente);
     }
 
     @GetMapping("/findById/{id}")
