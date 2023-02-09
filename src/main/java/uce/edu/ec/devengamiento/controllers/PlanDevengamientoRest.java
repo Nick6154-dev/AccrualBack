@@ -8,7 +8,7 @@ import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accrual/api/planDevemgamiento")
+@RequestMapping("/accrual/api/planDevengamiento")
 @CrossOrigin(origins = "${enviroments.linkFrontEnd}")
 public class PlanDevengamientoRest {
 
