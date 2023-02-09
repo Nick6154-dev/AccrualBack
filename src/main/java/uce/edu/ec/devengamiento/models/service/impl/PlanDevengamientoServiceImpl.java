@@ -8,6 +8,7 @@ import uce.edu.ec.devengamiento.models.repository.IDocenteRepository;
 import uce.edu.ec.devengamiento.models.repository.IPlanDevengamientoRepository;
 import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -26,7 +27,9 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
 
     @Override
     public List<PlanDevengamiento> findByIdDocente(Long idDocente) {
-        return repository.findPlanDevengamientosByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
+        System.out.println(idDocente);
+        //return repository.findPlanDevengamientosByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
+        return Collections.emptyList();
     }
 
     @Override
