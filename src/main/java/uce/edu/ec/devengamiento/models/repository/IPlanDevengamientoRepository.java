@@ -12,7 +12,7 @@ public interface IPlanDevengamientoRepository extends CrudRepository<PlanDevenga
 
     List<PlanDevengamiento> findPlanDevengamientosByIdDocente(Docente docente);
 
-    @Query("SELECT MAX(p.numeroPlan) FROM PlanDevengamiento p WHERE p.idDocente = :idDocente")
-    Integer findMaxNumeroPlanByIdDocente(@Param("idDocente") Integer idDocente);
+    @Query("SELECT p from PlanDevengamiento p where (select max(pd.numeroPlan) from PlanDevengamiento pd where pd.idDocente = :idDocente) = p.numeroPlan")
+    PlanDevengamiento findMaxPlanByIdDocente(@Param("idDocente") Long idDocente);
 
 }
