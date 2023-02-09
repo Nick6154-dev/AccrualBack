@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import uce.edu.ec.devengamiento.auth.SimpleGrantedAuthorityMixin;
+import uce.edu.ec.devengamiento.models.service.IDocenteService;
 import uce.edu.ec.devengamiento.models.service.IUsuarioService;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class JWTServiceImpl implements JWTService {
         Claims claims = Jwts.claims();
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
         String token = Jwts.builder().setClaims(claims)
-                .setSubject(service.findUserByUsername(username).getId().toString())
+                .setSubject(service.findUserByUsername(username).getIdDocente().getId().toString())
                 .signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE)).compact();
         return token;
