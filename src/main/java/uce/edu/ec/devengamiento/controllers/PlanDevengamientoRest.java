@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accrual/api/planDevemgamiento")
+@CrossOrigin(origins = "${enviroments.linkFrontEnd}")
 public class PlanDevengamientoRest {
 
     @Autowired

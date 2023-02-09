@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accrual/api/docente")
+@CrossOrigin(origins = "${enviroments.linkFrontEnd}")
 public class DocenteRest {
 
     @Autowired
@@ -20,8 +21,8 @@ public class DocenteRest {
     }
 
     @GetMapping("/findById/{id}")
-    public Docente listById(@PathVariable Long id) {
-        return service.findById(id);
+    public Docente listById(@PathVariable Integer id) {
+        return service.findById(id.longValue());
     }
 
     @PostMapping({"/save", "/save/"})

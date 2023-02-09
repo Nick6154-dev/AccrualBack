@@ -1,6 +1,7 @@
 package uce.edu.ec.devengamiento.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +31,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JWTService jwtService;
 
+    @Value("${enviroments.linkFrontEnd}")
+    private String link;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().authorizeRequests().antMatchers("/accrual/authorization")
@@ -51,7 +55,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
-        config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOrigin(link);
         source.registerCorsConfiguration("/**", config);
         return source;
     }
