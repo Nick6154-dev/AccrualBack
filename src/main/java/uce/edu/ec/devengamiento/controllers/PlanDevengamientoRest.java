@@ -21,7 +21,7 @@ public class PlanDevengamientoRest {
     }
 
     @GetMapping("/findByIdDocente/{idDocente}")
-    public List<PlanDevengamiento> listByIdDocente(Long idDocente) {
+    public List<PlanDevengamiento> listByIdDocente(@PathVariable Long idDocente) {
         return service.findByIdDocente(idDocente);
     }
 

@@ -27,9 +27,7 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
 
     @Override
     public List<PlanDevengamiento> findByIdDocente(Long idDocente) {
-        System.out.println(idDocente);
-        //return repository.findPlanDevengamientosByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
-        return Collections.emptyList();
+        return repository.findPlanDevengamientosByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
     }
 
     @Override
