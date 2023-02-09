@@ -9,3 +9,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+enviroments:
+  linkFrontEnd: http://localhost:5173
