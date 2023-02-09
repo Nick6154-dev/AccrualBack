@@ -13,7 +13,7 @@ public interface IPlanDevengamientoService {
 
     PlanDevengamiento findById(Long id);
 
-    void save(PlanDevengamiento planDevengamiento);
+    void save(Long idDocente, PlanDevengamiento planDevengamiento);
 
     void deleteById(Long id);
 

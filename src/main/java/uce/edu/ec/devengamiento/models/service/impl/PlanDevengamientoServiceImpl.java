@@ -35,7 +35,8 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
     }
 
     @Override
-    public void save(PlanDevengamiento planDevengamiento) {
+    public void save(Long idDocente, PlanDevengamiento planDevengamiento) {
+        planDevengamiento.setIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
         repository.save(planDevengamiento);
     }
 

@@ -30,9 +30,9 @@ public class PlanDevengamientoRest {
         return service.findById(id);
     }
 
-    @PostMapping({"/save", "/save/"})
-    public void save(@RequestBody PlanDevengamiento planDevengamiento) {
-        service.save(planDevengamiento);
+    @PostMapping("/save/{idDocente}")
+    public void save(@PathVariable Long idDocente, @RequestBody PlanDevengamiento planDevengamiento) {
+        service.save(idDocente, planDevengamiento);
     }
 
     @DeleteMapping("/deleteById/{id}")
