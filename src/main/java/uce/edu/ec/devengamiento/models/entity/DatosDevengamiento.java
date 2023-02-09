@@ -17,6 +17,9 @@ public class DatosDevengamiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "facultad")
+    private String facultad;
+
     @Column(name = "estado_docente")
     private String estadoDocente;
 
