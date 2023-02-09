@@ -10,6 +10,8 @@ public interface IDatosDevengamientoService {
 
     DatosDevengamiento findById(Long id);
 
+    DatosDevengamiento findByIdDocente(Long idDocente);
+
     void save(DatosDevengamiento datosDevengamiento);
 
     void deleteById(Long id);

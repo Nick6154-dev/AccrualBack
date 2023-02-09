@@ -15,7 +15,7 @@ public class DatosDevengamiento {
     @Id
     @Column(name = "id_datos_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "estado_docente")
     private String estadoDocente;

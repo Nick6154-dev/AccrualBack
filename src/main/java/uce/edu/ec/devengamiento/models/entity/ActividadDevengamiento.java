@@ -16,7 +16,7 @@ public class ActividadDevengamiento {
     @Id
     @Column(name = "id_actividad_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "fecha_inicio_actividad")
     private LocalDate fechaInicioActividad;

@@ -14,7 +14,7 @@ public class UniversidadInstitucion {
     @Id
     @Column(name = "id_universidad_institucion", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)

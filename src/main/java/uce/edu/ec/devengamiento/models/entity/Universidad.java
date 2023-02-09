@@ -13,7 +13,7 @@ public class Universidad {
     @Id
     @Column(name = "id_universidad", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "nombre_universidad")
     private String nombreUniversidad;

@@ -15,7 +15,7 @@ public class ActInvestigadora {
     @Id
     @Column(name = "id_act_investigadora", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "tipo_act_investigadora")
     private String tipoActInvestigadora;

@@ -9,19 +9,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accrual/api/datosDevengamiento")
+@CrossOrigin(origins = "${enviroments.linkFrontEnd}")
 public class DatosDevengamientoRest {
 
     @Autowired
     private IDatosDevengamientoService service;
 
     @GetMapping({"/findALl", "/findAll/"})
-    public List<DatosDevengamiento> listAll() {
+    public List<DatosDevengamiento> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/findById/{id}")
-    public DatosDevengamiento listById(@PathVariable Long id) {
+    public DatosDevengamiento findById(@PathVariable Long id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/findByIdDocente/{idDocente}")
+    public DatosDevengamiento findByIdDocente(@PathVariable Long idDocente) {
+        return service.findByIdDocente(idDocente);
     }
 
     @PostMapping({"/save", "/save/"})

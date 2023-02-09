@@ -3,7 +3,9 @@ package uce.edu.ec.devengamiento.models.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.devengamiento.models.entity.DatosDevengamiento;
+import uce.edu.ec.devengamiento.models.entity.Docente;
 import uce.edu.ec.devengamiento.models.repository.IDatosDevengamientoRepository;
+import uce.edu.ec.devengamiento.models.repository.IDocenteRepository;
 import uce.edu.ec.devengamiento.models.service.IDatosDevengamientoService;
 
 import java.util.List;
@@ -14,6 +16,9 @@ public class DatosDevengamientoServiceImpl implements IDatosDevengamientoService
     @Autowired
     private IDatosDevengamientoRepository repository;
 
+    @Autowired
+    private IDocenteRepository docenteRepository;
+
     @Override
     public List<DatosDevengamiento> findAll() {
         return (List<DatosDevengamiento>) repository.findAll();
@@ -22,6 +27,11 @@ public class DatosDevengamientoServiceImpl implements IDatosDevengamientoService
     @Override
     public DatosDevengamiento findById(Long id) {
         return repository.findById(id).orElse(new DatosDevengamiento());
+    }
+
+    @Override
+    public DatosDevengamiento findByIdDocente(Long idDocente) {
+        return repository.findDatosDevengamientoByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
     }
 
     @Override

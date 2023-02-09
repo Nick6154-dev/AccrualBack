@@ -15,7 +15,7 @@ public class PlanDevengamiento {
     @Id
     @Column(name = "id_plan_devengamiento", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "numero_plan")
     private Integer numeroPlan;
