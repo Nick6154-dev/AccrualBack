@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uce.edu.ec.devengamiento.models.entity.Carrera;
 import uce.edu.ec.devengamiento.models.repository.ICarreraRepository;
 import uce.edu.ec.devengamiento.models.service.ICarreraService;
+import uce.edu.ec.devengamiento.models.service.IFacultadService;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class CarreraServiceImpl implements ICarreraService {
     @Autowired
     private ICarreraRepository repository;
 
+    @Autowired
+    private IFacultadService service;
+
     @Override
     public List<Carrera> findAll() {
         return (List<Carrera>) repository.findAll();
@@ -21,7 +25,7 @@ public class CarreraServiceImpl implements ICarreraService {
 
     @Override
     public List<Carrera> findCarrerasByIdFacultad(Long idFacultad) {
-        return repository.findCarrerasByIdFacultad(idFacultad);
+        return repository.findCarrerasByIdFacultad(service.findById(idFacultad));
     }
 
     @Override
