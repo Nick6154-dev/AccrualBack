@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uce.edu.ec.devengamiento.models.entity.Facultad;
 import uce.edu.ec.devengamiento.models.repository.IFacultadRepository;
 import uce.edu.ec.devengamiento.models.service.IFacultadService;
+import uce.edu.ec.devengamiento.models.service.IUniversidadService;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class FacultadServiceImpl implements IFacultadService {
     @Autowired
     private IFacultadRepository repository;
 
+    @Autowired
+    private IUniversidadService service;
+
     @Override
     public List<Facultad> findAll() {
         return (List<Facultad>) repository.findAll();
@@ -21,7 +25,7 @@ public class FacultadServiceImpl implements IFacultadService {
 
     @Override
     public List<Facultad> findFacultadsByIdUniversidad(Long idUniversidad) {
-        return repository.findFacultadsByIdUniversidad(idUniversidad);
+        return repository.findFacultadsByIdUniversidad(service.findById(idUniversidad));
     }
 
     @Override
