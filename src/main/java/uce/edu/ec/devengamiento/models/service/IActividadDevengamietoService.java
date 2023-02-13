@@ -9,6 +9,8 @@ public interface IActividadDevengamietoService {
 
     List<ActividadDevengamiento> findAll();
 
+    List<ActividadDevengamiento> findAllByIdPlanDevengamiento(Long idPlan);
+
     ActividadDevengamiento findById(Long id);
 
     void save(ActividadDevengamiento actividadDevengamiento);

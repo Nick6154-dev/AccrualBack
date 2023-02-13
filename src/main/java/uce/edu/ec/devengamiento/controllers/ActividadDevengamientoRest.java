@@ -19,6 +19,11 @@ public class ActividadDevengamientoRest {
         return service.findAll();
     }
 
+    @GetMapping("/findAllByIdPlan/{idPlanDevengamiento}")
+    public List<ActividadDevengamiento> listAllByIdPlan(@PathVariable Long idPlanDevengamiento) {
+        return service.findAllByIdPlanDevengamiento(idPlanDevengamiento);
+    }
+
     @GetMapping("/findById/{id}")
     public ActividadDevengamiento listById(@PathVariable Long id) {
         return service.findById(id);

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import uce.edu.ec.devengamiento.models.entity.ActividadDevengamiento;
 import uce.edu.ec.devengamiento.models.repository.IActividadDevengamientoRepository;
 import uce.edu.ec.devengamiento.models.service.IActividadDevengamietoService;
+import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
 
 import java.util.List;
 
@@ -14,9 +15,17 @@ public class ActividadDevengamientoServiceImpl implements IActividadDevengamieto
     @Autowired
     private IActividadDevengamientoRepository repository;
 
+    @Autowired
+    private IPlanDevengamientoService service;
+
     @Override
     public List<ActividadDevengamiento> findAll() {
         return (List<ActividadDevengamiento>) repository.findAll();
+    }
+
+    @Override
+    public List<ActividadDevengamiento> findAllByIdPlanDevengamiento(Long idPlan) {
+        return repository.findActividadDevengamientosByIdPlanDevengamiento(service.findById(idPlan));
     }
 
     @Override
