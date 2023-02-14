@@ -2,6 +2,7 @@ package uce.edu.ec.devengamiento.models.service;
 
 
 import uce.edu.ec.devengamiento.models.entity.ActividadDevengamiento;
+import uce.edu.ec.devengamiento.models.objects.OActividad;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface IActividadDevengamietoService {
 
     ActividadDevengamiento findById(Long id);
 
-    void save(ActividadDevengamiento actividadDevengamiento);
+    void save(OActividad oActividad);
 
     void deleteById(Long id);
 

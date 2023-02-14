@@ -3,6 +3,7 @@ package uce.edu.ec.devengamiento.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.devengamiento.models.entity.ActividadDevengamiento;
+import uce.edu.ec.devengamiento.models.objects.OActividad;
 import uce.edu.ec.devengamiento.models.service.IActividadDevengamietoService;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public class ActividadDevengamientoRest {
     }
 
     @PostMapping({"/save", "/save/"})
-    public void save(@RequestBody ActividadDevengamiento actividadDevengamiento) {
-        service.save(actividadDevengamiento);
+    public void save(@RequestBody OActividad oActividad) {
+        service.save(oActividad);
     }
 
     @DeleteMapping("/deleteById/{id}")

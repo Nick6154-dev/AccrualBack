@@ -22,7 +22,7 @@ public class ActividadDevengamiento {
     private LocalDate fechaInicioActividad;
 
     @Column(name = "fecha_fin_actividad")
-    private Integer fechaFinActividad;
+    private LocalDate fechaFinActividad;
 
     @Column(name = "descripcion_actividad")
     private String descripcionActividad;

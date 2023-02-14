@@ -12,6 +12,8 @@ import java.util.List;
 @CrossOrigin(origins = "${enviroments.linkFrontEnd}")
 public class PlanDevengamientoRest {
 
+    private PlanDevengamiento planDevengamiento;
+
     @Autowired
     private IPlanDevengamientoService service;
 
@@ -31,8 +33,9 @@ public class PlanDevengamientoRest {
     }
 
     @PostMapping("/save/{idDocente}")
-    public void save(@PathVariable Long idDocente, @RequestBody PlanDevengamiento planDevengamiento) {
-        service.save(idDocente, planDevengamiento);
+    public String save(@PathVariable Long idDocente, @RequestBody PlanDevengamiento planDevengamiento) {
+        planDevengamiento = service.save(idDocente, planDevengamiento);
+        return planDevengamiento.getId() + "";
     }
 
     @DeleteMapping("/deleteById/{id}")

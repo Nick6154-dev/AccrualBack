@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import uce.edu.ec.devengamiento.auth.SimpleGrantedAuthorityMixin;
-import uce.edu.ec.devengamiento.models.service.IDocenteService;
 import uce.edu.ec.devengamiento.models.service.IUsuarioService;
 
 import java.io.IOException;

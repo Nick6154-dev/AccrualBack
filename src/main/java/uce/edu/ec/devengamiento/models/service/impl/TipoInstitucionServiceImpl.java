@@ -25,8 +25,8 @@ public class TipoInstitucionServiceImpl implements ITipoInstitucionService {
     }
 
     @Override
-    public void save(TipoInstitucion tipoInstitucion) {
-        repository.save(tipoInstitucion);
+    public TipoInstitucion save(TipoInstitucion tipoInstitucion) {
+        return repository.save(tipoInstitucion);
     }
 
     @Override

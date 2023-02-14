@@ -11,7 +11,7 @@ public interface ITipoInstitucionService {
 
     TipoInstitucion findById(Long id);
 
-    void save(TipoInstitucion tipoInstitucion);
+    TipoInstitucion save(TipoInstitucion tipoInstitucion);
 
     void deleteById(Long id);
 

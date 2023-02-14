@@ -8,7 +8,6 @@ import uce.edu.ec.devengamiento.models.repository.IDocenteRepository;
 import uce.edu.ec.devengamiento.models.repository.IPlanDevengamientoRepository;
 import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -36,7 +35,7 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
     }
 
     @Override
-    public void save(Long idDocente, PlanDevengamiento planDevengamiento) {
+    public PlanDevengamiento save(Long idDocente, PlanDevengamiento planDevengamiento) {
         planDevengamiento.setIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
         List<PlanDevengamiento> planesDocente = findByIdDocente(idDocente);
         if (planesDocente.isEmpty()) {
@@ -44,7 +43,8 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
         } else {
             planDevengamiento.setNumeroPlan(Integer.getInteger(repository.findMaxPlanByIdDocente(idDocente).getNumeroPlan() + "") + 1);
         }
-        repository.save(planDevengamiento);
+        planDevengamiento = repository.save(planDevengamiento);
+        return planDevengamiento;
     }
 
     @Override
