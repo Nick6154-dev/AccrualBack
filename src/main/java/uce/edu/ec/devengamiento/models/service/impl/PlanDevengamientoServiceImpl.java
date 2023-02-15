@@ -41,7 +41,9 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
         if (planesDocente.isEmpty()) {
             planDevengamiento.setNumeroPlan(1);
         } else {
-            planDevengamiento.setNumeroPlan(repository.findMaxPlanByIdDocente(docenteService.findById(idDocente)).getNumeroPlan() + 1);
+            planDevengamiento.setNumeroPlan(repository
+                    .findMaxPlanByIdDocente(docenteService.findById(idDocente))
+                    .get(0).getNumeroPlan() + 1);
         }
         planDevengamiento = repository.save(planDevengamiento);
         return planDevengamiento;
