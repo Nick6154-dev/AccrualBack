@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.devengamiento.models.entity.Docente;
 import uce.edu.ec.devengamiento.models.entity.PlanDevengamiento;
-import uce.edu.ec.devengamiento.models.repository.IDocenteRepository;
 import uce.edu.ec.devengamiento.models.repository.IPlanDevengamientoRepository;
+import uce.edu.ec.devengamiento.models.service.IDocenteService;
 import uce.edu.ec.devengamiento.models.service.IPlanDevengamientoService;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
     private IPlanDevengamientoRepository repository;
 
     @Autowired
-    private IDocenteRepository docenteRepository;
+    private IDocenteService docenteService;
 
     @Override
     public List<PlanDevengamiento> findAll() {
@@ -26,7 +26,7 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
 
     @Override
     public List<PlanDevengamiento> findByIdDocente(Long idDocente) {
-        return repository.findPlanDevengamientosByIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
+        return repository.findPlanDevengamientosByIdDocente(docenteService.findById(idDocente));
     }
 
     @Override
@@ -36,12 +36,12 @@ public class PlanDevengamientoServiceImpl implements IPlanDevengamientoService {
 
     @Override
     public PlanDevengamiento save(Long idDocente, PlanDevengamiento planDevengamiento) {
-        planDevengamiento.setIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
+        planDevengamiento.setIdDocente(docenteService.findById(idDocente));
         List<PlanDevengamiento> planesDocente = findByIdDocente(idDocente);
         if (planesDocente.isEmpty()) {
             planDevengamiento.setNumeroPlan(1);
         } else {
-            planDevengamiento.setNumeroPlan(Integer.getInteger(repository.findMaxPlanByIdDocente(idDocente).getNumeroPlan() + "") + 1);
+            planDevengamiento.setNumeroPlan(repository.findMaxPlanByIdDocente(docenteService.findById(idDocente)).getNumeroPlan() + 1);
         }
         planDevengamiento = repository.save(planDevengamiento);
         return planDevengamiento;
