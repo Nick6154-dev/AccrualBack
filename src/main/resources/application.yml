@@ -9,5 +9,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: davidrokero666@gmail.com
+    password: 0983837084davidscreamolexero
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 enviroments:
   linkFrontEnd: http://localhost:5173
+  mailResponseFiniquito: nikomont123@gmail.com

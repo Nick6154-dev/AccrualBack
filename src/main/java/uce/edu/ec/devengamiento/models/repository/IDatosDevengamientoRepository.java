@@ -6,6 +6,6 @@ import uce.edu.ec.devengamiento.models.entity.Docente;
 
 public interface IDatosDevengamientoRepository extends CrudRepository<DatosDevengamiento, Long> {
 
-    public DatosDevengamiento findDatosDevengamientoByIdDocente(Docente docente);
+    DatosDevengamiento findDatosDevengamientoByIdDocente(Docente docente);
 
 }
