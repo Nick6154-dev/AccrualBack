@@ -25,8 +25,9 @@ public class MailService implements IMailService {
     @Override
     public SimpleMailMessage sendFiniquitoTrue(Long idDocente) {
         Docente docente = docenteService.findById(idDocente);
+        boolean ok = true;
         DatosDevengamiento datosDevengamiento = datosDevengamientoService.findByIdDocente(idDocente);
-        datosDevengamiento.setFiniquito(true);
+        datosDevengamiento.setFiniquito(ok);
         datosDevengamientoService.update(datosDevengamiento.getId(), datosDevengamiento);
         String nombreCompleto = docente.getNombres() + " " + docente.getApellidos();
         SimpleMailMessage message = new SimpleMailMessage();
