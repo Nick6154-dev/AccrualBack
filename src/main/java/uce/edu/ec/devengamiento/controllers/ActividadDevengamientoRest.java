@@ -31,8 +31,8 @@ public class ActividadDevengamientoRest {
     }
 
     @PostMapping({"/save", "/save/"})
-    public void save(@RequestBody OActividad oActividad) {
-        service.save(oActividad);
+    public ActividadDevengamiento save(@RequestBody OActividad oActividad) {
+        return service.save(oActividad);
     }
 
     @DeleteMapping("/deleteById/{id}")

@@ -14,7 +14,7 @@ public interface IActividadDevengamietoService {
 
     ActividadDevengamiento findById(Long id);
 
-    void save(OActividad oActividad);
+    ActividadDevengamiento save(OActividad oActividad);
 
     void deleteById(Long id);
 

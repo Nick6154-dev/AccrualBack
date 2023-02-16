@@ -60,7 +60,7 @@ public class ActividadDevengamientoServiceImpl implements IActividadDevengamieto
     }
 
     @Override
-    public void save(OActividad oActividad) {
+    public ActividadDevengamiento save(OActividad oActividad) {
         Map<String, Object> mapper = loadTipoActividad(oActividad);
         ActividadDevengamiento actividadDevengamiento = repository.save(loadActividad(oActividad));
         tipoActividadService.save((TipoActividad) mapper.get("tipoActividad"));
@@ -73,6 +73,7 @@ public class ActividadDevengamientoServiceImpl implements IActividadDevengamieto
         } else {
             otraInstitucionService.save(loadOtraInstitucion(oActividad, tipoInstitucion));
         }
+        return actividadDevengamiento;
     }
 
     @Override
