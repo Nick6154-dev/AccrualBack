@@ -35,8 +35,7 @@ public class ActividadDevengamiento {
     @JoinColumn(name = "id_plan_devengamiento")
     private PlanDevengamiento idPlanDevengamiento;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<TipoActividad> tipoActividades;
 
 }
