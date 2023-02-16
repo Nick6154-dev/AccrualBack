@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Table(name = "datos_devengamiento")
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DatosDevengamiento {
     @Id
     @Column(name = "id_datos_devengamiento", nullable = false)
@@ -56,10 +55,12 @@ public class DatosDevengamiento {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Docente idDocente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_codigo_orcid")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private CodigoOrcid idCodigoOrcid;
 
 }

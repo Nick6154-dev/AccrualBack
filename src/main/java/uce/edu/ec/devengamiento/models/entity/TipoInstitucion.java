@@ -22,6 +22,7 @@ public class TipoInstitucion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_actividad_devengamiento")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ActividadDevengamiento idActividadDevengamiento;
 
 }

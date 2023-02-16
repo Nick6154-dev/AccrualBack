@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "act_innovacion")
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ActInnovacion {
     @Id
     @Column(name = "id_act_innovacion", nullable = false)
@@ -23,6 +22,7 @@ public class ActInnovacion {
     private String tipoActInnovacion;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actividadesInnovacion")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonBackReference
     private List<TipoActividad> tiposActividad;
 

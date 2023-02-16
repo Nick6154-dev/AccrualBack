@@ -11,7 +11,6 @@ import java.util.List;
 @Table(name = "usuario")
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario {
     @Id
     @Column(name = "id_usuario", nullable = false)
@@ -26,9 +25,11 @@ public class Usuario {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Docente idDocente;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Role> roles;
 
 }

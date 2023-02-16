@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Table(name = "otra_institucion")
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OtraInstitucion {
     @Id
     @Column(name = "id_otra_institucion", nullable = false)
@@ -23,6 +22,7 @@ public class OtraInstitucion {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tipo_institucion")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private TipoInstitucion idTipoInstitucion;
 
 }
