@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Table(name = "datos_devengamiento")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DatosDevengamiento {
     @Id
     @Column(name = "id_datos_devengamiento", nullable = false)
@@ -19,9 +20,6 @@ public class DatosDevengamiento {
 
     @Column(name = "facultad")
     private String facultad;
-
-    @Column(name = "estado_docente")
-    private String estadoDocente;
 
     @Column(name = "categoria_docente")
     private String categoriaDocente;
@@ -44,12 +42,22 @@ public class DatosDevengamiento {
     @Column(name = "enlace_tesis")
     private String enlaceTesis;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @Column(name = "tiempo_devengamiento")
+    private Integer tiempoDevengamiento;
+
+    @Column(name = "enlace_contrato_adenda")
+    private String enlaceContratoAdenda;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
+    @Column(name = "finiquito")
+    private boolean finiquito;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
     private Docente idDocente;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_codigo_orcid")
     private CodigoOrcid idCodigoOrcid;

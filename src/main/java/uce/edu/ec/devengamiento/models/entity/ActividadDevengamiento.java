@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "actividad_devengamiento")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ActividadDevengamiento {
     @Id
     @Column(name = "id_actividad_devengamiento", nullable = false)
@@ -30,7 +31,6 @@ public class ActividadDevengamiento {
     @Column(name = "evidencias_link")
     private String evidenciasLink;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_plan_devengamiento")
     private PlanDevengamiento idPlanDevengamiento;

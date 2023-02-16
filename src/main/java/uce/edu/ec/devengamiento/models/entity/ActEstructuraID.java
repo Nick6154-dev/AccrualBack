@@ -1,5 +1,6 @@
 package uce.edu.ec.devengamiento.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Table(name = "act_estructura_i_d")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ActEstructuraID {
     @Id
     @Column(name = "id_act_estructura", nullable = false)
@@ -20,8 +22,8 @@ public class ActEstructuraID {
     @Column(name = "tipo_act_estructura")
     private String tipoActEstructura;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "actividadesEstructura")
+    @JsonBackReference
     private List<TipoActividad> tiposActividad;
 
 }

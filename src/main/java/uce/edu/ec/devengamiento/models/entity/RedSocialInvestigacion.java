@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Table(name = "red_social_investigacion")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class RedSocialInvestigacion {
     @Id
     @Column(name = "id_red_social_investigacion", nullable = false)
@@ -22,7 +23,6 @@ public class RedSocialInvestigacion {
     @Column(name = "link_red_social")
     private String linkRedSocial;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_datos_devengamiento")
     private DatosDevengamiento idDatosDevengamiento;

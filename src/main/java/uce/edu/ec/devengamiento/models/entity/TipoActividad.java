@@ -1,5 +1,6 @@
 package uce.edu.ec.devengamiento.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Table(name = "tipo_actividad")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TipoActividad {
     @Id
     @Column(name = "id_tipo_actividad", nullable = false)
@@ -20,23 +22,19 @@ public class TipoActividad {
     @Column(name = "nombre_tipo_actividad")
     private String nombreTipoActividad;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "tipoActividades")
+    @JsonBackReference
     private List<ActividadDevengamiento> actividadDevengamientos;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<ActDocente> actividadesDocentes;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<ActEstructuraID> actividadesEstructura;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<ActInnovacion> actividadesInnovacion;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<ActInvestigadora> actividadesInvestigadora;
 
