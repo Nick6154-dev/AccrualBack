@@ -10,10 +10,10 @@ spring:
     hibernate:
       ddl-auto: update
   mail:
-    host: smtp.gmail.com
+    host: smtp.office365.com
     port: 587
-    username: davidrokero666@gmail.com
-    password: 0983837084davidscreamolexero
+    username: YSP_fashionStore@outlook.es
+    password: YspfashionStore
     properties:
       mail:
         smtp:
