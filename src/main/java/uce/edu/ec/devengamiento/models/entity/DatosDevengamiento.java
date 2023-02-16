@@ -51,7 +51,7 @@ public class DatosDevengamiento {
     private String observaciones;
 
     @Column(name = "finiquito")
-    private boolean finiquito;
+    private Integer finiquito;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
