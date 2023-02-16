@@ -13,7 +13,7 @@ spring:
     host: smtp.office365.com
     port: 587
     username: YSP_fashionStore@outlook.es
-    password: YspfashionStore
+    password: Yps_2020
     properties:
       mail:
         smtp:
