@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accrual/api/datosDevengamiento")
-@CrossOrigin(origins = "${enviroments.linkFrontEnd}")
+@CrossOrigin
 public class DatosDevengamientoRest {
 
     @Autowired
