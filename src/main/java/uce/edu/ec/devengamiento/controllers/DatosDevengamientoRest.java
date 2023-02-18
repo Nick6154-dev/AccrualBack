@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/accrual/api/datosDevengamiento")
-@CrossOrigin
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 public class DatosDevengamientoRest {
 
     @Autowired
