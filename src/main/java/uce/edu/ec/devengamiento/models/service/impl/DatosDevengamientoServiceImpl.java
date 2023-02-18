@@ -35,7 +35,8 @@ public class DatosDevengamientoServiceImpl implements IDatosDevengamientoService
     }
 
     @Override
-    public void save(DatosDevengamiento datosDevengamiento) {
+    public void save(DatosDevengamiento datosDevengamiento, Long idDocente) {
+        datosDevengamiento.setIdDocente(docenteRepository.findById(idDocente).orElse(new Docente()));
         repository.save(datosDevengamiento);
     }
 

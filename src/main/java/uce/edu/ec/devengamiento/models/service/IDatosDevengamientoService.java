@@ -12,7 +12,7 @@ public interface IDatosDevengamientoService {
 
     DatosDevengamiento findByIdDocente(Long idDocente);
 
-    void save(DatosDevengamiento datosDevengamiento);
+    void save(DatosDevengamiento datosDevengamiento, Long idDocente);
 
     void deleteById(Long id);
 
