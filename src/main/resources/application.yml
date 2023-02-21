@@ -3,12 +3,13 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://containers-us-west-192.railway.app:7701/doctorado_devengamiento
+    url: jdbc:postgresql://localhost:5432/accrual_database
     username: postgres
-    password: msCN0wjQOrJLWJLHrCxN
+    password: 277353
   jpa:
     hibernate:
       ddl-auto: update
+    generate-ddl: true
   mail:
     host: smtp.office365.com
     port: 587
