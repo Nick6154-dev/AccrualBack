@@ -53,16 +53,17 @@ public class NetworkServiceImpl implements NetworkService {
     public ResponseEntity<?> deleteById(Long idNetwork) {
         return repository.findById(idNetwork).map(value -> {
             repository.deleteById(idNetwork);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado correctamente");
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al momento de eliminar"));
     }
 
     @Override
     @Transactional
     public ResponseEntity<?> update(Network network, Long idNetwork) {
-        return repository.findById(idNetwork).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(network)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+        return repository.findById(idNetwork).map(value -> {
+            network.setIdNetworks(value.getIdNetworks());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(network));
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Network()));
     }
 
 }

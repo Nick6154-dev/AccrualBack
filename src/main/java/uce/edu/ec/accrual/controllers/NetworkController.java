@@ -36,7 +36,7 @@ public class NetworkController {
         return service.findById(idNetwork);
     }
 
-    @GetMapping("/{idDocent}")
+    @GetMapping("/byIdDocent/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
         return service.findByDocent((Docent) docentService.findById(idDocent).getBody());
     }
