@@ -18,6 +18,9 @@ import uce.edu.ec.accrual.auth.filter.JWTAuthorizationFilter;
 import uce.edu.ec.accrual.auth.service.JWTService;
 import uce.edu.ec.accrual.models.service.impl.AuthUserDetailsService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -56,6 +59,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
         config.addAllowedOrigin(link);
+        List<String> allowedMethods = new ArrayList<>();
+        allowedMethods.add("GET");
+        allowedMethods.add("POST");
+        allowedMethods.add("DELETE");
+        allowedMethods.add("PUT");
+        allowedMethods.add("PATCH");
+        config.setAllowedMethods(allowedMethods);
         source.registerCorsConfiguration("/**", config);
         return source;
     }

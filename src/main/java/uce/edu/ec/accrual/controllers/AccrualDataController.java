@@ -15,7 +15,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/accrualData")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AccrualDataController {
 
     @Autowired
@@ -65,7 +64,7 @@ public class AccrualDataController {
         return service.deleteById(idAccrualData);
     }
 
-    @PatchMapping("/update/{idAccrualData}")
+    @PutMapping("/update/{idAccrualData}")
     public ResponseEntity<?> update(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
         if (result.hasErrors()) {
             return commonsService.validate(result);
