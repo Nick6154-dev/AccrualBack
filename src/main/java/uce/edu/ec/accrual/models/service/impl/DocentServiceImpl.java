@@ -35,6 +35,13 @@ public class DocentServiceImpl implements DocentService {
     }
 
     @Override
+    public ResponseEntity<?> findByIdPerson(Long idPerson) {
+        return repository.findByIdPerson(idPerson).map(value ->
+                        ResponseEntity.status(HttpStatus.FOUND).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @Override
     @Transactional
     public ResponseEntity<?> save(Docent docent) {
         return repository.findByIdPerson(docent.getIdPerson()).map(value ->

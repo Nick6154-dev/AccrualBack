@@ -9,6 +9,8 @@ public interface DocentService {
 
     ResponseEntity<?> findById(Long idDocent);
 
+    ResponseEntity<?> findByIdPerson(Long idPerson);
+
     ResponseEntity<?> save(Docent docent);
 
     ResponseEntity<?> deleteById(Long idDocent);

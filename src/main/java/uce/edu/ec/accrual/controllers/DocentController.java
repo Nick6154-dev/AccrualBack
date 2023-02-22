@@ -30,6 +30,11 @@ public class DocentController {
         return service.findById(idDocent);
     }
 
+    @GetMapping("/byIdPerson/{idPerson}")
+    public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
+        return service.findByIdPerson(idPerson);
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Docent docent, BindingResult result) {
         if (result.hasErrors()) {
