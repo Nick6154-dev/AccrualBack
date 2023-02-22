@@ -36,7 +36,7 @@ public class AccrualDataController {
         return service.findById(idAccrualData);
     }
 
-    @GetMapping("/{idDocent}")
+    @GetMapping("/byIdDocent/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
         return service.findByDocent((Docent) docentService.findById(idDocent).getBody());
     }
@@ -64,7 +64,7 @@ public class AccrualDataController {
         return service.deleteById(idAccrualData);
     }
 
-    @PutMapping("/update/{idAccrualData}")
+    @PutMapping("/{idAccrualData}")
     public ResponseEntity<?> update(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
         if (result.hasErrors()) {
             return commonsService.validate(result);
