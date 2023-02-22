@@ -22,5 +22,5 @@ spring:
           starttls:
             enable: true
 enviroments:
-  linkFrontEnd: http://localhost:5173
+  linkFrontEnd: http://localhost:3000
   mailResponseFiniquito: nikomont123@gmail.com
