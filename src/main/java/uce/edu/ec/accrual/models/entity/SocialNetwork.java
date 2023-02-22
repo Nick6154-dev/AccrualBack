@@ -25,4 +25,8 @@ public class SocialNetwork {
     @Column(name = "enlace_red_social")
     private String socialNetworkLink;
 
+    @ManyToOne
+    @JoinColumn(name = "id_redes")
+    private Network network;
+
 }

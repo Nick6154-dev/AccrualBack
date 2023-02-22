@@ -38,7 +38,7 @@ public class DocentServiceImpl implements DocentService {
     public ResponseEntity<?> findByIdPerson(Long idPerson) {
         return repository.findByIdPerson(idPerson).map(value ->
                         ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Docent()));
     }
 
     @Override
