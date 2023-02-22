@@ -1,6 +1,7 @@
 package uce.edu.ec.accrual.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,16 @@ public class NetworkController {
     @GetMapping("/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
         return service.findByDocent((Docent) docentService.findById(idDocent).getBody());
+    }
+
+    @GetMapping("/byIdPerson/{idPerson}")
+    public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
+        Docent docent = (Docent) docentService.findByIdPerson(idPerson).getBody();
+        if (docent.getCategory() != null) {
+            return service.findByDocent(docent);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id persona no encontrada : " + idPerson);
+        }
     }
 
     @PostMapping

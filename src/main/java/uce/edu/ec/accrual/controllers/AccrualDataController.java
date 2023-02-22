@@ -47,7 +47,7 @@ public class AccrualDataController {
         if (docent.getCategory() != null) {
             return service.findByDocent(docent);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id persona no encontrada: " + idPerson);
         }
     }
 

@@ -1,6 +1,7 @@
 package uce.edu.ec.accrual.models.service;
 
 import org.springframework.http.ResponseEntity;
+import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.SocialNetwork;
 
 public interface SocialNetworkService {
@@ -8,6 +9,8 @@ public interface SocialNetworkService {
     ResponseEntity<?> findAll();
 
     ResponseEntity<?> findById(Long idSocialNetwork);
+
+    ResponseEntity<?> findByIdPerson(Long idPerson);
 
     ResponseEntity<?> save(SocialNetwork socialNetwork);
 
