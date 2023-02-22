@@ -11,6 +11,7 @@ import uce.edu.ec.accrual.models.service.AccrualDataService;
 import uce.edu.ec.accrual.models.service.DocentService;
 import uce.edu.ec.accrual.models.service.UtilCommonsService;
 
+import javax.validation.Path;
 import javax.validation.Valid;
 
 @RestController
@@ -70,6 +71,14 @@ public class AccrualDataController {
             return commonsService.validate(result);
         }
         return service.update(accrualData, idAccrualData);
+    }
+
+    @PatchMapping("/observation/{idAccrualData}")
+    public ResponseEntity<?> saveObservation(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
+        if (result.hasErrors()) {
+            return commonsService.validate(result);
+        }
+        return service.updateObservations(accrualData, idAccrualData);
     }
 
 }

@@ -65,4 +65,13 @@ public class AccrualDataServiceImpl implements AccrualDataService {
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(accrualData));
         }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
     }
+
+    @Override
+    public ResponseEntity<?> updateObservations(AccrualData accrualData, Long idAccrualData) {
+        return repository.findById(idAccrualData).map(value -> {
+            value.setObservations(accrualData.getObservations());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(value));
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+    }
+
 }
