@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/accrualData")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccrualDataController {
 
     @Autowired
