@@ -64,8 +64,8 @@ public class AccrualDataController {
         return service.deleteById(idAccrualData);
     }
 
-    @PutMapping("/{idAccrualData}")
-    public ResponseEntity<?> udpate(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
+    @PatchMapping("/update/{idAccrualData}")
+    public ResponseEntity<?> update(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
