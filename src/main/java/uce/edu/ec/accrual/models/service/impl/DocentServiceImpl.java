@@ -22,22 +22,22 @@ public class DocentServiceImpl implements DocentService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         return Optional.of((List<Docent>) repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idDocent) {
         return repository.findById(idDocent).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Docent()));
     }
 
     @Override
     public ResponseEntity<?> findByIdPerson(Long idPerson) {
         return repository.findByIdPerson(idPerson).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Docent()));
     }
 

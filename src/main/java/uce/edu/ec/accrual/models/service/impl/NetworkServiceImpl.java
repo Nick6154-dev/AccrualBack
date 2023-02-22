@@ -22,24 +22,24 @@ public class NetworkServiceImpl implements NetworkService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         return Optional.of(repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idNetwork) {
         return repository.findById(idNetwork).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Network()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findByDocent(Docent docent) {
         return repository.findNetworkByDocent(docent).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Network()));
     }
 
     @Override
