@@ -25,10 +25,36 @@ public class ActivityInstitutionJoin {
     public ActivityInstitutionJoin() {
     }
 
-    public ActivityInstitutionJoin(Long idPerson, String period, ActivityPlanAccrual activityPlanAccrual, InstitutionActivity institutionActivity) {
-        this.idPerson = idPerson;
-        this.period = period;
-        this.activityPlanAccrual = activityPlanAccrual;
-        this.institutionActivity = institutionActivity;
+    public ActivityInstitutionJoin(Converter converter) {
+        this.idPerson = converter.getIdPerson();
+        this.period = converter.getPeriod();
+        this.activityPlanAccrual = convertactivityPlanAccrual(converter);
+        this.institutionActivity = convertInstitutionActivity(converter);
     }
+
+    private ActivityPlanAccrual convertactivityPlanAccrual(Converter converter) {
+        ActivityPlanAccrual planAccrual = new ActivityPlanAccrual();
+        planAccrual.setIdPlan(converter.getIdPlan());
+        planAccrual.setStarDate(converter.getStarDate());
+        planAccrual.setEvidences(converter.getEvidences());
+        planAccrual.setEndDate(converter.getEndDate());
+        planAccrual.setIdActivityType(converter.getIdActivityType());
+        planAccrual.setDescriptionSubtype(converter.getDescriptionSubtype());
+        planAccrual.setIdActivitySubtype(converter.getIdActivitySubtype());
+        planAccrual.setDescriptionActivity(converter.getDescriptionActivity());
+        return planAccrual;
+    }
+
+    private InstitutionActivity convertInstitutionActivity(Converter converter) {
+        InstitutionActivity activity = new InstitutionActivity();
+        activity.setIdActivity(converter.getIdActivity());
+        activity.setInstitutionName(converter.getInstitutionName());
+        activity.setVerificationLink(converter.getVerificationLink());
+        activity.setIdFaculty(converter.getIdFaculty());
+        activity.setIdUniversity(converter.getIdUniversity());
+        activity.setOtherInstitutionName(converter.getInstitutionName());
+        activity.setIdCareer(converter.getIdCareer());
+        return activity;
+    }
+
 }

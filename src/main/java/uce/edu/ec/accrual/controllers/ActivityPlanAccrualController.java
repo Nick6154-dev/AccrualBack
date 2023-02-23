@@ -10,6 +10,7 @@ import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.entity.Plan;
 import uce.edu.ec.accrual.models.object.ActivityInstitutionJoin;
+import uce.edu.ec.accrual.models.object.Converter;
 import uce.edu.ec.accrual.models.repository.ActivityPlanRepository;
 import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.repository.InstitutionRepository;
@@ -48,10 +49,11 @@ public class ActivityPlanAccrualController {
     private UtilCommonsService utilCommonsService;
 
     @PostMapping
-    ResponseEntity<?> save(@Valid @RequestBody ActivityInstitutionJoin activityInstitutionJoin, BindingResult result) {
+    ResponseEntity<?> save(@Valid @RequestBody Converter converter, BindingResult result) {
         if (result.hasErrors()) {
             return utilCommonsService.validate(result);
         }
+        ActivityInstitutionJoin activityInstitutionJoin = new ActivityInstitutionJoin(converter);
         Optional<Docent> docent = docentRepository.findByIdPerson(activityInstitutionJoin.getIdPerson());
         if (docent.isPresent()) {
             Plan plan = new Plan();
@@ -89,11 +91,12 @@ public class ActivityPlanAccrualController {
     }
 
     @PutMapping("/{idActivityPlan}")
-    public ResponseEntity<?> update(@Valid @RequestBody ActivityInstitutionJoin activityInstitutionJoin, BindingResult result,
+    public ResponseEntity<?> update(@Valid @RequestBody Converter converter, BindingResult result,
                                     @PathVariable Long idActivityPlan) {
         if (result.hasErrors()) {
             return utilCommonsService.validate(result);
         }
+        ActivityInstitutionJoin activityInstitutionJoin = new ActivityInstitutionJoin(converter);
         Optional<Docent> docent = docentRepository.findByIdPerson(activityInstitutionJoin.getIdPerson());
         if (docent.isPresent()) {
             Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
