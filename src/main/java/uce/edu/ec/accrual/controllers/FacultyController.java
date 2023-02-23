@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uce.edu.ec.accrual.models.entity.University;
 import uce.edu.ec.accrual.models.repository.UniversityRepository;
 import uce.edu.ec.accrual.models.service.FacultyService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/faculty")
@@ -32,9 +35,12 @@ public class FacultyController {
 
     @GetMapping("/byIdUniversity/{idUniversity}")
     public ResponseEntity<?> findByUniversity(@PathVariable Long idUniversity) {
-        return universityRepository.findById(idUniversity).map(value -> ResponseEntity.status(HttpStatus.FOUND)
-                        .body(facultyService.findFacultiesByUniversity(value)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Optional<University> university = universityRepository.findById(idUniversity);
+        if (university.isPresent()) {
+            return facultyService.findFacultiesByUniversity(university.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro facultades para el id especificado");
+        }
     }
 
 }

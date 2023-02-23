@@ -1,5 +1,6 @@
 package uce.edu.ec.accrual.models.service.impl;
 
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        return Optional.of((List<Faculty>)repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value.iterator()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 
     @Override
@@ -37,7 +38,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findFacultiesByUniversity(University university) {
-        return repository.findFacultiesByUniversity(university).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+        return Optional.of(repository.findFacultiesByUniversity(university)).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 }

@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface FacultyRepository extends CrudRepository<Faculty, Long> {
 
-    Optional<List<Faculty>> findFacultiesByUniversity(University university);
+    List<Faculty> findFacultiesByUniversity(University university);
 
 }
