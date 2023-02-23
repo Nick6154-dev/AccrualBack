@@ -1,9 +1,11 @@
 package uce.edu.ec.accrual.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import uce.edu.ec.accrual.models.object.AccrualActivity;
 import uce.edu.ec.accrual.models.object.ActivityPlanAccrual;
 import uce.edu.ec.accrual.models.service.ActivityPlanAccrualService;
 import uce.edu.ec.accrual.models.service.UtilCommonsService;
@@ -11,7 +13,7 @@ import uce.edu.ec.accrual.models.service.UtilCommonsService;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/activityPlan")
+@RequestMapping("/activityPlanAccrual")
 public class ActivityPlanAccrualController {
 
     @Autowired
@@ -19,6 +21,11 @@ public class ActivityPlanAccrualController {
 
     @Autowired
     private UtilCommonsService utilCommonsService;
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getForm() {
+        return ResponseEntity.status(HttpStatus.FOUND).body(new AccrualActivity());
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody ActivityPlanAccrual activityPlanAccrual, BindingResult result) {
