@@ -70,7 +70,7 @@ public class ActivityPlanAccrualController {
                 }
                 activityInstitutionJoin.getInstitutionActivity().setIdActivity(activityPlan.getActivity().getIdActivity());
                 institutionActivityService.save(activityInstitutionJoin.getInstitutionActivity());
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(activityPlan);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(plan.getIdPlan());
             } else {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body("Problemas al cargar el plan");
             }
