@@ -63,7 +63,7 @@ public class ActivityPlanAccrualServiceImpl implements ActivityPlanAccrualServic
             activityRepository.delete(value.getActivity());
             activityPlanRepository.delete(value);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado con exito");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("El id especificado no se encuentra en el sistema"));
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El id especificado no se encuentra en el sistema"));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ActivityPlanAccrualServiceImpl implements ActivityPlanAccrualServic
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al cargar el tipo o subtipo enviados");
             }
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("El id especificado no se encuentra en el sistema"));
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El id especificado no se encuentra en el sistema"));
     }
 
     @Transactional

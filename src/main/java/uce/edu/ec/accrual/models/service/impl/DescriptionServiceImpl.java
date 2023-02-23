@@ -10,6 +10,7 @@ import uce.edu.ec.accrual.models.entity.Description;
 import uce.edu.ec.accrual.models.repository.DescriptionRepository;
 import uce.edu.ec.accrual.models.service.DescriptionService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,24 +24,24 @@ public class DescriptionServiceImpl implements DescriptionService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         Optional<List<Description>> docents = Optional.of((List<Description>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idDescription) {
         Optional<Description> docent = repository.findById(idDescription);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Description()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findDescriptionByActivityPlan(ActivityPlan activityPlan) {
         Optional<Description> description = repository.findDescriptionByActivityPlan(activityPlan);
-        return description.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return description.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Description()));
     }
 
     @Override

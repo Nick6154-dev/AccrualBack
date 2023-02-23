@@ -20,6 +20,4 @@ public interface PersonService {
 
     ResponseEntity<?> update(Person person, Long idPerson);
 
-    ResponseEntity<Map<String, String>> validate(BindingResult result);
-
 }

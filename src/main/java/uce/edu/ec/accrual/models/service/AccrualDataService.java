@@ -20,4 +20,6 @@ public interface AccrualDataService {
 
     ResponseEntity<?> updateObservations(String observations, Long idAccrualData);
 
+    ResponseEntity<?> updateSettlement(Boolean settlement, Long idPerson);
+
 }

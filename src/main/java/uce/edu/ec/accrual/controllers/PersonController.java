@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrual.models.entity.Person;
 import uce.edu.ec.accrual.models.service.PersonService;
+import uce.edu.ec.accrual.models.service.UtilCommonsService;
 
 import javax.validation.Valid;
 
@@ -15,6 +16,9 @@ public class PersonController {
 
     @Autowired
     private PersonService service;
+
+    @Autowired
+    private UtilCommonsService commonsService;
 
     @GetMapping
     public ResponseEntity<?> findAll() {
@@ -29,7 +33,7 @@ public class PersonController {
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Person person, BindingResult result) {
         if (result.hasErrors()) {
-            return service.validate(result);
+            return commonsService.validate(result);
         }
         return service.save(person);
     }
@@ -42,7 +46,7 @@ public class PersonController {
     @DeleteMapping
     public ResponseEntity<?> delete(@Valid @RequestBody Person person, BindingResult result) {
         if (result.hasErrors()) {
-            return service.validate(result);
+            return commonsService.validate(result);
         }
         return service.delete(person);
     }
@@ -50,7 +54,7 @@ public class PersonController {
     @PutMapping("/{idPerson}")
     public ResponseEntity<?> update(@Valid @RequestBody Person person, BindingResult result, @PathVariable Long idPerson) {
         if (result.hasErrors()) {
-            return service.validate(result);
+            return commonsService.validate(result);
         }
         return service.update(person, idPerson);
     }

@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.UniversityInstitution;
 import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
 import uce.edu.ec.accrual.models.service.UniversityInstitutionService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -19,20 +20,22 @@ public class UniversityInstitutionServiceImpl implements UniversityInstitutionSe
 
     @Override
     public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ArrayList<>()));
     }
 
     @Override
     public ResponseEntity<?> findById(Long idUniversityInstitution) {
-        return repository.findById(idUniversityInstitution).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findById(idUniversityInstitution).map(value ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 
     @Override
     public ResponseEntity<?> findUniversityInstitutionByInstitution(Institution institution) {
-        return repository.findUniversityInstitutionByInstitution(institution).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findUniversityInstitutionByInstitution(institution).map(value ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 
     @Override
@@ -44,13 +47,14 @@ public class UniversityInstitutionServiceImpl implements UniversityInstitutionSe
     public ResponseEntity<?> deleteById(Long idUniversityInstitution) {
         return repository.findById(idUniversityInstitution).map(value -> {
             repository.deleteById(idUniversityInstitution);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado con exito");
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha podido eliminar"));
     }
 
     @Override
     public ResponseEntity<?> update(UniversityInstitution universityInstitution, Long idUniversityInstitution) {
-        return repository.findById(idUniversityInstitution).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(universityInstitution)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+        return repository.findById(idUniversityInstitution).map(value ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(universityInstitution))
+                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 }

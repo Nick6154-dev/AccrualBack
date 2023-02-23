@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrual.models.entity.AccrualData;
 import uce.edu.ec.accrual.models.entity.Docent;
+import uce.edu.ec.accrual.models.entity.Person;
 import uce.edu.ec.accrual.models.repository.AccrualDataRepository;
+import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.service.AccrualDataService;
 
 import java.util.Optional;
@@ -17,6 +19,9 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Autowired
     private AccrualDataRepository repository;
+
+    @Autowired
+    private DocentRepository docentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -67,11 +72,25 @@ public class AccrualDataServiceImpl implements AccrualDataService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> updateObservations(String observations, Long idAccrualData) {
         return repository.findById(idAccrualData).map(value -> {
             value.setObservations(observations);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(value));
         }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateSettlement(Boolean settlement, Long idPerson) {
+        return docentRepository.findByIdPerson(idPerson).map(valueDocent -> {
+            Optional<AccrualData> accrualData = repository.findAccrualDataByDocent(valueDocent);
+            if (accrualData.isPresent()) {
+                accrualData.get().setSettlement(settlement);
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(accrualData.get()));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Finiquito no actualizado");
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Finiquito no actualizado"));
     }
 
 }

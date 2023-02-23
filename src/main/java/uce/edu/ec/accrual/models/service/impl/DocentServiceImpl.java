@@ -35,6 +35,7 @@ public class DocentServiceImpl implements DocentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseEntity<?> findByIdPerson(Long idPerson) {
         return repository.findByIdPerson(idPerson).map(value ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
@@ -55,7 +56,7 @@ public class DocentServiceImpl implements DocentService {
         return repository.findById(idDocent).map(value -> {
             repository.deleteById(idDocent);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 
     @Override
@@ -63,6 +64,6 @@ public class DocentServiceImpl implements DocentService {
     public ResponseEntity<?> updateAll(Docent docent, Long idDocent) {
         return repository.findById(idDocent).map(value ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(value)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 }

@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.repository.InstitutionRepository;
 import uce.edu.ec.accrual.models.service.InstitutionService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -20,22 +21,22 @@ public class InstitutionServiceImpl implements InstitutionService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idInstitution) {
-        return repository.findById(idInstitution).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findById(idInstitution).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Institution()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findInstitutionByActivity(Long idActivity) {
-        return repository.findInstitutionByIdActivity(idActivity).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findInstitutionByIdActivity(idActivity).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Institution()));
     }
 
     @Override
@@ -50,7 +51,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         return repository.findById(idInstitution).map(value -> {
             repository.deleteById(idInstitution);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado con exito");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado el id especificado"));
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha encontrado el id especificado"));
     }
 
     @Override

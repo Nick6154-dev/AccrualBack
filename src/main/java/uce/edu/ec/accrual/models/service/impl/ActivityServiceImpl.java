@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.Activity;
 import uce.edu.ec.accrual.models.repository.ActivityRepository;
 import uce.edu.ec.accrual.models.service.ActivityService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,16 +23,16 @@ public class ActivityServiceImpl implements ActivityService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         Optional<List<Activity>> docents = Optional.of((List<Activity>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idActivity) {
         Optional<Activity> docent = repository.findById(idActivity);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Activity()));
     }
 
     @Override

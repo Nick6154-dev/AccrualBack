@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.ActivityPlan;
 import uce.edu.ec.accrual.models.repository.ActivityPlanRepository;
 import uce.edu.ec.accrual.models.service.ActivityPlanService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,23 +23,23 @@ public class ActivityPlanServiceImpl implements ActivityPlanService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         Optional<List<ActivityPlan>> docents = Optional.of((List<ActivityPlan>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idActivityPlan) {
         Optional<ActivityPlan> docent = repository.findById(idActivityPlan);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ActivityPlan()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findActivityPlansByIdPlan(Long idPlan) {
-        return repository.findActivityPlansByIdPlan(idPlan).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findActivityPlansByIdPlan(idPlan).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override

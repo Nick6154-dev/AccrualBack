@@ -10,6 +10,7 @@ import uce.edu.ec.accrual.models.entity.OtherInstitution;
 import uce.edu.ec.accrual.models.repository.OtherInstitutionRepository;
 import uce.edu.ec.accrual.models.service.OtherInstitutionService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -21,22 +22,22 @@ public class OtherInstitutionServiceImpl implements OtherInstitutionService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idOtherInstitution) {
-        return repository.findById(idOtherInstitution).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findById(idOtherInstitution).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new OtherInstitution()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findOtherInstitutionByInstitution(Institution institution) {
-        return repository.findOtherInstitutionByInstitution(institution).map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return repository.findOtherInstitutionByInstitution(institution).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new OtherInstitution()));
     }
 
     @Override
@@ -57,7 +58,8 @@ public class OtherInstitutionServiceImpl implements OtherInstitutionService {
     @Override
     @Transactional
     public ResponseEntity<?> update(OtherInstitution otherInstitution, Long idOtherInstitution) {
-        return repository.findById(idOtherInstitution).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(otherInstitution)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+        return repository.findById(idOtherInstitution).map(value ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(otherInstitution)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new OtherInstitution()));
     }
 }

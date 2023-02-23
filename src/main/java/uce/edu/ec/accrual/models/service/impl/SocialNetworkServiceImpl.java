@@ -13,6 +13,7 @@ import uce.edu.ec.accrual.models.repository.NetworkRepository;
 import uce.edu.ec.accrual.models.repository.SocialNetworkRepository;
 import uce.edu.ec.accrual.models.service.SocialNetworkService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -31,16 +32,16 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         return Optional.of(repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idSocialNetwork) {
         return repository.findById(idSocialNetwork).map(value ->
-                        ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new SocialNetwork()));
     }
 
     @Override
@@ -76,6 +77,6 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
     public ResponseEntity<?> update(SocialNetwork socialNetwork, Long idSocialNetwork) {
         return repository.findById(idSocialNetwork).map(value ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(socialNetwork)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new SocialNetwork()));
     }
 }

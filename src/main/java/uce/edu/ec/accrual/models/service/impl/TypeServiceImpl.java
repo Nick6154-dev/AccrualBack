@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.Type;
 import uce.edu.ec.accrual.models.repository.TypeRepository;
 import uce.edu.ec.accrual.models.service.TypeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,16 +23,16 @@ public class TypeServiceImpl implements TypeService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         Optional<List<Type>> docents = Optional.of((List<Type>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idType) {
         Optional<Type> docent = repository.findById(idType);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Type()));
     }
 
     @Override

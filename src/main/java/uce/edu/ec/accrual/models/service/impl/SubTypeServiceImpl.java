@@ -10,6 +10,7 @@ import uce.edu.ec.accrual.models.entity.Type;
 import uce.edu.ec.accrual.models.repository.SubtypeRepository;
 import uce.edu.ec.accrual.models.service.SubtypeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,24 +24,24 @@ public class SubTypeServiceImpl implements SubtypeService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         Optional<List<Subtype>> docents = Optional.of((List<Subtype>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findById(Long idSubtype) {
         Optional<Subtype> docent = repository.findById(idSubtype);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Subtype()));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findSubtypeByType(Type type) {
         Optional<List<Subtype>> subtypes = repository.findSubtypesByActivityType(type);
-        return subtypes.map(value -> ResponseEntity.status(HttpStatus.FOUND).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return subtypes.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override

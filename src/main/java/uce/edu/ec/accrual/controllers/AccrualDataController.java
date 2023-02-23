@@ -81,4 +81,12 @@ public class AccrualDataController {
         return service.updateObservations(observations, idAccrualData);
     }
 
+    @PatchMapping("/settlement/{idPerson}")
+    public ResponseEntity<?> saveSettlement(@Valid @RequestBody Boolean settlement, BindingResult result, @PathVariable Long idPerson) {
+        if (result.hasErrors()) {
+            return commonsService.validate(result);
+        }
+        return service.updateSettlement(settlement, idPerson);
+    }
+
 }
