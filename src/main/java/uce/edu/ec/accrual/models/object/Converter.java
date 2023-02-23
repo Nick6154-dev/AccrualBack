@@ -13,51 +13,36 @@ public class Converter {
 
     private Long idPlan;
 
-    @NotBlank
     private String descriptionActivity;
 
-    @NotNull
     private LocalDate starDate;
 
-    @NotNull
     private LocalDate endDate;
 
-    @NotBlank
     private String evidences;
 
-    @NotNull
     private Long idActivityType;
 
-    @NotNull
     private Long idActivitySubtype;
 
-    @NotBlank
     private String descriptionSubtype;
 
     private Long idActivity;
 
-    @NotBlank
     private String institutionName;
 
-    @NotBlank
     private String otherInstitutionName;
 
-    @NotBlank
     private String verificationLink;
 
-    @NotNull
     private Long idUniversity;
 
-    @NotNull
     private Long idFaculty;
 
-    @NotNull
     private Long idCareer;
 
-    @NotNull
     private Long idPerson;
 
-    @NotBlank
     private String period;
 
     public Converter() {
