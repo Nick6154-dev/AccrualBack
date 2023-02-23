@@ -32,8 +32,8 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
         return Optional.of(repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
     }
 
     @Override

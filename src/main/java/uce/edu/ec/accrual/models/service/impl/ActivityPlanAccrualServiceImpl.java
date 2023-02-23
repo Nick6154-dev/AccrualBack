@@ -31,26 +31,33 @@ public class ActivityPlanAccrualServiceImpl implements ActivityPlanAccrualServic
     @Autowired
     private SubtypeRepository subtypeRepository;
 
+    @Autowired
+    private PlanRepository planRepository;
+
     @Override
     @Transactional
     public ResponseEntity<?> save(ActivityPlanAccrual activityPlanAccrual) {
         Optional<Type> type = typeRepository.findById(activityPlanAccrual.getIdActivityType());
         Optional<Subtype> subtype = subtypeRepository.findById(activityPlanAccrual.getIdActivitySubtype());
-        if (type.isPresent() && subtype.isPresent()) {
-            if (!Objects.equals(subtype.get().getActivityType().getIdActivityType(), type.get().getIdActivityType())) {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El subtipo de actividad no pertenece " +
-                        "al tipo de actividad");
+        Optional<Plan> plan = planRepository.findById(activityPlanAccrual.getIdPlan());
+        if (plan.isPresent()) {
+            if (type.isPresent() && subtype.isPresent()) {
+                if (!Objects.equals(subtype.get().getActivityType().getIdActivityType(), type.get().getIdActivityType())) {
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El subtipo de actividad no pertenece " +
+                            "al tipo de actividad");
+                }
+                Activity activity = loadActivity(activityPlanAccrual, new Activity());
+                ActivityPlan activityPlan = loadPlanAccrual(activityPlanAccrual, activity, type.get(), subtype.get(), new ActivityPlan());
+                if (type.get().getIdActivityType().intValue() == 2) {
+                    loadDescription(activityPlanAccrual, activityPlan, new Description());
+                }
+                return ResponseEntity.status(HttpStatus.CREATED).body(activityPlan);
+            } else {
+                return ResponseEntity.status(HttpStatus.CREATED).body("Los valores definidos en el tipo de actividad o" +
+                        " el subtipo no son correctos");
             }
-            Activity activity = loadActivity(activityPlanAccrual, new Activity());
-            ActivityPlan activityPlan = loadPlanAccrual(activityPlanAccrual, activity, type.get(), subtype.get(), new ActivityPlan());
-            if (type.get().getIdActivityType().intValue() == 2) {
-                loadDescription(activityPlanAccrual, activityPlan, new Description());
-            }
-            return ResponseEntity.status(HttpStatus.CREATED).body(activityPlan);
-        } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Los valores definidos en el tipo de actividad o" +
-                    " el subtipo no son correctos");
         }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El id del plan definido no existe");
     }
 
     @Override

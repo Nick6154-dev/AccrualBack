@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrual.models.entity.AccrualData;
 import uce.edu.ec.accrual.models.entity.Docent;
-import uce.edu.ec.accrual.models.entity.Person;
 import uce.edu.ec.accrual.models.repository.AccrualDataRepository;
 import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.service.AccrualDataService;

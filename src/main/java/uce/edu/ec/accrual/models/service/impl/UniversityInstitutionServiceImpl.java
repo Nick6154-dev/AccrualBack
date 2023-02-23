@@ -27,15 +27,15 @@ public class UniversityInstitutionServiceImpl implements UniversityInstitutionSe
     @Override
     public ResponseEntity<?> findById(Long idUniversityInstitution) {
         return repository.findById(idUniversityInstitution).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 
     @Override
     public ResponseEntity<?> findUniversityInstitutionByInstitution(Institution institution) {
         return repository.findUniversityInstitutionByInstitution(institution).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UniversityInstitutionServiceImpl implements UniversityInstitutionSe
     @Override
     public ResponseEntity<?> update(UniversityInstitution universityInstitution, Long idUniversityInstitution) {
         return repository.findById(idUniversityInstitution).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(universityInstitution))
-                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+                ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(universityInstitution))
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
     }
 }

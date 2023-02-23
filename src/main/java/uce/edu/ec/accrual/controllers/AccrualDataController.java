@@ -11,7 +11,6 @@ import uce.edu.ec.accrual.models.service.AccrualDataService;
 import uce.edu.ec.accrual.models.service.DocentService;
 import uce.edu.ec.accrual.models.service.UtilCommonsService;
 
-import javax.validation.Path;
 import javax.validation.Valid;
 
 @RestController

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PlanRepository extends CrudRepository<Plan, Long> {
 
-    @Query("FROM Plan WHERE numberPlan = (SELECT MAX(p.numberPlan) FROM Plan p WHERE p.idDocent=:idDocent)")
+    @Query("FROM Plan WHERE numberPlan = (SELECT MAX(p.numberPlan) FROM Plan p WHERE p.idDocent=:idDocent) AND idDocent=:idDocent")
     Optional<Plan> findNextNumberPlanByIdDocent(Long idDocent);
 
     @Query("FROM Plan p WHERE p.period=:period AND p.idDocent=:idDocent")

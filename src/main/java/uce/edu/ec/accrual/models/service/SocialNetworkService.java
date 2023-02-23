@@ -1,7 +1,6 @@
 package uce.edu.ec.accrual.models.service;
 
 import org.springframework.http.ResponseEntity;
-import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.SocialNetwork;
 
 public interface SocialNetworkService {

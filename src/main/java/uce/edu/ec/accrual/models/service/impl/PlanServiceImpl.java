@@ -65,7 +65,7 @@ public class PlanServiceImpl implements PlanService {
     @Transactional
     public ResponseEntity<?> update(Plan plan, Long idPlan) {
         return repository.findById(idPlan).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(plan))
-                ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Plan()));
+                ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(plan))
+        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Plan()));
     }
 }
