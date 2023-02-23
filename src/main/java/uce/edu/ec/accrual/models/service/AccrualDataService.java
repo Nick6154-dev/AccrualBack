@@ -18,6 +18,6 @@ public interface AccrualDataService {
 
     ResponseEntity<?> update(AccrualData accrualData, Long idAccrualData);
 
-    ResponseEntity<?> updateObservations(AccrualData accrualData, Long idAccrualData);
+    ResponseEntity<?> updateObservations(String observations, Long idAccrualData);
 
 }
