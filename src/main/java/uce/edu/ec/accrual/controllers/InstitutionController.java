@@ -17,8 +17,7 @@ import uce.edu.ec.accrual.models.repository.OtherInstitutionRepository;
 import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
 import uce.edu.ec.accrual.models.service.InstitutionService;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/institution")
@@ -66,22 +65,27 @@ public class InstitutionController {
 
     @GetMapping("/withDetailsByIdPlan/{idPlan}")
     public ResponseEntity<?> findWithDetailsByPlan(@PathVariable Long idPlan) {
+        List<HashMap<String, Object>> objects = new ArrayList<>();
         Optional<List<ActivityPlan>> activityPlan = activityPlanRepository.findActivityPlansByIdPlan(idPlan);
         if (activityPlan.isPresent()) {
-            Long idActivity = activityPlan.get().get(0).getActivity().getIdActivity();
-            Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
-            if (institution.isPresent()) {
-                Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
-                        .findOtherInstitutionByInstitution(institution.get());
-                UniversityInstitution universityInstitution = universityInstitutionRepository
-                        .findUniversityInstitutionByInstitution(institution.get()).orElse(new UniversityInstitution());
-                if (otherInstitution.isPresent()) {
-                    return ResponseEntity.status(HttpStatus.FOUND).body(otherInstitution);
-                } else {
-                    return ResponseEntity.status(HttpStatus.FOUND).body(universityInstitution);
+            for (ActivityPlan ap : activityPlan.get()) {
+                Long idActivity = ap.getActivity().getIdActivity();
+                Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
+                if (institution.isPresent()) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
+                            .findOtherInstitutionByInstitution(institution.get());
+                    UniversityInstitution universityInstitution = universityInstitutionRepository
+                            .findUniversityInstitutionByInstitution(institution.get()).orElse(new UniversityInstitution());
+                    if (otherInstitution.isPresent()) {
+                        map.put("other", otherInstitution.get());
+                    } else {
+                        map.put("university", universityInstitution);
+                    }
+                    objects.add(map);
                 }
             }
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al encontrar la institucion");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(objects);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al encontrar el plan de la actividad");
         }
