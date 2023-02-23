@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uce.edu.ec.accrual.models.entity.Faculty;
 import uce.edu.ec.accrual.models.repository.FacultyRepository;
 import uce.edu.ec.accrual.models.service.CareerService;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/career")
@@ -30,11 +33,13 @@ public class CareerController {
         return careerService.findById(idCareer);
     }
 
-    @GetMapping("/byIdCareer/{idFaculty}")
+    @GetMapping("/byIdFaculty/{idFaculty}")
     public ResponseEntity<?> findByFaculty(@PathVariable Long idFaculty) {
-        return facultyRepository.findById(idFaculty).map(value -> ResponseEntity
-                        .status(HttpStatus.FOUND).body(careerService.findCareersByFaculty(value)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        Optional<Faculty> faculty = facultyRepository.findById(idFaculty);
+        if (faculty.isPresent()) {
+            return careerService.findCareersByFaculty(faculty.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se ha encontrado carreras para el id especificado");
     }
 
 }

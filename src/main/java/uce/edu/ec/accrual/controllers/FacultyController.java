@@ -38,9 +38,8 @@ public class FacultyController {
         Optional<University> university = universityRepository.findById(idUniversity);
         if (university.isPresent()) {
             return facultyService.findFacultiesByUniversity(university.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro facultades para el id especificado");
         }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro facultades para el id especificado");
     }
 
 }

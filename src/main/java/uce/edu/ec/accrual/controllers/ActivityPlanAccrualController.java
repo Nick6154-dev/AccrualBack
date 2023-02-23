@@ -1,13 +1,13 @@
 package uce.edu.ec.accrual.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import uce.edu.ec.accrual.models.object.AccrualActivity;
 import uce.edu.ec.accrual.models.object.ActivityPlanAccrual;
+import uce.edu.ec.accrual.models.object.InstitutionActivity;
 import uce.edu.ec.accrual.models.service.ActivityPlanAccrualService;
+import uce.edu.ec.accrual.models.service.InstitutionActivityService;
 import uce.edu.ec.accrual.models.service.UtilCommonsService;
 
 import javax.validation.Valid;
@@ -20,19 +20,21 @@ public class ActivityPlanAccrualController {
     private ActivityPlanAccrualService service;
 
     @Autowired
+    private InstitutionActivityService institutionActivityService;
+
+    @Autowired
     private UtilCommonsService utilCommonsService;
 
-    @GetMapping("/get")
-    public ResponseEntity<?> getForm() {
-        return ResponseEntity.status(HttpStatus.FOUND).body(new AccrualActivity());
-    }
-
     @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody ActivityPlanAccrual activityPlanAccrual, BindingResult result) {
-        if (result.hasErrors()) {
-            return utilCommonsService.validate(result);
+    ResponseEntity<?> save(@Valid @RequestBody ActivityPlanAccrual activityPlanAccrual, BindingResult result1,
+                           @Valid @RequestBody InstitutionActivity institutionActivity, BindingResult result2) {
+        if (result1.hasErrors()) {
+            return utilCommonsService.validate(result1);
         }
-        return service.save(activityPlanAccrual);
+        if (result2.hasErrors()) {
+            return utilCommonsService.validate(result2);
+        }
+        return null;
     }
 
     @DeleteMapping("/{idActivityPlan}")

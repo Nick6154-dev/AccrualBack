@@ -24,7 +24,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value.iterator()))
+        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
     }
 
