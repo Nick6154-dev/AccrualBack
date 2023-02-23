@@ -30,7 +30,7 @@ public class FacultyController {
         return facultyService.findById(idFaculty);
     }
 
-    @GetMapping("/{idUniversity}")
+    @GetMapping("/byIdUniversity/{idUniversity}")
     public ResponseEntity<?> findByUniversity(@PathVariable Long idUniversity) {
         return universityRepository.findById(idUniversity).map(value -> ResponseEntity.status(HttpStatus.FOUND)
                         .body(facultyService.findFacultiesByUniversity(value)))

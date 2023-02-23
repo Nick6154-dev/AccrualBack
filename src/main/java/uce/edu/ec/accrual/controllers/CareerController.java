@@ -30,7 +30,7 @@ public class CareerController {
         return careerService.findById(idCareer);
     }
 
-    @GetMapping("/{idFaculty}")
+    @GetMapping("/byIdCareer/{idFaculty}")
     public ResponseEntity<?> findByFaculty(@PathVariable Long idFaculty) {
         return facultyRepository.findById(idFaculty).map(value -> ResponseEntity
                         .status(HttpStatus.FOUND).body(careerService.findCareersByFaculty(value)))

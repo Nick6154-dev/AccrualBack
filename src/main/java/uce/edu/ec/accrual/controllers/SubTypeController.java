@@ -30,7 +30,7 @@ public class SubTypeController {
         return service.findById(idSubtype);
     }
 
-    @GetMapping("/{idType}")
+    @GetMapping("/byIdType/{idType}")
     public ResponseEntity<?> findSubtypeByType(@PathVariable Long idType) {
         if (repository.findById(idType).isPresent()) {
             return service.findSubtypeByType(repository.findById(idType).get());
