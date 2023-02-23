@@ -73,7 +73,7 @@ public class AccrualDataController {
         return service.update(accrualData, idAccrualData);
     }
 
-    @PatchMapping("/observation/{idAccrualData}")
+    @PutMapping("/observation/{idAccrualData}")
     public ResponseEntity<?> saveObservation(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
         if (result.hasErrors()) {
             return commonsService.validate(result);
