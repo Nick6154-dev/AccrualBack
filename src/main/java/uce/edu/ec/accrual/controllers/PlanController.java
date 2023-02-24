@@ -56,5 +56,10 @@ public class PlanController {
         return service.update(plan, idPlan);
     }
 
+    @PatchMapping("/updatePlanNotEditable/{idPerson},{period}")
+    public ResponseEntity<?> updatePlanNotEditable(@PathVariable Long idPerson, @PathVariable String period) {
+        return service.updateNotEditable(idPerson, period);
+    }
+
 }
 

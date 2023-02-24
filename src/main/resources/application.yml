@@ -3,9 +3,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://containers-us-west-126.railway.app:6271/railway
+    url: jdbc:postgresql://containers-us-west-20.railway.app:5476/railway
     username: postgres
-    password: jH09qbSLKjCCmCp7ETXu
+    password: qLyRwDdFIMaV4AcpRA5a
   jpa:
     hibernate:
       ddl-auto: update

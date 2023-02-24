@@ -60,8 +60,12 @@ public class ActivityPlanAccrualController {
             plan.setPeriod(activityInstitutionJoin.getPeriod());
             plan.setIdDocent(docent.get().getIdDocent());
             plan.setStarDate(LocalDate.now());
+            plan.setEditable(true);
             plan = (Plan) planService.save(plan).getBody();
             if (plan != null) {
+                if (!plan.getEditable()) {
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se agregar mas actividades pues ya no es editable");
+                }
                 activityInstitutionJoin.getActivityPlanAccrual().setIdPlan(plan.getIdPlan());
                 ResponseEntity<?> responseEntity = service.save(activityInstitutionJoin.getActivityPlanAccrual());
                 ActivityPlan activityPlan = (ActivityPlan) responseEntity.getBody();
@@ -70,7 +74,7 @@ public class ActivityPlanAccrualController {
                 }
                 activityInstitutionJoin.getInstitutionActivity().setIdActivity(activityPlan.getActivity().getIdActivity());
                 institutionActivityService.save(activityInstitutionJoin.getInstitutionActivity());
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(plan.getIdPlan());
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Guardado los datos con exito");
             } else {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body("Problemas al cargar el plan");
             }
@@ -82,6 +86,12 @@ public class ActivityPlanAccrualController {
     public ResponseEntity<?> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
         Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
         if (activityPlan.isPresent()) {
+            Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
+            if (plan != null) {
+                if (!plan.getEditable()) {
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se eliminar mas actividades pues ya no es editable");
+                }
+            }
             service.deleteByIdActivityPlan(idActivityPlan);
             Optional<Institution> institution = institutionRepository.findInstitutionByIdActivity(activityPlan.get().getActivity().getIdActivity());
             institution.ifPresent(value -> institutionActivityService.deleteById(value.getIdInstitution()));
@@ -101,6 +111,12 @@ public class ActivityPlanAccrualController {
         if (docent.isPresent()) {
             Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
             if (activityPlan.isPresent()) {
+                Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
+                if (plan != null) {
+                    if (!plan.getEditable()) {
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se actualizar mas actividades pues ya no es editable");
+                    }
+                }
                 activityInstitutionJoin.getActivityPlanAccrual().setIdPlan(activityPlan.get().getIdPlan());
                 ResponseEntity<?> responseEntity = service.update(activityInstitutionJoin.getActivityPlanAccrual(), idActivityPlan);
                 activityInstitutionJoin.getInstitutionActivity().setIdActivity(activityPlan.get().getActivity().getIdActivity());
@@ -112,5 +128,6 @@ public class ActivityPlanAccrualController {
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id de persona no encontrado");
     }
+
 
 }

@@ -113,6 +113,7 @@ public class ActivityPlanAccrualServiceImpl implements ActivityPlanAccrualServic
         activityPlan.setActivity(activity);
         activityPlan.setType(type);
         activityPlan.setSubtype(subtype);
+        activityPlan.setState(0);
         return activityPlanRepository.save(activityPlan);
     }
 

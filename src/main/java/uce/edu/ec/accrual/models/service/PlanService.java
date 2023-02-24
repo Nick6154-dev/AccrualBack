@@ -17,4 +17,6 @@ public interface PlanService {
 
     ResponseEntity<?> update(Plan plan, Long idPlan);
 
+    ResponseEntity<?> updateNotEditable(Long idPerson, String period);
+
 }

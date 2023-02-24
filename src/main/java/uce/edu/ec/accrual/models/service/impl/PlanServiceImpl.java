@@ -85,4 +85,16 @@ public class PlanServiceImpl implements PlanService {
                 ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(plan))
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Plan()));
     }
+
+    @Override
+    public ResponseEntity<?> updateNotEditable(Long idPerson, String period) {
+        Optional<Docent> docent = docentRepository.findByIdPerson(idPerson);
+        return docent.map(docent1 -> repository.findByPeriodAndIdDocent(period, docent1.getIdDocent())
+                        .map(value -> {
+                            value.setEditable(false);
+                            repository.save(value);
+                            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Este plan ya no se podra editar");
+                        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se pudo encontrar un plan")))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha encontrado un plan asignado a ese id persona"));
+    }
 }

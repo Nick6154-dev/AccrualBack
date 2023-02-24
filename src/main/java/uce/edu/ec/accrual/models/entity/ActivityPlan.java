@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "actividad_plan")
@@ -19,6 +20,10 @@ public class ActivityPlan {
 
     @Column(name = "id_plan")
     private Long idPlan;
+
+    @NotNull
+    @Column(name = "estado")
+    private Integer state;
 
     @OneToOne
     @JoinColumn(name = "id_actividad")
