@@ -30,6 +30,11 @@ public class PlanController {
         return service.findById(idPlan);
     }
 
+    @GetMapping("/byIdPersonPeriod/{idPerson},{period}")
+    public ResponseEntity<?> findByPersonPeriod(@PathVariable Long idPerson, @PathVariable String period) {
+        return service.findByIdPersonAndPeriod(idPerson, period);
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Plan plan, BindingResult result) {
         if (result.hasErrors()) {

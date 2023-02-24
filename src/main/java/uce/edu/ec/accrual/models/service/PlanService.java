@@ -9,6 +9,8 @@ public interface PlanService {
 
     ResponseEntity<?> findById(Long idPlan);
 
+    ResponseEntity<?> findByIdPersonAndPeriod(Long idPerson, String period);
+
     ResponseEntity<?> save(Plan plan);
 
     ResponseEntity<?> deleteById(Long idPlan);

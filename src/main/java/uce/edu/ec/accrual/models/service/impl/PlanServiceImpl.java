@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.Plan;
+import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.repository.PlanRepository;
 import uce.edu.ec.accrual.models.service.PlanService;
 
@@ -18,6 +20,9 @@ public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private PlanRepository repository;
+
+    @Autowired
+    private DocentRepository docentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -33,6 +38,18 @@ public class PlanServiceImpl implements PlanService {
         return repository.findById(idPlan).map(value ->
                 ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
         ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Plan()));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> findByIdPersonAndPeriod(Long idPerson, String period) {
+        Optional<Docent> docent = docentRepository.findByIdPerson(idPerson);
+        if (docent.isPresent()) {
+            return repository.findByPeriodAndIdDocent(period, docent.get().getIdDocent())
+                    .map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value.getIdPlan()))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha encontrado un plan asignado a ese id persona");
     }
 
     @Override
