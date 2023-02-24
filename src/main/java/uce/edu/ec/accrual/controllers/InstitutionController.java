@@ -50,17 +50,7 @@ public class InstitutionController {
 
     @GetMapping("/withDetails/{idInstitution}")
     public ResponseEntity<?> findWithDetails(@PathVariable Long idInstitution) {
-        return repository.findById(idInstitution).map(value -> {
-            Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
-                    .findOtherInstitutionByInstitution(value);
-            UniversityInstitution universityInstitution = universityInstitutionRepository
-                    .findUniversityInstitutionByInstitution(value).orElse(new UniversityInstitution());
-            if (otherInstitution.isPresent()) {
-                return ResponseEntity.status(HttpStatus.FOUND).body(otherInstitution);
-            } else {
-                return ResponseEntity.status(HttpStatus.FOUND).body(universityInstitution);
-            }
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El id especificado no se encuentra en el sistema"));
+        return showByIdInstitution(idInstitution);
     }
 
     @GetMapping("/withDetailsByIdPlan/{idPlan}")
@@ -89,6 +79,34 @@ public class InstitutionController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al encontrar el plan de la actividad");
         }
+    }
+
+    @GetMapping("/withDetailsByIdActivityPlan/{idActivityPlan}")
+    public ResponseEntity<?> findWithDetailsByIdActivityPlan(@PathVariable Long idActivityPlan) {
+        Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
+        if (activityPlan.isPresent()) {
+            Long idActivity = activityPlan.get().getActivity().getIdActivity();
+            Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
+            if (institution.isPresent()) {
+                return showByIdInstitution(institution.get().getIdInstitution());
+            }
+            return ResponseEntity.status(HttpStatus.FOUND).body("No se encontro una institucion relacionada a ese id");
+        }
+        return ResponseEntity.status(HttpStatus.FOUND).body("No se encontro una actividad plan relacionada a ese id");
+    }
+
+    private ResponseEntity<?> showByIdInstitution(Long idInstitution) {
+        return repository.findById(idInstitution).map(value -> {
+            Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
+                    .findOtherInstitutionByInstitution(value);
+            UniversityInstitution universityInstitution = universityInstitutionRepository
+                    .findUniversityInstitutionByInstitution(value).orElse(new UniversityInstitution());
+            if (otherInstitution.isPresent()) {
+                return ResponseEntity.status(HttpStatus.FOUND).body(otherInstitution);
+            } else {
+                return ResponseEntity.status(HttpStatus.FOUND).body(universityInstitution);
+            }
+        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("El id especificado no se encuentra en el sistema"));
     }
 
 }
