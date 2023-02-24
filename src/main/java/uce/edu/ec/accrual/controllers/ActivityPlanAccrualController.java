@@ -64,7 +64,7 @@ public class ActivityPlanAccrualController {
             plan = (Plan) planService.save(plan).getBody();
             if (plan != null) {
                 if (!plan.getEditable()) {
-                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se agregar mas actividades pues ya no es editable");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se agregan mas actividades pues ya no es editable");
                 }
                 activityInstitutionJoin.getActivityPlanAccrual().setIdPlan(plan.getIdPlan());
                 ResponseEntity<?> responseEntity = service.save(activityInstitutionJoin.getActivityPlanAccrual());
@@ -74,7 +74,7 @@ public class ActivityPlanAccrualController {
                 }
                 activityInstitutionJoin.getInstitutionActivity().setIdActivity(activityPlan.getActivity().getIdActivity());
                 institutionActivityService.save(activityInstitutionJoin.getInstitutionActivity());
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("Guardado los datos con exito");
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(plan.getIdPlan());
             } else {
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body("Problemas al cargar el plan");
             }
@@ -89,7 +89,7 @@ public class ActivityPlanAccrualController {
             Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
             if (plan != null) {
                 if (!plan.getEditable()) {
-                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se eliminar mas actividades pues ya no es editable");
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se eliminan mas actividades pues ya no es editable");
                 }
             }
             service.deleteByIdActivityPlan(idActivityPlan);
@@ -114,7 +114,7 @@ public class ActivityPlanAccrualController {
                 Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
                 if (plan != null) {
                     if (!plan.getEditable()) {
-                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se actualizar mas actividades pues ya no es editable");
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se actualizan mas actividades pues ya no es editable");
                     }
                 }
                 activityInstitutionJoin.getActivityPlanAccrual().setIdPlan(activityPlan.get().getIdPlan());
