@@ -11,6 +11,7 @@ import uce.edu.ec.accrual.models.entity.ActivityPlan;
 import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.entity.OtherInstitution;
 import uce.edu.ec.accrual.models.entity.UniversityInstitution;
+import uce.edu.ec.accrual.models.object.ActivityInstitutionShow;
 import uce.edu.ec.accrual.models.repository.InstitutionRepository;
 import uce.edu.ec.accrual.models.repository.OtherInstitutionRepository;
 import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
@@ -51,26 +52,24 @@ public class ActivityPlanController {
     public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPlan) {
         ResponseEntity<?> responseActivityPlans = service.findActivityPlansByIdPlan(idPlan);
         List<ActivityPlan> activityPlans = (List<ActivityPlan>) responseActivityPlans.getBody();
-        List<HashMap<Object, Object>> objects = new ArrayList<>();
+        List<ActivityInstitutionShow> activityInstitutionShows = new ArrayList<>();
         assert activityPlans != null;
         for (ActivityPlan ap : activityPlans) {
             Long idActivity = ap.getActivity().getIdActivity();
             Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
             if (institution.isPresent()) {
-                HashMap<Object, Object> map = new HashMap<>();
                 Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
                         .findOtherInstitutionByInstitution(institution.get());
                 UniversityInstitution universityInstitution = universityInstitutionRepository
                         .findUniversityInstitutionByInstitution(institution.get()).orElse(new UniversityInstitution());
                 if (otherInstitution.isPresent()) {
-                    map.put(ap, otherInstitution.get());
+                    activityInstitutionShows.add(new ActivityInstitutionShow(ap, otherInstitution.get()));
                 } else {
-                    map.put(ap, universityInstitution);
+                    activityInstitutionShows.add(new ActivityInstitutionShow(ap, universityInstitution));
                 }
-                objects.add(map);
             }
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(objects);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(activityInstitutionShows);
     }
 
 }
