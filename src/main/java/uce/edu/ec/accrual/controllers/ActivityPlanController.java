@@ -11,12 +11,10 @@ import uce.edu.ec.accrual.models.entity.ActivityPlan;
 import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.entity.OtherInstitution;
 import uce.edu.ec.accrual.models.entity.UniversityInstitution;
-import uce.edu.ec.accrual.models.repository.ActivityPlanRepository;
 import uce.edu.ec.accrual.models.repository.InstitutionRepository;
 import uce.edu.ec.accrual.models.repository.OtherInstitutionRepository;
 import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
 import uce.edu.ec.accrual.models.service.ActivityPlanService;
-import uce.edu.ec.accrual.models.service.InstitutionService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,30 +50,27 @@ public class ActivityPlanController {
     @GetMapping("/byPlan/{idPlan}")
     public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPlan) {
         ResponseEntity<?> responseActivityPlans = service.findActivityPlansByIdPlan(idPlan);
-        Optional<List<ActivityPlan>> activityPlans = (Optional<List<ActivityPlan>>) responseActivityPlans.getBody();
-        if (activityPlans.isPresent()) {
-            List<HashMap<Object, Object>> objects = new ArrayList<>();
-            for (ActivityPlan ap : activityPlans.get()) {
-                Long idActivity = ap.getActivity().getIdActivity();
-                Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
-                if (institution.isPresent()) {
-                    HashMap<Object, Object> map = new HashMap<>();
-                    Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
-                            .findOtherInstitutionByInstitution(institution.get());
-                    UniversityInstitution universityInstitution = universityInstitutionRepository
-                            .findUniversityInstitutionByInstitution(institution.get()).orElse(new UniversityInstitution());
-                    if (otherInstitution.isPresent()) {
-                        map.put(ap, otherInstitution.get());
-                    } else {
-                        map.put(ap, universityInstitution);
-                    }
-                    objects.add(map);
+        List<ActivityPlan> activityPlans = (List<ActivityPlan>) responseActivityPlans.getBody();
+        List<HashMap<Object, Object>> objects = new ArrayList<>();
+        assert activityPlans != null;
+        for (ActivityPlan ap : activityPlans) {
+            Long idActivity = ap.getActivity().getIdActivity();
+            Optional<Institution> institution = repository.findInstitutionByIdActivity(idActivity);
+            if (institution.isPresent()) {
+                HashMap<Object, Object> map = new HashMap<>();
+                Optional<OtherInstitution> otherInstitution = otherInstitutionRepository
+                        .findOtherInstitutionByInstitution(institution.get());
+                UniversityInstitution universityInstitution = universityInstitutionRepository
+                        .findUniversityInstitutionByInstitution(institution.get()).orElse(new UniversityInstitution());
+                if (otherInstitution.isPresent()) {
+                    map.put(ap, otherInstitution.get());
+                } else {
+                    map.put(ap, universityInstitution);
                 }
+                objects.add(map);
             }
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(objects);
         }
-        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Problemas al encontrar el plan de la actividad");
-        //return service.findActivityPlansByIdPlan(idPlan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(objects);
     }
 
 }
