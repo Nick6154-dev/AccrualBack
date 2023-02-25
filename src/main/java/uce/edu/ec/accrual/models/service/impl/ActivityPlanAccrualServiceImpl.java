@@ -64,8 +64,10 @@ public class ActivityPlanAccrualServiceImpl implements ActivityPlanAccrualServic
     @Transactional
     public ResponseEntity<?> deleteByIdActivityPlan(Long idActivityPlan) {
         return activityPlanRepository.findById(idActivityPlan).map(value -> {
-            if (value.getType().getIdActivityType().intValue() == 2 && descriptionRepository.findDescriptionByActivityPlan(value).isPresent()) {
-                descriptionRepository.delete(descriptionRepository.findDescriptionByActivityPlan(value).get());
+            if (value.getType().getIdActivityType().intValue() == 2) {
+                if (descriptionRepository.findDescriptionByActivityPlan(value).isPresent()) {
+                    descriptionRepository.delete(descriptionRepository.findDescriptionByActivityPlan(value).get());
+                }
             }
             activityRepository.delete(value.getActivity());
             activityPlanRepository.delete(value);

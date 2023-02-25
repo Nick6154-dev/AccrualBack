@@ -10,4 +10,6 @@ public interface DescriptionRepository extends CrudRepository<Description, Long>
 
     Optional<Description> findDescriptionByActivityPlan(ActivityPlan activityPlan);
 
+    void deleteByActivityPlan(ActivityPlan activityPlan);
+
 }
