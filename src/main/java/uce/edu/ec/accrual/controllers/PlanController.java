@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrual.models.entity.Plan;
+import uce.edu.ec.accrual.models.object.PlanSearch;
 import uce.edu.ec.accrual.models.service.PlanService;
 import uce.edu.ec.accrual.models.service.UtilCommonsService;
 
@@ -30,9 +31,9 @@ public class PlanController {
         return service.findById(idPlan);
     }
 
-    @GetMapping("/byIdPersonPeriod/{idPerson},{period}")
-    public ResponseEntity<?> findByPersonPeriod(@PathVariable Long idPerson, @PathVariable String period) {
-        return service.findByIdPersonAndPeriod(idPerson, period);
+    @GetMapping("/byIdPersonPeriod")
+    public ResponseEntity<?> findByPersonPeriod(@RequestBody PlanSearch planSearch) {
+        return service.findByIdPersonAndPeriod(planSearch.getIdPerson(), planSearch.getPeriod());
     }
 
     @PostMapping
