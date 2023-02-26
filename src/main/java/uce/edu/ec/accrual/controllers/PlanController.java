@@ -31,7 +31,7 @@ public class PlanController {
         return service.findById(idPlan);
     }
 
-    @GetMapping("/byIdPersonPeriod")
+    @PostMapping("/byIdPersonPeriod")
     public ResponseEntity<?> findByPersonPeriod(@RequestBody PlanSearch planSearch) {
         return service.findByIdPersonAndPeriod(planSearch.getIdPerson(), planSearch.getPeriod());
     }
