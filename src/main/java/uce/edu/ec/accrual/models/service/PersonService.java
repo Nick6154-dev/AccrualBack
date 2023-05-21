@@ -3,18 +3,20 @@ package uce.edu.ec.accrual.models.service;
 import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.Person;
 
+import java.util.List;
+
 public interface PersonService {
 
-    ResponseEntity<?> findAll();
+    List<Person> findAll();
 
-    ResponseEntity<?> findById(Long idPerson);
+    Person findById(Long idPerson);
 
-    ResponseEntity<?> save(Person person);
+    Person save(Person person);
 
-    ResponseEntity<?> delete(Person person);
+    String delete(Person person);
 
-    ResponseEntity<?> deleteById(Long idPerson);
+    String deleteById(Long idPerson);
 
-    ResponseEntity<?> update(Person person, Long idPerson);
+    Person update(Person person, Long idPerson);
 
 }

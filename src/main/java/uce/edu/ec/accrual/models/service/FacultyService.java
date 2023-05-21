@@ -1,14 +1,17 @@
 package uce.edu.ec.accrual.models.service;
 
 import org.springframework.http.ResponseEntity;
+import uce.edu.ec.accrual.models.entity.Faculty;
 import uce.edu.ec.accrual.models.entity.University;
+
+import java.util.List;
 
 public interface FacultyService {
 
-    ResponseEntity<?> findAll();
+    List<Faculty> findAll();
 
-    ResponseEntity<?> findById(Long idFaculty);
+    Faculty findById(Long idFaculty);
 
-    ResponseEntity<?> findFacultiesByUniversity(University university);
+    List<Faculty> findFacultiesByUniversity(University university);
 
 }

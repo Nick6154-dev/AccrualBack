@@ -11,6 +11,7 @@ import uce.edu.ec.accrual.models.repository.FacultyRepository;
 import uce.edu.ec.accrual.models.service.FacultyService;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,22 +22,19 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public List<Faculty> findAll() {
+        return (List<Faculty>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idFaculty) {
-        return repository.findById(idFaculty).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Faculty()));
+    public Faculty findById(Long idFaculty) {
+        return repository.findById(idFaculty).orElseGet(Faculty::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findFacultiesByUniversity(University university) {
-        return Optional.of(repository.findFacultiesByUniversity(university)).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+    public List<Faculty> findFacultiesByUniversity(University university) {
+        return Optional.of(repository.findFacultiesByUniversity(university)).orElseGet(ArrayList::new);
     }
 }

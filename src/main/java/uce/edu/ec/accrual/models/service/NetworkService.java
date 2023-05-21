@@ -4,18 +4,20 @@ import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.Network;
 
+import java.util.List;
+
 public interface NetworkService {
 
-    ResponseEntity<?> findAll();
+    List<Network> findAll();
 
-    ResponseEntity<?> findById(Long idNetwork);
+    Network findById(Long idNetwork);
 
-    ResponseEntity<?> findByDocent(Docent docent);
+    Network findByDocent(Docent docent);
 
-    ResponseEntity<?> save(Network network);
+    Network save(Network network);
 
-    ResponseEntity<?> deleteById(Long idNetwork);
+    String deleteById(Long idNetwork);
 
-    ResponseEntity<?> update(Network network, Long idNetwork);
+    Network update(Network network, Long idNetwork);
 
 }

@@ -4,22 +4,24 @@ import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.AccrualData;
 import uce.edu.ec.accrual.models.entity.Docent;
 
+import java.util.List;
+
 public interface AccrualDataService {
 
-    ResponseEntity<?> findAll();
+    List<AccrualData> findAll();
 
-    ResponseEntity<?> findById(Long idAccrualData);
+    AccrualData findById(Long idAccrualData);
 
-    ResponseEntity<?> findByDocent(Docent docent);
+    AccrualData findByDocent(Docent docent);
 
-    ResponseEntity<?> save(AccrualData accrualData);
+    AccrualData save(AccrualData accrualData);
 
-    ResponseEntity<?> deleteById(Long idAccrualData);
+    String deleteById(Long idAccrualData);
 
-    ResponseEntity<?> update(AccrualData accrualData, Long idAccrualData);
+    AccrualData update(AccrualData accrualData, Long idAccrualData);
 
-    ResponseEntity<?> updateObservations(String observations, Long idAccrualData);
+    String updateObservations(String observations, Long idAccrualData);
 
-    ResponseEntity<?> updateSettlement(Boolean settlement, Long idPerson);
+    String updateSettlement(Boolean settlement, Long idPerson);
 
 }

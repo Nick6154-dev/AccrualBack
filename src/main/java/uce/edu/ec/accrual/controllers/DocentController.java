@@ -1,6 +1,7 @@
 package uce.edu.ec.accrual.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,17 +23,17 @@ public class DocentController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idDocent}")
     public ResponseEntity<?> findById(@PathVariable Long idDocent) {
-        return service.findById(idDocent);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idDocent));
     }
 
     @GetMapping("/byIdPerson/{idPerson}")
     public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
-        return service.findByIdPerson(idPerson);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByIdPerson(idPerson));
     }
 
     @PostMapping
@@ -40,12 +41,12 @@ public class DocentController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.save(docent);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(docent));
     }
 
     @DeleteMapping("/{idDocent}")
     public ResponseEntity<?> deleteById(@PathVariable Long idDocent) {
-        return service.deleteById(idDocent);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idDocent));
     }
 
     @PutMapping("/{idDocent}")
@@ -53,7 +54,7 @@ public class DocentController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.updateAll(docent, idDocent);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateAll(docent, idDocent));
     }
 
 }

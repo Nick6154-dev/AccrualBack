@@ -21,54 +21,45 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        return Optional.of((List<Person>) repository.findAll()).map(value ->
-                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+    public List<Person> findAll() {
+        return Optional.of((List<Person>) repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idPerson) {
-        return repository.findById(idPerson).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Person()));
+    public Person findById(Long idPerson) {
+        return repository.findById(idPerson).orElseGet(Person::new);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(Person person) {
-        return repository.findByEmailAndIdentification(person.getEmail(), person.getIdentification()).map(value ->
-                ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Person())
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(person)));
+    public Person save(Person person) {
+        return repository.findByEmailAndIdentification(person.getEmail(), person.getIdentification()).orElseGet(() -> repository.save(person));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> delete(Person person) {
-        return repository.findById(person.getIdPerson()).map(value -> {
-            repository.delete(value);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado con exito");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se pudo eliminar"));
+    public String delete(Person person) {
+        return repository.findById(person.getIdPerson()).map(value -> "Eliminado con exito")
+                .orElseGet(() -> "No se pudo eliminar");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteById(Long idPerson) {
-        return repository.findById(idPerson).map(value -> {
-            repository.deleteById(value.getIdPerson());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public String deleteById(Long idPerson) {
+        return repository.findById(idPerson).map(value -> "Eliminado con exito")
+                .orElseGet(() -> "No se pudo eliminar");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> update(Person person, Long idPerson) {
+    public Person update(Person person, Long idPerson) {
         return repository.findByEmailAndIdentification(person.getEmail(), person.getIdentification())
-                .map(value -> ResponseEntity.badRequest().build()).orElseGet(() -> {
+                .map(value -> new Person()).orElseGet(() -> {
                     if (repository.existsById(idPerson)) {
-                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Person());
+                        return new Person();
                     }
-                    return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(person));
+                    return repository.save(person);
                 });
     }
 

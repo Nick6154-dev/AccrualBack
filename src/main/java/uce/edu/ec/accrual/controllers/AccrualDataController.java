@@ -28,24 +28,24 @@ public class AccrualDataController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idAccrualData}")
     public ResponseEntity<?> findById(@PathVariable Long idAccrualData) {
-        return service.findById(idAccrualData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idAccrualData));
     }
 
     @GetMapping("/byIdDocent/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
-        return service.findByDocent((Docent) docentService.findById(idDocent).getBody());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docentService.findById(idDocent)));
     }
 
     @GetMapping("/ByIdPerson/{idPerson}")
     public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
-        Docent docent = (Docent) docentService.findByIdPerson(idPerson).getBody();
+        Docent docent = docentService.findByIdPerson(idPerson);
         if (docent.getCategory() != null) {
-            return service.findByDocent(docent);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docent));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id persona no encontrada: " + idPerson);
         }
@@ -56,12 +56,12 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.save(accrualData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(accrualData));
     }
 
     @DeleteMapping("/{idAccrualData}")
     public ResponseEntity<?> delete(@PathVariable Long idAccrualData) {
-        return service.deleteById(idAccrualData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idAccrualData));
     }
 
     @PutMapping("/{idAccrualData}")
@@ -69,7 +69,7 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.update(accrualData, idAccrualData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(accrualData, idAccrualData));
     }
 
     @PatchMapping("/observation/{idAccrualData}")
@@ -77,7 +77,7 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.updateObservations(observations, idAccrualData);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateObservations(observations, idAccrualData));
     }
 
     @PatchMapping("/settlement/{idPerson}")
@@ -85,7 +85,7 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.updateSettlement(settlement, idPerson);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateSettlement(settlement, idPerson));
     }
 
 }

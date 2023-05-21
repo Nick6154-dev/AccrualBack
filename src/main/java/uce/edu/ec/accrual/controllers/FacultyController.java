@@ -25,19 +25,24 @@ public class FacultyController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return facultyService.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(facultyService.findAll());
+    }
+
+    @GetMapping("/withoutToken")
+    public ResponseEntity<?> findAllWithoutToken() {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(facultyService.findAll());
     }
 
     @GetMapping("/{idFaculty}")
     public ResponseEntity<?> findById(@PathVariable Long idFaculty) {
-        return facultyService.findById(idFaculty);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(facultyService.findById(idFaculty));
     }
 
     @GetMapping("/byIdUniversity/{idUniversity}")
     public ResponseEntity<?> findByUniversity(@PathVariable Long idUniversity) {
         Optional<University> university = universityRepository.findById(idUniversity);
         if (university.isPresent()) {
-            return facultyService.findFacultiesByUniversity(university.get());
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(facultyService.findFacultiesByUniversity(university.get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro facultades para el id especificado");
     }

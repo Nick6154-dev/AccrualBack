@@ -10,7 +10,10 @@ import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.repository.AccrualDataRepository;
 import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.service.AccrualDataService;
+import uce.edu.ec.accrual.models.service.DocentService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,76 +23,69 @@ public class AccrualDataServiceImpl implements AccrualDataService {
     private AccrualDataRepository repository;
 
     @Autowired
-    private DocentRepository docentRepository;
+    private DocentService docentService;
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public List<AccrualData> findAll() {
+        return (List<AccrualData>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idAccrualData) {
-        return repository.findById(idAccrualData).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+    public AccrualData findById(Long idAccrualData) {
+        return repository.findById(idAccrualData).orElseGet(AccrualData::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findByDocent(Docent docent) {
-        return repository.findAccrualDataByDocent(docent).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+    public AccrualData findByDocent(Docent docent) {
+        return repository.findAccrualDataByDocent(docent).orElseGet(AccrualData::new);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(AccrualData accrualData) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(accrualData));
+    public AccrualData save(AccrualData accrualData) {
+        return repository.findAccrualDataByDocent(accrualData.getDocent()).orElseGet(() -> repository.save(accrualData));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteById(Long idAccrualData) {
-        return repository.findById(idAccrualData).map(value -> {
-            repository.deleteById(idAccrualData);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha podido eliminar"));
+    public String deleteById(Long idAccrualData) {
+        return repository.findById(idAccrualData).map(value -> "Eliminado").orElseGet(() -> "No se ha podido eliminar");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> update(AccrualData accrualData, Long idAccrualData) {
+    public AccrualData update(AccrualData accrualData, Long idAccrualData) {
         return repository.findById(idAccrualData).map(value -> {
             accrualData.setIdAccrualData(value.getIdAccrualData());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(accrualData));
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+            return repository.save(accrualData);
+        }).orElseGet(AccrualData::new);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> updateObservations(String observations, Long idAccrualData) {
+    public String updateObservations(String observations, Long idAccrualData) {
         return repository.findById(idAccrualData).map(value -> {
             value.setObservations(observations);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(value));
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new AccrualData()));
+            repository.save(value);
+            return "Observacion guardada con exito";
+        }).orElseGet(() -> "Observacion no guardada");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> updateSettlement(Boolean settlement, Long idPerson) {
-        return docentRepository.findByIdPerson(idPerson).map(valueDocent -> {
+    public String updateSettlement(Boolean settlement, Long idPerson) {
+        return Optional.ofNullable(docentService.findByIdPerson(idPerson)).map(valueDocent -> {
             Optional<AccrualData> accrualData = repository.findAccrualDataByDocent(valueDocent);
             if (accrualData.isPresent()) {
                 accrualData.get().setSettlement(settlement);
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(accrualData.get()));
+                repository.save(accrualData.get());
+                return "Finiquito actualizado";
             }
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Finiquito no actualizado");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Finiquito no actualizado"));
+            return "Finiquito no actualizado";
+        }).orElseGet(() -> "Finiquito no actualizado");
     }
 
 }

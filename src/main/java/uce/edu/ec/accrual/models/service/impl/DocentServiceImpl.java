@@ -9,6 +9,7 @@ import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.service.DocentService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,50 +21,37 @@ public class DocentServiceImpl implements DocentService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        return Optional.of((List<Docent>) repository.findAll()).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public List<Docent> findAll() {
+        return Optional.of((List<Docent>) repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idDocent) {
-        return repository.findById(idDocent).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Docent()));
+    public Docent findById(Long idDocent) {
+        return repository.findById(idDocent).orElseGet(Docent::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findByIdPerson(Long idPerson) {
-        return repository.findByIdPerson(idPerson).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Docent()));
+    public Docent findByIdPerson(Long idPerson) {
+        return repository.findByIdPerson(idPerson).orElseGet(Docent::new);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> save(Docent docent) {
-        return repository.findByIdPerson(docent.getIdPerson()).map(value ->
-                        ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build())
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.CREATED).body(repository.save(docent)));
+    public Docent save(Docent docent) {
+        return repository.findByIdPerson(docent.getIdPerson()).orElseGet(() -> repository.save(docent));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteById(Long idDocent) {
-        return repository.findById(idDocent).map(value -> {
-            repository.deleteById(idDocent);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public String deleteById(Long idDocent) {
+        return repository.findById(idDocent).map(value -> "Eliminado con exito").orElseGet(() -> "No se pudo eliminar");
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> updateAll(Docent docent, Long idDocent) {
-        return repository.findById(idDocent).map(value ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(value)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build());
+    public Docent updateAll(Docent docent, Long idDocent) {
+        return repository.findById(idDocent).map(value -> repository.save(value)).orElseGet(Docent::new);
     }
 }

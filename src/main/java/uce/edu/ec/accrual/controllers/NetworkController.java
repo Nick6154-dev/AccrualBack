@@ -28,24 +28,24 @@ public class NetworkController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idNetwork}")
     public ResponseEntity<?> findById(@PathVariable Long idNetwork) {
-        return service.findById(idNetwork);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idNetwork));
     }
 
     @GetMapping("/byIdDocent/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
-        return service.findByDocent((Docent) docentService.findById(idDocent).getBody());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docentService.findById(idDocent)));
     }
 
     @GetMapping("/byIdPerson/{idPerson}")
     public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
-        Docent docent = (Docent) docentService.findByIdPerson(idPerson).getBody();
+        Docent docent = docentService.findByIdPerson(idPerson);
         if (docent.getCategory() != null) {
-            return service.findByDocent(docent);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docent));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id persona no encontrada : " + idPerson);
         }
@@ -56,12 +56,12 @@ public class NetworkController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.save(network);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(network));
     }
 
     @DeleteMapping("/{idNetwork}")
     public ResponseEntity<?> deleteById(@PathVariable Long idNetwork) {
-        return service.deleteById(idNetwork);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idNetwork));
     }
 
     @PutMapping("/{idNetwork}")
@@ -69,7 +69,7 @@ public class NetworkController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.update(network, idNetwork);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(network, idNetwork));
     }
 
 }

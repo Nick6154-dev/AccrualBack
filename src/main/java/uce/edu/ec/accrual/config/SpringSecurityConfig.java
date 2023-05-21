@@ -39,7 +39,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().authorizeRequests().antMatchers("/accrual/authorization", "/swagger-ui.html")
+        http.cors().and().authorizeRequests().antMatchers("/accrual/authorization", "/swagger-ui.html",
+                        "/faculty/withoutToken", "/register")
                 .permitAll().anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
