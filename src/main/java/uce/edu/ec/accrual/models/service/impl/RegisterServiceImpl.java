@@ -7,6 +7,9 @@ import uce.edu.ec.accrual.models.entity.Person;
 import uce.edu.ec.accrual.models.object.RegisterObject;
 import uce.edu.ec.accrual.models.service.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class RegisterServiceImpl implements RegisterService {
 
@@ -25,13 +28,17 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private FacultyService facultyService;
 
-    @Override
-    public String registerNewDocent(RegisterObject registerObject) {
+    private Docent registerNewDocent(RegisterObject registerObject) {
         Person person = personService.save(registerObject.getPerson());
         registerObject.getDocent().setIdPerson(person.getIdPerson());
         registerObject.getDocent().setFaculty(
                 facultyService.findById(Long.valueOf(registerObject.getDocent().getFaculty())).getFacultyName());
-        Docent docent = docentService.save(registerObject.getDocent());
+        return docentService.save(registerObject.getDocent());
+    }
+
+    @Override
+    public String registerNewDocentByHimself(RegisterObject registerObject) {
+        Docent docent = registerNewDocent(registerObject);
         registerObject.getAccrualData().setDocent(docent);
         registerObject.getAccrualData().setSettlement(false);
         accrualDataService.save(registerObject.getAccrualData());
@@ -39,4 +46,11 @@ public class RegisterServiceImpl implements RegisterService {
         networkService.save(registerObject.getNetwork());
         return "Nuevo docente registrado con exito";
     }
+
+    @Override
+    public String registerNewDocentByAnotherOne(RegisterObject registerObject) {
+        Docent docent = registerNewDocent(registerObject);
+        return "Nuevo docente registrado con exito";
+    }
+
 }

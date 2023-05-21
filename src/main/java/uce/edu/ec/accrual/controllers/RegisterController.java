@@ -17,9 +17,14 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @PostMapping
-    public ResponseEntity<?> registerNewDocent(@RequestBody RegisterObject registerObject) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewDocent(registerObject));
+    @PostMapping("/ByHimself")
+    public ResponseEntity<?> registerByHimself(@RequestBody RegisterObject registerObject) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewDocentByHimself(registerObject));
+    }
+
+    @PostMapping("/ByAnotherOne")
+    public ResponseEntity<?> registerByAnotherOne(@RequestBody RegisterObject registerObject) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewDocentByAnotherOne(registerObject));
     }
 
 }

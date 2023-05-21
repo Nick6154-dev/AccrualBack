@@ -15,6 +15,21 @@ public class RegisterObject {
 
     private Network network;
 
+    public RegisterObject() {
+    }
+
+    public RegisterObject(Person person, Docent docent) {
+        this.person = person;
+        this.docent = docent;
+    }
+
+    public RegisterObject(Person person, Docent docent, AccrualData accrualData, Network network) {
+        this.person = person;
+        this.docent = docent;
+        this.accrualData = accrualData;
+        this.network = network;
+    }
+
     public Person getPerson() {
         return person;
     }
