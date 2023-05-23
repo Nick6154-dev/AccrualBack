@@ -21,45 +21,50 @@ public class ActivityPlanServiceImpl implements ActivityPlanService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        Optional<List<ActivityPlan>> docents = Optional.of((List<ActivityPlan>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+    public List<ActivityPlan> findAll() {
+        return Optional.of((List<ActivityPlan>) repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idActivityPlan) {
-        Optional<ActivityPlan> docent = repository.findById(idActivityPlan);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ActivityPlan()));
+    public List<ActivityPlan> findActivityPlansByIdPlan(Long idPlan) {
+        return repository.findActivityPlansByIdPlan(idPlan).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<ActivityPlan> findActivityPlansByState(Integer state) {
+        return repository.findActivityPlansByState(state).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findActivityPlansByIdPlan(Long idPlan) {
-        return repository.findActivityPlansByIdPlan(idPlan).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+    public ActivityPlan findById(Long idActivityPlan) {
+        return repository.findById(idActivityPlan).orElseGet(ActivityPlan::new);
     }
 
     @Override
-    public ResponseEntity<?> save(ActivityPlan activityPlan) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ActivityPlan save(ActivityPlan activityPlan) {
+        return repository.save(activityPlan);
     }
 
     @Override
-    public ResponseEntity<?> delete(ActivityPlan activityPlan) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public String delete(ActivityPlan activityPlan) {
+        repository.delete(activityPlan);
+        return "Actividad de plan eliminada con exito";
     }
 
     @Override
-    public ResponseEntity<?> deleteById(Long idActivityPlan) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public String deleteById(Long idActivityPlan) {
+        repository.deleteById(idActivityPlan);
+        return "Actividad de plan eliminada con exito";
     }
 
     @Override
-    public ResponseEntity<?> update(ActivityPlan activityPlan, Long idActivityPlan) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ActivityPlan update(ActivityPlan activityPlan, Long idActivityPlan) {
+        return Optional.of(repository.findById(idActivityPlan)).map(value -> {
+            activityPlan.setIdActivityPlan(idActivityPlan);
+            return repository.save(activityPlan);
+        }).orElseGet(ActivityPlan::new);
     }
 
 }

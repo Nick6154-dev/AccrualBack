@@ -1,22 +1,27 @@
 package uce.edu.ec.accrual.models.service;
 
 import org.springframework.http.ResponseEntity;
+import uce.edu.ec.accrual.models.entity.Docent;
 import uce.edu.ec.accrual.models.entity.Plan;
+
+import java.util.List;
 
 public interface PlanService {
 
-    ResponseEntity<?> findAll();
+    List<Plan> findAll();
 
-    ResponseEntity<?> findById(Long idPlan);
+    Plan findById(Long idPlan);
 
-    ResponseEntity<?> findByIdPersonAndPeriod(Long idPerson, String period);
+    Plan findByIdPersonAndPeriod(Long idPerson, String period);
 
-    ResponseEntity<?> save(Plan plan);
+    List<Plan> findByDocent(Docent docent);
 
-    ResponseEntity<?> deleteById(Long idPlan);
+    Plan save(Plan plan);
 
-    ResponseEntity<?> update(Plan plan, Long idPlan);
+    String deleteById(Long idPlan);
 
-    ResponseEntity<?> updateNotEditable(Long idPerson, String period);
+    Plan update(Plan plan, Long idPlan);
+
+    String updateNotEditable(Long idPerson, String period);
 
 }

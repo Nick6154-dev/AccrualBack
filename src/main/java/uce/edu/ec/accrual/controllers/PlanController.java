@@ -1,6 +1,7 @@
 package uce.edu.ec.accrual.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,17 +23,17 @@ public class PlanController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idPlan}")
     public ResponseEntity<?> findById(@PathVariable Long idPlan) {
-        return service.findById(idPlan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idPlan));
     }
 
     @GetMapping("/byIdPersonPeriod/{idPerson},{period}")
     public ResponseEntity<?> findByPersonPeriod(@PathVariable Long idPerson, @PathVariable String period) {
-        return service.findByIdPersonAndPeriod(idPerson, period);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByIdPersonAndPeriod(idPerson, period));
     }
 
     @PostMapping
@@ -40,12 +41,12 @@ public class PlanController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.save(plan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(plan));
     }
 
     @DeleteMapping("/{idPlan}")
     public ResponseEntity<?> deleteById(@PathVariable Long idPlan) {
-        return service.deleteById(idPlan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idPlan));
     }
 
     @PutMapping("/{idPlan}")
@@ -53,12 +54,12 @@ public class PlanController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return service.update(plan, idPlan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(plan, idPlan));
     }
 
     @PatchMapping("/updatePlanNotEditable/{idPerson},{period}")
     public ResponseEntity<?> updatePlanNotEditable(@PathVariable Long idPerson, @PathVariable String period) {
-        return service.updateNotEditable(idPerson, period);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateNotEditable(idPerson, period));
     }
 
 }

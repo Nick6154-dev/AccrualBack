@@ -14,7 +14,7 @@ public class ActivityInstitutionJoin {
     private Long idPerson;
 
     @NotBlank
-    private String period;
+    private Long idPeriod;
 
     @NotNull
     private ActivityPlanAccrual activityPlanAccrual;
@@ -27,7 +27,7 @@ public class ActivityInstitutionJoin {
 
     public ActivityInstitutionJoin(Converter converter) {
         this.idPerson = converter.getIdPerson();
-        this.period = converter.getPeriod();
+        this.idPeriod = converter.getIdPeriod();
         this.activityPlanAccrual = convertactivityPlanAccrual(converter);
         this.institutionActivity = convertInstitutionActivity(converter);
     }

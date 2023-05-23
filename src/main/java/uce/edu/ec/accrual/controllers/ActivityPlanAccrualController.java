@@ -5,19 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import uce.edu.ec.accrual.models.entity.ActivityPlan;
-import uce.edu.ec.accrual.models.entity.Docent;
-import uce.edu.ec.accrual.models.entity.Institution;
-import uce.edu.ec.accrual.models.entity.Plan;
+import uce.edu.ec.accrual.models.entity.*;
 import uce.edu.ec.accrual.models.object.ActivityInstitutionJoin;
 import uce.edu.ec.accrual.models.object.Converter;
 import uce.edu.ec.accrual.models.repository.ActivityPlanRepository;
 import uce.edu.ec.accrual.models.repository.DocentRepository;
 import uce.edu.ec.accrual.models.repository.InstitutionRepository;
-import uce.edu.ec.accrual.models.service.ActivityPlanAccrualService;
-import uce.edu.ec.accrual.models.service.InstitutionActivityService;
-import uce.edu.ec.accrual.models.service.PlanService;
-import uce.edu.ec.accrual.models.service.UtilCommonsService;
+import uce.edu.ec.accrual.models.service.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -48,6 +42,9 @@ public class ActivityPlanAccrualController {
     @Autowired
     private UtilCommonsService utilCommonsService;
 
+    @Autowired
+    private PeriodService periodService;
+
     @PostMapping
     ResponseEntity<?> save(@Valid @RequestBody Converter converter, BindingResult result) {
         if (result.hasErrors()) {
@@ -57,11 +54,11 @@ public class ActivityPlanAccrualController {
         Optional<Docent> docent = docentRepository.findByIdPerson(activityInstitutionJoin.getIdPerson());
         if (docent.isPresent()) {
             Plan plan = new Plan();
-            plan.setPeriod(activityInstitutionJoin.getPeriod());
+            plan.setPeriod(periodService.findById(activityInstitutionJoin.getIdPeriod()));
             plan.setIdDocent(docent.get().getIdDocent());
             plan.setStarDate(LocalDate.now());
             plan.setEditable(true);
-            plan = (Plan) planService.save(plan).getBody();
+            plan = planService.save(plan);
             if (plan != null) {
                 if (!plan.getEditable()) {
                     return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se agregan mas actividades pues ya no es editable");
@@ -86,7 +83,7 @@ public class ActivityPlanAccrualController {
     public ResponseEntity<?> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
         Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
         if (activityPlan.isPresent()) {
-            Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
+            Plan plan = planService.findById(activityPlan.get().getIdPlan());
             if (plan != null) {
                 if (!plan.getEditable()) {
                     return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se eliminan mas actividades pues ya no es editable");
@@ -111,7 +108,7 @@ public class ActivityPlanAccrualController {
         if (docent.isPresent()) {
             Optional<ActivityPlan> activityPlan = activityPlanRepository.findById(idActivityPlan);
             if (activityPlan.isPresent()) {
-                Plan plan = (Plan) planService.findById(activityPlan.get().getIdPlan()).getBody();
+                Plan plan = planService.findById(activityPlan.get().getIdPlan());
                 if (plan != null) {
                     if (!plan.getEditable()) {
                         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ya no se actualizan mas actividades pues ya no es editable");

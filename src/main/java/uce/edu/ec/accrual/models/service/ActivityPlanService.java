@@ -3,20 +3,24 @@ package uce.edu.ec.accrual.models.service;
 import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.ActivityPlan;
 
+import java.util.List;
+
 public interface ActivityPlanService {
 
-    ResponseEntity<?> findAll();
+    List<ActivityPlan> findAll();
 
-    ResponseEntity<?> findById(Long idActivityPlan);
+    List<ActivityPlan> findActivityPlansByIdPlan(Long idPlan);
 
-    ResponseEntity<?> findActivityPlansByIdPlan(Long idPlan);
+    List<ActivityPlan> findActivityPlansByState(Integer state);
 
-    ResponseEntity<?> save(ActivityPlan activityPlan);
+    ActivityPlan findById(Long idActivityPlan);
 
-    ResponseEntity<?> delete(ActivityPlan activityPlan);
+    ActivityPlan save(ActivityPlan activityPlan);
 
-    ResponseEntity<?> deleteById(Long idActivityPlan);
+    String delete(ActivityPlan activityPlan);
 
-    ResponseEntity<?> update(ActivityPlan activityPlan, Long idActivityPlan);
+    String deleteById(Long idActivityPlan);
+
+    ActivityPlan update(ActivityPlan activityPlan, Long idActivityPlan);
 
 }

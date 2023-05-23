@@ -3,8 +3,6 @@ package uce.edu.ec.accrual.models.object;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -43,7 +41,7 @@ public class Converter {
 
     private Long idPerson;
 
-    private String period;
+    private Long idPeriod;
 
     public Converter() {
     }
@@ -51,7 +49,7 @@ public class Converter {
     public Converter(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate, String evidences,
                      Long idActivityType, Long idActivitySubtype, String descriptionSubtype, Long idActivity,
                      String institutionName, String otherInstitutionName, String verificationLink, Long idUniversity,
-                     Long idFaculty, Long idCareer, Long idPerson, String period) {
+                     Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
         this.idPlan = idPlan;
         this.descriptionActivity = descriptionActivity;
         this.starDate = starDate;
@@ -68,6 +66,6 @@ public class Converter {
         this.idFaculty = idFaculty;
         this.idCareer = idCareer;
         this.idPerson = idPerson;
-        this.period = period;
+        this.idPeriod = idPeriod;
     }
 }

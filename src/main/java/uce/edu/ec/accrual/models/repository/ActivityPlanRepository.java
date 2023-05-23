@@ -10,4 +10,6 @@ public interface ActivityPlanRepository extends CrudRepository<ActivityPlan, Lon
 
     Optional<List<ActivityPlan>> findActivityPlansByIdPlan(Long idPlan);
 
+    Optional<List<ActivityPlan>> findActivityPlansByState(Integer state);
+
 }

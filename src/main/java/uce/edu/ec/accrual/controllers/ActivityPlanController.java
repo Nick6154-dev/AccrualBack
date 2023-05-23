@@ -40,18 +40,17 @@ public class ActivityPlanController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idActivityPlan}")
     public ResponseEntity<?> findById(@PathVariable Long idActivityPlan) {
-        return service.findById(idActivityPlan);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idActivityPlan));
     }
 
     @GetMapping("/byPlan/{idPlan}")
     public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPlan) {
-        ResponseEntity<?> responseActivityPlans = service.findActivityPlansByIdPlan(idPlan);
-        List<ActivityPlan> activityPlans = (List<ActivityPlan>) responseActivityPlans.getBody();
+        List<ActivityPlan> activityPlans = service.findActivityPlansByIdPlan(idPlan);
         List<ActivityInstitutionShow> activityInstitutionShows = new ArrayList<>();
         assert activityPlans != null;
         for (ActivityPlan ap : activityPlans) {
