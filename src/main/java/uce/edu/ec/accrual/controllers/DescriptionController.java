@@ -22,18 +22,19 @@ public class DescriptionController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idDescription}")
     public ResponseEntity<?> findById(@PathVariable Long idDescription) {
-        return service.findById(idDescription);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idDescription));
     }
 
     @GetMapping("/byActivityPlan/{idActivityPlan}")
     public ResponseEntity<?> findDescriptionByIdActivityPlan(@PathVariable Long idActivityPlan) {
         if (repository.findById(idActivityPlan).isPresent()) {
-            return service.findDescriptionByActivityPlan(repository.findById(idActivityPlan).get());
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(service.findDescriptionByActivityPlan(repository.findById(idActivityPlan).get()));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El id especificado no existe en el sistema");
     }

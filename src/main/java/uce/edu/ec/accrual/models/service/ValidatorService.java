@@ -9,10 +9,10 @@ public interface ValidatorService {
 
     List<ValidatorObject> findAllPersonDocentPlan();
 
-    List<ValidatorObject> findByState(Integer state);
-
     ValidatorObject findPlansByPerson(Long idPerson);
 
     String validatePlanByPerson(Plan plan);
+
+    byte[] generateExcelActivitiesPlan(Long idPerson, Long idPlan);
 
 }

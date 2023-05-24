@@ -17,7 +17,10 @@ import uce.edu.ec.accrual.models.repository.OtherInstitutionRepository;
 import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
 import uce.edu.ec.accrual.models.service.InstitutionService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/institution")
@@ -40,12 +43,12 @@ public class InstitutionController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return service.findAll();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
     @GetMapping("/{idInstitution}")
     public ResponseEntity<?> findById(@PathVariable Long idInstitution) {
-        return service.findById(idInstitution);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idInstitution));
     }
 
     @GetMapping("/withDetails/{idInstitution}")

@@ -1,21 +1,22 @@
 package uce.edu.ec.accrual.models.service;
 
-import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.entity.UniversityInstitution;
 
+import java.util.List;
+
 public interface UniversityInstitutionService {
 
-    ResponseEntity<?> findAll();
+    List<UniversityInstitution> findAll();
 
-    ResponseEntity<?> findById(Long idUniversityInstitution);
+    UniversityInstitution findById(Long idUniversityInstitution);
 
-    ResponseEntity<?> findUniversityInstitutionByInstitution(Institution institution);
+    UniversityInstitution findUniversityInstitutionByInstitution(Institution institution);
 
-    ResponseEntity<?> save(UniversityInstitution universityInstitution);
+    UniversityInstitution save(UniversityInstitution universityInstitution);
 
-    ResponseEntity<?> deleteById(Long idUniversityInstitution);
+    String deleteById(Long idUniversityInstitution);
 
-    ResponseEntity<?> update(UniversityInstitution universityInstitution, Long idUniversityInstitution);
+    UniversityInstitution update(UniversityInstitution universityInstitution, Long idUniversityInstitution);
 
 }

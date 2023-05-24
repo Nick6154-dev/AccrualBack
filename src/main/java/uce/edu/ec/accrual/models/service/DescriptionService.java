@@ -1,23 +1,24 @@
 package uce.edu.ec.accrual.models.service;
 
-import org.springframework.http.ResponseEntity;
 import uce.edu.ec.accrual.models.entity.ActivityPlan;
 import uce.edu.ec.accrual.models.entity.Description;
 
+import java.util.List;
+
 public interface DescriptionService {
 
-    ResponseEntity<?> findAll();
+    List<Description> findAll();
 
-    ResponseEntity<?> findById(Long idDescription);
+    Description findById(Long idDescription);
 
-    ResponseEntity<?> findDescriptionByActivityPlan(ActivityPlan activityPlan);
+    Description findDescriptionByActivityPlan(ActivityPlan activityPlan);
 
-    ResponseEntity<?> save(Description description);
+    Description save(Description description);
 
-    ResponseEntity<?> delete(Description description);
+    String delete(Description description);
 
-    ResponseEntity<?> deleteById(Long idDescription);
+    String deleteById(Long idDescription);
 
-    ResponseEntity<?> update(Description description, Long idDescription);
+    Description update(Description description, Long idDescription);
 
 }

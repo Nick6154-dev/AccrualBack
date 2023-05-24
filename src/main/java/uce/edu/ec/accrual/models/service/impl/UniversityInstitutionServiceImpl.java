@@ -1,8 +1,6 @@
 package uce.edu.ec.accrual.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.accrual.models.entity.Institution;
 import uce.edu.ec.accrual.models.entity.UniversityInstitution;
@@ -10,6 +8,7 @@ import uce.edu.ec.accrual.models.repository.UniversityInstitutionRepository;
 import uce.edu.ec.accrual.models.service.UniversityInstitutionService;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,42 +18,38 @@ public class UniversityInstitutionServiceImpl implements UniversityInstitutionSe
     private UniversityInstitutionRepository repository;
 
     @Override
-    public ResponseEntity<?> findAll() {
-        return Optional.of(repository.findAll()).map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ArrayList<>()));
+    public List<UniversityInstitution> findAll() {
+        return (List<UniversityInstitution>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
-    public ResponseEntity<?> findById(Long idUniversityInstitution) {
-        return repository.findById(idUniversityInstitution).map(value ->
-                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+    public UniversityInstitution findById(Long idUniversityInstitution) {
+        return repository.findById(idUniversityInstitution).orElseGet(UniversityInstitution::new);
     }
 
     @Override
-    public ResponseEntity<?> findUniversityInstitutionByInstitution(Institution institution) {
-        return repository.findUniversityInstitutionByInstitution(institution).map(value ->
-                ResponseEntity.status(HttpStatus.ACCEPTED).body(value)
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+    public UniversityInstitution findUniversityInstitutionByInstitution(Institution institution) {
+        return repository.findUniversityInstitutionByInstitution(institution).orElseGet(UniversityInstitution::new);
     }
 
     @Override
-    public ResponseEntity<?> save(UniversityInstitution universityInstitution) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(universityInstitution));
+    public UniversityInstitution save(UniversityInstitution universityInstitution) {
+        return repository.save(universityInstitution);
     }
 
     @Override
-    public ResponseEntity<?> deleteById(Long idUniversityInstitution) {
+    public String deleteById(Long idUniversityInstitution) {
         return repository.findById(idUniversityInstitution).map(value -> {
             repository.deleteById(idUniversityInstitution);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Eliminado con exito");
-        }).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("No se ha podido eliminar"));
+            return "Eliminado con exito";
+        }).orElseGet(() -> "No se ha podido eliminar");
     }
 
     @Override
-    public ResponseEntity<?> update(UniversityInstitution universityInstitution, Long idUniversityInstitution) {
-        return repository.findById(idUniversityInstitution).map(value ->
-                ResponseEntity.status(HttpStatus.ACCEPTED).body(repository.save(universityInstitution))
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UniversityInstitution()));
+    public UniversityInstitution update(UniversityInstitution universityInstitution, Long idUniversityInstitution) {
+        return repository.findById(idUniversityInstitution).map(value -> {
+            universityInstitution.setIdUniversityInstitution(idUniversityInstitution);
+            return repository.save(universityInstitution);
+        }).orElseGet(UniversityInstitution::new);
     }
 }

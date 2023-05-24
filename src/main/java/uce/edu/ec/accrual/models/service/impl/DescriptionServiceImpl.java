@@ -1,8 +1,6 @@
 package uce.edu.ec.accrual.models.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrual.models.entity.ActivityPlan;
@@ -22,45 +20,48 @@ public class DescriptionServiceImpl implements DescriptionService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findAll() {
-        Optional<List<Description>> docents = Optional.of((List<Description>) repository.findAll());
-        return docents.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ArrayList<>()));
+    public List<Description> findAll() {
+        return (List<Description>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findById(Long idDescription) {
-        Optional<Description> docent = repository.findById(idDescription);
-        return docent.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Description()));
+    public Description findById(Long idDescription) {
+        return repository.findById(idDescription).orElseGet(Description::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<?> findDescriptionByActivityPlan(ActivityPlan activityPlan) {
-        Optional<Description> description = repository.findDescriptionByActivityPlan(activityPlan);
-        return description.map(value -> ResponseEntity.status(HttpStatus.ACCEPTED).body(value))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Description()));
+    public Description findDescriptionByActivityPlan(ActivityPlan activityPlan) {
+        return repository.findDescriptionByActivityPlan(activityPlan).orElseGet(Description::new);
     }
 
     @Override
-    public ResponseEntity<?> save(Description description) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public Description save(Description description) {
+        return repository.save(description);
     }
 
     @Override
-    public ResponseEntity<?> delete(Description description) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public String delete(Description description) {
+        return repository.findById(description.getIdDescriptionSubtype()).map(value -> {
+            repository.delete(value);
+            return "Eliminado la descripcion subtipo con exito";
+        }).orElseGet(() -> "Problemas al eliminar la descripcion subtipo");
     }
 
     @Override
-    public ResponseEntity<?> deleteById(Long idDescription) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public String deleteById(Long idDescription) {
+        return repository.findById(idDescription).map(value -> {
+            repository.delete(value);
+            return "Eliminado la descripcion subtipo con exito";
+        }).orElseGet(() -> "Problemas al eliminar la descripcion subtipo");
     }
 
     @Override
-    public ResponseEntity<?> update(Description description, Long idDescription) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public Description update(Description description, Long idDescription) {
+        return repository.findById(idDescription).map(value -> {
+            description.setIdDescriptionSubtype(idDescription);
+            return repository.save(description);
+        }).orElseGet(Description::new);
     }
 }
