@@ -13,14 +13,16 @@ import uce.edu.ec.accrual.models.service.MailService;
 public class MailController {
 
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
     private MailService mailService;
 
     @PostMapping("/approveFiniquito/{idDocente}")
     public void approveFiniquito(@PathVariable Long idDocente) {
-        mailSender.send(mailService.sendFiniquitoTrue(idDocente));
+        //mailService.sendFiniquitoTrue(idDocente);
+    }
+
+    @PostMapping("/test")
+    public void test() {
+        mailService.sendFiniquitoTrue("nikomont123@gmail.com", "ola", "ola");
     }
 
 }
