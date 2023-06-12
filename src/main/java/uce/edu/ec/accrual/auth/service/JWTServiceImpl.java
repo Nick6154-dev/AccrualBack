@@ -34,18 +34,12 @@ public class JWTServiceImpl implements JWTService {
     @Autowired
     private UserService service;
 
-    @Autowired
-    private PeriodService periodService;
-
-
     @Override
     public String create(Authentication auth) throws IOException {
         String username = ((User) auth.getPrincipal()).getUsername();
         Collection<? extends GrantedAuthority> roles = auth.getAuthorities();
-        List<Period> periodList = periodService.findActivePeriodTrue();
         Claims claims = Jwts.claims();
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
-        claims.put("periods", new ObjectMapper().writeValueAsString(periodList));
         String token = Jwts.builder().setClaims(claims)
                 .setSubject(service.findUserByUsername(username).getIdPerson().toString())
                 .signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).setIssuedAt(new Date())

@@ -19,6 +19,11 @@ public class PeriodController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.findAll());
     }
 
+    @GetMapping("/findAllActivePeriods")
+    public ResponseEntity<?> findAllActivePeriods() {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.findActivePeriodTrue());
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> savePeriod(@RequestBody Period period) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.save(period));
