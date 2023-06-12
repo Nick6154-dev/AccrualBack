@@ -16,6 +16,8 @@ public interface PlanService {
 
     List<Plan> findByDocent(Docent docent);
 
+    List<Plan> findPlansByStateIs(Integer state);
+
     Plan save(Plan plan);
 
     String deleteById(Long idPlan);

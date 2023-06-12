@@ -13,6 +13,10 @@ public interface ValidatorService {
 
     String validatePlanByPerson(Plan plan);
 
+    void approveAllPlans();
+
     byte[] generateExcelActivitiesPlan(Long idPerson, Long idPlan);
+
+    byte[] generateExcelDocentsInPlan();
 
 }

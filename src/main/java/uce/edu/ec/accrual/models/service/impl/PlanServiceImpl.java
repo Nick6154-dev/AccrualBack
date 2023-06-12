@@ -48,6 +48,11 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    public List<Plan> findPlansByStateIs(Integer state) {
+        return repository.findPlansByStateIs(state).orElseGet(ArrayList::new);
+    }
+
+    @Override
     @Transactional
     public Plan save(Plan plan) {
         return repository.findByPeriodAndIdDocent(plan.getPeriod().getValuePeriod(), plan.getIdDocent())

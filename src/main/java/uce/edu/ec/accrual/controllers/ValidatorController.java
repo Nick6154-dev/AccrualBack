@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uce.edu.ec.accrual.models.entity.Person;
 import uce.edu.ec.accrual.models.entity.Plan;
+import uce.edu.ec.accrual.models.service.PersonService;
 import uce.edu.ec.accrual.models.service.ValidatorService;
 
 @RestController
@@ -15,6 +17,9 @@ public class ValidatorController {
 
     @Autowired
     private ValidatorService validatorService;
+
+    @Autowired
+    private PersonService personService;
 
     @GetMapping("/findAllDocentPersonPlans")
     public ResponseEntity<?> findAllPersonDocentPlans() {
@@ -34,12 +39,31 @@ public class ValidatorController {
     @PostMapping("/generateExcel/{idPerson},{idPlan}")
     public ResponseEntity<?> generateExcel(@PathVariable Long idPerson, @PathVariable Long idPlan) {
         byte[] excelBytes = validatorService.generateExcelActivitiesPlan(idPerson, idPlan);
+        Person person = personService.findById(idPerson);
+        String fullNames = person.getName() + " " + person.getLastname();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "ActivitiesPlan.xlsx");
+        headers.setContentDispositionFormData("attachment",  fullNames + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);
+    }
+
+    @PostMapping("/generateExcelDocentsInPlan")
+    public ResponseEntity<?> generateExcelDocentsInPlan() {
+        byte[] excelBytes = validatorService.generateExcelDocentsInPlan();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "Lista Docentes.xlsx");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelBytes);
+    }
+
+    @PostMapping("/approveAllPlans")
+    public ResponseEntity<?> approveAllPlans() {
+        validatorService.approveAllPlans();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Todos los planes aprobados");
     }
 
 }

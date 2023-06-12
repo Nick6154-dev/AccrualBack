@@ -17,4 +17,6 @@ public interface PlanRepository extends CrudRepository<Plan, Long> {
 
     Optional<List<Plan>> findPlansByIdDocent(Long idDocent);
 
+    Optional<List<Plan>> findPlansByStateIs(Integer state);
+
 }

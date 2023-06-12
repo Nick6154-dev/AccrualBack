@@ -81,6 +81,15 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
+    public void approveAllPlans() {
+        List<Plan> plans = planService.findPlansByStateIs(0);
+        for (Plan p : plans) {
+            p.setState(1);
+            planService.save(p);
+        }
+    }
+
+    @Override
     public byte[] generateExcelActivitiesPlan(Long idPerson, Long idPlan) {
         Docent docent = docentService.findByIdPerson(idPerson);
         if (docent == null) {
@@ -102,7 +111,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         planDocentContentInformation(activityPlans, sheet);
         //Let's apply some style
         applyBorderStyle(sheet, createBorderStyle(workbook), 0, 1, 0, 3);
-        applyBorderStyle(sheet, createBorderStyle(workbook), 3, 18, 0, 11);
+        applyBorderStyle(sheet, createBorderStyle(workbook), 3, sheet.getLastRowNum()
+                , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
         adjustColumnRow(sheet.getRow(0), sheet);
         adjustColumnRow(sheet.getRow(3), sheet);
         applyBoldStyleRow(sheet.getRow(0), createBoldStyle(workbook));
@@ -116,6 +126,45 @@ public class ValidatorServiceImpl implements ValidatorService {
             //Close the workbook
             workbook.close();
             //Getting the file into bytes
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public byte[] generateExcelDocentsInPlan() {
+        List<Docent> docents = docentService.findAll();
+        List<Docent> docentsInPlan = new ArrayList<>();
+        List<Plan> plans = planService.findAll();
+        for (Plan p : plans) {
+            for (Docent d : docents) {
+                if (Objects.equals(p.getIdDocent(), d.getIdDocent())) {
+                    docentsInPlan.add(d);
+                }
+            }
+        }
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Docentes");
+        Row headerDocentInformation = sheet.createRow(0);
+        headerDocentInformation.createCell(0).setCellValue("NOMBRES");
+        headerDocentInformation.createCell(1).setCellValue("APELLIDOS");
+        headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
+        headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
+        int row = 1;
+        for (Docent d : docentsInPlan) {
+            docentsInPlanContentExcelInformation(personService.findById(d.getIdPerson()), sheet, row);
+            row++;
+        }
+        applyBorderStyle(sheet, createBorderStyle(workbook), 0, sheet.getLastRowNum()
+                , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+        adjustColumnRow(sheet.getRow(0), sheet);
+        applyBoldStyleRow(sheet.getRow(0), createBoldStyle(workbook));
+        applyForegroundColorRow(sheet.getRow(0), createForegroundColorRow(workbook));
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
             return outputStream.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -202,6 +251,14 @@ public class ValidatorServiceImpl implements ValidatorService {
         headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
         headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
         Row contentDocentInformation = sheet.createRow(1);
+        contentDocentInformation.createCell(0).setCellValue(person.getName());
+        contentDocentInformation.createCell(1).setCellValue(person.getLastname());
+        contentDocentInformation.createCell(2).setCellValue(person.getEmail());
+        contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
+    }
+
+    private void docentsInPlanContentExcelInformation(Person person, Sheet sheet, int row) {
+        Row contentDocentInformation = sheet.createRow(row);
         contentDocentInformation.createCell(0).setCellValue(person.getName());
         contentDocentInformation.createCell(1).setCellValue(person.getLastname());
         contentDocentInformation.createCell(2).setCellValue(person.getEmail());
