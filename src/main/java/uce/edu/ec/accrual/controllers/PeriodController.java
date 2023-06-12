@@ -29,4 +29,9 @@ public class PeriodController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.switchActivePeriod(idPeriod));
     }
 
+    @DeleteMapping("/deletePeriodById/{idPeriod}")
+    public ResponseEntity<?> deletePeriodById(@PathVariable Long idPeriod) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.delete(periodService.findById(idPeriod)));
+    }
+
 }
