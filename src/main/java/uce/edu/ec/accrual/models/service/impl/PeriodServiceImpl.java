@@ -24,6 +24,11 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
+    public List<Period> findActivePeriodTrue() {
+        return Optional.of(repository.findPeriodByActive(true)).orElseGet(ArrayList::new);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Period findById(Long idPeriod) {
         return repository.findById(idPeriod).orElseGet(Period::new);

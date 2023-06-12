@@ -8,6 +8,8 @@ public interface PeriodService {
 
     List<Period> findAll();
 
+    List<Period> findActivePeriodTrue();
+
     Period findById(Long idPeriod);
 
     Period save(Period period);
