@@ -21,8 +21,8 @@ spring:
           auth: true
           starttls:
             enable: true
-    protocol: smtp
+    protocol: unknown
 env:
   linkFront: http://localhost:8000/
-  mailFrom: YSP_fashionStore@outlook.es
-  mailToTest: pnbalseca@uce.edu.ec
+  mailFrom: unknown
+  mailToTest: unknown
