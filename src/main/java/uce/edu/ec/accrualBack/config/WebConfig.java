@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    @Value("${enviroments.linkFrontEnd}")
+    @Value("${env.linkFront}")
     private String link;
 
     @Override

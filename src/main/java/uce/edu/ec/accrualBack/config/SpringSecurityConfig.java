@@ -34,7 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JWTService jwtService;
 
-    @Value("${enviroments.linkFrontEnd}")
+    @Value("${env.linkFront}")
     private String link;
 
     @Override

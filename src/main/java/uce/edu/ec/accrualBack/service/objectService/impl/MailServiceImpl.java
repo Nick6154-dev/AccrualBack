@@ -12,7 +12,7 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 @Service
 public class MailServiceImpl implements MailService {
 
-    @Value("${enviroments.mailResponseFiniquito}")
+    @Value("${env.mailFrom}")
     private String mail;
 
     @Autowired
