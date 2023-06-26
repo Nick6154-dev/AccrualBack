@@ -21,7 +21,7 @@ spring:
           auth: true
           starttls:
             enable: true
-    protocol: unknown
+    protocol: smtp
 env:
   linkFront: http://localhost:8000/
   mailFrom: YSP_fashionStore@outlook.es
