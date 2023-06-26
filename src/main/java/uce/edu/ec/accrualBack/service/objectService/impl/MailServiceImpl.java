@@ -13,7 +13,7 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 public class MailServiceImpl implements MailService {
 
     @Value("${env.mailFrom}")
-    private String mail;
+    private String mailFrom;
 
     @Autowired
     private DocentService docenteService;
@@ -27,6 +27,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendFiniquitoTrue(String receiver, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(mailFrom);
         message.setTo(receiver);
         message.setSubject(subject);
         message.setText(body);
