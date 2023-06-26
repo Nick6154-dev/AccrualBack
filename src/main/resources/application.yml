@@ -11,16 +11,17 @@ spring:
       ddl-auto: update
     generate-ddl: true
   mail:
-    host: smtp.us-west-1.mailertogo.net
-    port: 587
-    username: 41ad632dda0fb13e3a44cc9c376320ef
-    password: 181a2236effa842634511dd1f8b12604c14bd0daa682f2daa5c813a412425af0
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 0d69cac26fb660
+    password: 22b1951a2b72e6
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-enviroments:
-  linkFrontEnd: http://localhost:3000
-  mailResponseFiniquito: nikomont123@gmail.com
+    protocol: smtp
+env:
+  linkFront: http://localhost:8000/
+  mailFrom: pbalsecamh5b@outlook.com
