@@ -11,10 +11,10 @@ spring:
       ddl-auto: update
     generate-ddl: true
   mail:
-    host: smtp.office365.com
+    host: smtp.us-west-1.mailertogo.net
     port: 587
-    username: YSP_fashionStore@outlook.es
-    password: Yps_2020
+    username: 41ad632dda0fb13e3a44cc9c376320ef
+    password: 181a2236effa842634511dd1f8b12604c14bd0daa682f2daa5c813a412425af0
     properties:
       mail:
         smtp:
