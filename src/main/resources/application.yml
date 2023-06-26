@@ -11,17 +11,18 @@ spring:
       ddl-auto: update
     generate-ddl: true
   mail:
-    host: sandbox.smtp.mailtrap.io
-    port: 2525
-    username: 0d69cac26fb660
-    password: 22b1951a2b72e6
+    host: unknown
+    port: 0
+    username: unknown
+    password: unknown
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-    protocol: smtp
+    protocol: unknown
 env:
   linkFront: http://localhost:8000/
-  mailFrom: pbalsecamh5b@outlook.com
+  mailFrom: unknown
+  mailToTest: unknown
