@@ -25,4 +25,4 @@ spring:
 env:
   linkFront: http://localhost:8000/
   mailFrom: unknown
-  mailToTest: unknown
+  mailToTest: pnbalseca@uce.edu.ec
