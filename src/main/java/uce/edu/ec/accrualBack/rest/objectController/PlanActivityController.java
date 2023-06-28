@@ -54,12 +54,12 @@ public class PlanActivityController {
         for (ActivityPlan ap : activityPlans) {
             Long idActivity = ap.getActivity().getIdActivity();
             Institution institution = institutionService.findInstitutionByActivity(idActivity);
-            if (institution != null) {
+            if (institution.getIdInstitution() != null) {
                 OtherInstitution otherInstitution = otherInstitutionService
                         .findOtherInstitutionByInstitution(institution);
                 UniversityInstitution universityInstitution = universityInstitutionService
                         .findUniversityInstitutionByInstitution(institution);
-                if (otherInstitution != null) {
+                if (otherInstitution.getIdOther() != null) {
                     activityInstitutionShows.add(new ActivityInstitutionShow(ap, otherInstitution));
                 } else {
                     activityInstitutionShows.add(new ActivityInstitutionShow(ap, universityInstitution));
