@@ -21,6 +21,6 @@ public interface AccrualDataService {
 
     String updateObservations(String observations, Long idAccrualData);
 
-    String updateSettlement(Boolean settlement, Long idPerson);
+    String updateSettlement(Boolean settlement, Docent docent);
 
 }

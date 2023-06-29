@@ -12,20 +12,12 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 @RequestMapping("/accrual/api/mail")
 public class MailController {
 
-    @Value("${env.mailToTest}")
-    private String mailTo;
-
     @Autowired
     private MailService mailService;
 
-    @PostMapping("/approveFiniquito/{idDocente}")
-    public void approveFiniquito(@PathVariable Long idDocente) {
-        //mailService.sendFiniquitoTrue(idDocente);
-    }
-
-    @PostMapping("/test")
-    public void test() {
-        mailService.sendFiniquitoTrue(mailTo, "ola", "ola");
+    @PostMapping("/approveSettlement/{idPerson}")
+    public void approveSettlement(@PathVariable Long idPerson) {
+        mailService.setSettlementTrue(idPerson);
     }
 
 }

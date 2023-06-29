@@ -80,12 +80,4 @@ public class AccrualDataController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateObservations(observations, idAccrualData));
     }
 
-    @PatchMapping("/settlement/{idPerson}")
-    public ResponseEntity<?> saveSettlement(@Valid @RequestBody Boolean settlement, BindingResult result, @PathVariable Long idPerson) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateSettlement(settlement, idPerson));
-    }
-
 }

@@ -73,16 +73,14 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Override
     @Transactional
-    public String updateSettlement(Boolean settlement, Long idPerson) {
-        return Optional.ofNullable(docentService.findByIdPerson(idPerson)).map(valueDocent -> {
-            Optional<AccrualData> accrualData = repository.findAccrualDataByDocent(valueDocent);
-            if (accrualData.isPresent()) {
-                accrualData.get().setSettlement(settlement);
-                repository.save(accrualData.get());
-                return "Finiquito actualizado";
-            }
-            return "Finiquito no actualizado";
-        }).orElseGet(() -> "Finiquito no actualizado");
+    public String updateSettlement(Boolean settlement, Docent docent) {
+        Optional<AccrualData> accrualData = repository.findAccrualDataByDocent(docent);
+        if (accrualData.isPresent()) {
+            accrualData.get().setSettlement(settlement);
+            repository.save(accrualData.get());
+            return "Finiquito actualizado";
+        }
+        return "Finiquito no actualizado";
     }
 
 }
