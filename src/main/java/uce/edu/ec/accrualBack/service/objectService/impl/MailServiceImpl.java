@@ -88,7 +88,7 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendNewDocentNotificationMail(Long idPerson) {
+    public void sendNewUserNotificationMail(Long idPerson) {
         Person person = personService.findById(idPerson);
         String fullName = person.getName() + " " + person.getLastname();
         String message = "Estimado/a docente " + fullName +  " con CI: " + person.getIdentification() + ",\n" +
@@ -100,6 +100,19 @@ public class MailServiceImpl implements MailService {
                 "necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de soporte. ¡Le deseamos" +
                 " mucho éxito en su experiencia con nuestra plataforma!";
         String subject = "Registro Sistema Devengamiento - " + fullName;
+        //Email to send is validator_role, should be the next function
+        sendMail(message, subject, "nikomont123@gmail.com");
+    }
+
+    @Override
+    public void sendNewDocentStateNotificationMail(Long idPerson) {
+        Person person = personService.findById(idPerson);
+        String fullName = person.getName() + " " + person.getLastname();
+        String message = "Mediante esta comunicación, me dirijo a usted con el propósito de informarle de manera oficial" +
+                " que el docente " + fullName + " con número de identificación " + person.getIdentification() + " ha presentado" +
+                " una solicitud de ingreso al sistema. Le instamos a que acceda a la página correspondiente para revisar y tomar" +
+                " una decisión sobre dicha solicitud, ya sea aprobándola o denegándola.";
+        String subject = "Solicitud registro nuevo docente - " + fullName;
         //Email to send is validator_role, should be the next function
         sendMail(message, subject, "nikomont123@gmail.com");
     }

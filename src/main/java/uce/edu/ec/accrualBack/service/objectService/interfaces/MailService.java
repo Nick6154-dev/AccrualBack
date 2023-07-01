@@ -8,6 +8,8 @@ public interface MailService {
 
     void sendStatePlanNotificationMail(Long idDocent, Long state, String observations, String period);
 
-    void sendNewDocentNotificationMail(Long idPerson);
+    void sendNewUserNotificationMail(Long idPerson);
+
+    void sendNewDocentStateNotificationMail(Long idPerson);
 
 }
