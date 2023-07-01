@@ -62,7 +62,7 @@ public class InstitutionActivityServiceImpl implements InstitutionActivityServic
     @Transactional
     public String deleteById(Long idInstitution) {
         return Optional.of(institutionService.findById(idInstitution)).map(value -> {
-            if (otherInstitutionService.findOtherInstitutionByInstitution(value) != null) {
+            if (otherInstitutionService.findOtherInstitutionByInstitution(value).getIdOther() != null) {
                 otherInstitutionService.deleteOtherInstitutionByInstitution(value);
             } else {
                 universityInstitutionService.deleteUniversityInstitutionByInstitution(value);

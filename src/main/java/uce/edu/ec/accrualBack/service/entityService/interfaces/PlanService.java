@@ -1,6 +1,7 @@
 package uce.edu.ec.accrualBack.service.entityService.interfaces;
 
 import uce.edu.ec.accrualBack.entity.Docent;
+import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Plan;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface PlanService {
 
     Plan findById(Long idPlan);
 
-    Plan findByIdPersonAndPeriod(Long idPerson, String period);
+    Plan findByIdPersonAndPeriod(Long idPerson, Period period);
 
     List<Plan> findByDocent(Docent docent);
 
@@ -23,6 +24,6 @@ public interface PlanService {
 
     Plan update(Plan plan, Long idPlan);
 
-    String updateNotEditable(Long idPerson, String period);
+    String updateNotEditable(Long idPerson, Long idPeriod);
 
 }

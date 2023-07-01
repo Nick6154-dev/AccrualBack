@@ -19,9 +19,6 @@ public class AccrualDataServiceImpl implements AccrualDataService {
     @Autowired
     private AccrualDataRepository repository;
 
-    @Autowired
-    private DocentService docentService;
-
     @Override
     @Transactional(readOnly = true)
     public List<AccrualData> findAll() {

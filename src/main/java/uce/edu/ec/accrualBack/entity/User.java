@@ -31,4 +31,13 @@ public class User {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private List<Role> roles;
 
+    public User() {
+    }
+
+    public User(String username, String password, Long idPerson, List<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.idPerson = idPerson;
+        this.roles = roles;
+    }
 }

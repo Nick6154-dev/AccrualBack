@@ -2,6 +2,7 @@ package uce.edu.ec.accrualBack.repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Plan;
 
 import java.util.List;
@@ -12,8 +13,7 @@ public interface PlanRepository extends CrudRepository<Plan, Long> {
     @Query("FROM Plan WHERE numberPlan = (SELECT MAX(p.numberPlan) FROM Plan p WHERE p.idDocent=:idDocent) AND idDocent=:idDocent")
     Optional<Plan> findNextNumberPlanByIdDocent(Long idDocent);
 
-    @Query("FROM Plan p WHERE p.period.valuePeriod=:period AND p.idDocent=:idDocent")
-    Optional<Plan> findByPeriodAndIdDocent(String period, Long idDocent);
+    Optional<Plan> findPlanByPeriodAndIdDocent(Period period, Long idDocent);
 
     Optional<List<Plan>> findPlansByIdDocent(Long idDocent);
 

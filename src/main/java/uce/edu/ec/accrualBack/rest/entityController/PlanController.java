@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Plan;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
@@ -17,6 +19,9 @@ public class PlanController {
 
     @Autowired
     private PlanService service;
+
+    @Autowired
+    private PeriodService periodService;
 
     @Autowired
     private UtilCommonsService commonsService;
@@ -31,8 +36,9 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idPlan));
     }
 
-    @GetMapping("/byIdPersonPeriod/{idPerson},{period}")
-    public ResponseEntity<?> findByPersonPeriod(@PathVariable Long idPerson, @PathVariable String period) {
+    @GetMapping("/byIdPersonPeriod/{idPerson},{idPeriod}")
+    public ResponseEntity<?> findByPersonPeriod(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
+        Period period = periodService.findById(idPeriod);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByIdPersonAndPeriod(idPerson, period));
     }
 
@@ -57,9 +63,9 @@ public class PlanController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(plan, idPlan));
     }
 
-    @PatchMapping("/updatePlanNotEditable/{idPerson},{period}")
-    public ResponseEntity<?> updatePlanNotEditable(@PathVariable Long idPerson, @PathVariable String period) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateNotEditable(idPerson, period));
+    @PatchMapping("/updatePlanNotEditable/{idPerson},{idPeriod}")
+    public ResponseEntity<?> updatePlanNotEditable(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateNotEditable(idPerson, idPeriod));
     }
 
 }

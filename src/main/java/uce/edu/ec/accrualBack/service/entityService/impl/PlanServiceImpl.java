@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Docent;
+import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Plan;
 import uce.edu.ec.accrualBack.repository.PlanRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
+import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,12 @@ public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private DocentService docentService;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private PeriodService periodService;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,9 +45,9 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional(readOnly = true)
-    public Plan findByIdPersonAndPeriod(Long idPerson, String period) {
+    public Plan findByIdPersonAndPeriod(Long idPerson, Period period) {
         return Optional.of(docentService.findByIdPerson(idPerson)).map(value -> {
-            return repository.findByPeriodAndIdDocent(period, value.getIdDocent()).orElseGet(Plan::new);
+            return repository.findPlanByPeriodAndIdDocent(period, value.getIdDocent()).orElseGet(Plan::new);
         }).orElseGet(Plan::new);
     }
 
@@ -55,7 +64,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public Plan save(Plan plan) {
-        return repository.findByPeriodAndIdDocent(plan.getPeriod().getValuePeriod(), plan.getIdDocent())
+        return repository.findPlanByPeriodAndIdDocent(plan.getPeriod(), plan.getIdDocent())
                 .orElseGet(() -> {
                     Optional<Plan> optionalPlan = repository.findNextNumberPlanByIdDocent(plan.getIdDocent());
                     return optionalPlan.map(value -> {
@@ -84,12 +93,14 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public String updateNotEditable(Long idPerson, String period) {
+    public String updateNotEditable(Long idPerson, Long idPeriod) {
+        Period period = periodService.findById(idPeriod);
         return Optional.of(docentService.findByIdPerson(idPerson))
-                .map(docent -> repository.findByPeriodAndIdDocent(period, docent.getIdDocent())
+                .map(docent -> repository.findPlanByPeriodAndIdDocent(period, docent.getIdDocent())
                         .map(value -> {
                             value.setEditable(false);
                             repository.save(value);
+                            mailService.sendPlanNotificationMail(idPerson);
                             return "Este plan ya no se podra editar";
                         }).orElseGet(() -> "No se pudo encontrar un plan"))
                 .orElseGet(() -> "No se ha encontrado un plan asignado a ese id persona");

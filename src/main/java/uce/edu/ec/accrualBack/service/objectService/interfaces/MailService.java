@@ -2,6 +2,12 @@ package uce.edu.ec.accrualBack.service.objectService.interfaces;
 
 public interface MailService {
 
-    void setSettlementTrue(Long idPerson);
+    void sendSettlementNotificationMail(Long idPerson);
+
+    void sendPlanNotificationMail(Long idPerson);
+
+    void sendStatePlanNotificationMail(Long idDocent, Long state, String observations, String period);
+
+    void sendNewDocentNotificationMail(Long idPerson);
 
 }

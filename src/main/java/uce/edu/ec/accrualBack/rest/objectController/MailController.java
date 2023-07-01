@@ -17,7 +17,7 @@ public class MailController {
 
     @PostMapping("/approveSettlement/{idPerson}")
     public void approveSettlement(@PathVariable Long idPerson) {
-        mailService.setSettlementTrue(idPerson);
+        mailService.sendSettlementNotificationMail(idPerson);
     }
 
 }

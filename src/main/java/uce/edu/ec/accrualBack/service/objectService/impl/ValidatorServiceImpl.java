@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.ValidatorObject;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
+import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UniversityInstitutionService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
@@ -45,6 +46,9 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Autowired
     private DocentService docentService;
 
+    @Autowired
+    private MailService mailService;
+
     @Override
     public List<ValidatorObject> findAllPersonDocentPlan() {
         List<ValidatorObject> validatorObjects = new ArrayList<>();
@@ -78,6 +82,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             value.setState(plan.getState());
             value.setObservations(plan.getObservations());
             planService.save(value);
+            mailService.sendStatePlanNotificationMail(plan.getIdDocent(), Long.valueOf(plan.getState()), plan.getObservations(),
+                    plan.getPeriod().getValuePeriod());
             return "Estado de plan actualizado junto con las observaciones";
         }).orElseGet(() -> "No se encontro el id del plan para la actualizacion");
     }
@@ -88,6 +94,8 @@ public class ValidatorServiceImpl implements ValidatorService {
         for (Plan p : plans) {
             p.setState(1);
             planService.save(p);
+            mailService.sendStatePlanNotificationMail(p.getIdDocent(), Long.valueOf(p.getState()), "Sin observaciones",
+                    p.getPeriod().getValuePeriod());
         }
     }
 
