@@ -82,8 +82,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             value.setState(plan.getState());
             value.setObservations(plan.getObservations());
             planService.save(value);
-            mailService.sendStatePlanNotificationMail(plan.getIdDocent(), Long.valueOf(plan.getState()), plan.getObservations(),
-                    plan.getPeriod().getValuePeriod());
+            mailService.sendStatePlanNotificationMail(value.getIdDocent(), Long.valueOf(value.getState()), value.getObservations(),
+                    value.getPeriod().getValuePeriod());
             return "Estado de plan actualizado junto con las observaciones";
         }).orElseGet(() -> "No se encontro el id del plan para la actualizacion");
     }
