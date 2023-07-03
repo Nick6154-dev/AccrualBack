@@ -60,9 +60,8 @@ public class PlanActivityServiceImpl implements PlanActivityService {
     @Transactional
     public String deleteByIdActivityPlan(Long idActivityPlan) {
         return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
-            if (activityPlan.getType().getIdActivityType().intValue() == 2) {
-                System.out.println("Entro a la condicion");
-                descriptionService.delete(descriptionService.findDescriptionByActivityPlan(activityPlan));
+            if (descriptionService.existsByActivityPlan(activityPlan)) {
+                descriptionService.deleteByActivityPlan(activityPlan);
             }
             activityService.delete(activityPlan.getActivity());
             activityPlanService.delete(activityPlan);
@@ -73,7 +72,7 @@ public class PlanActivityServiceImpl implements PlanActivityService {
     @Override
     @Transactional
     public String update(PlanActivity activityPlanAccrual, Long idActivityPlan) {
-        return Optional.of(activityPlanService.findById(idActivityPlan)).map(value -> {
+        return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
             if (typeService.findById(activityPlanAccrual.getIdActivityType()) != null &&
                     subtypeService.findById(activityPlanAccrual.getIdActivitySubtype()) != null) {
                 if (!Objects.equals(subtypeService.findById(
@@ -81,13 +80,16 @@ public class PlanActivityServiceImpl implements PlanActivityService {
                         typeService.findById(activityPlanAccrual.getIdActivityType()).getIdActivityType())) {
                     return "El subtipo de actividad no pertenece";
                 }
-                if (value.getType().getIdActivityType().intValue() == 2
-                        && descriptionService.findDescriptionByActivityPlan(value) != null) {
-                    loadDescription(activityPlanAccrual, value, descriptionService.findDescriptionByActivityPlan(value));
+                if (descriptionService.existsByActivityPlan(activityPlan)) {
+                    descriptionService.deleteByActivityPlan(activityPlan);
                 }
-                loadPlanAccrual(activityPlanAccrual, loadActivity(activityPlanAccrual, value.getActivity()),
+                if (activityPlan.getType().getIdActivityType().intValue() == 2
+                        && descriptionService.findDescriptionByActivityPlan(activityPlan) != null) {
+                    loadDescription(activityPlanAccrual, activityPlan, descriptionService.findDescriptionByActivityPlan(activityPlan));
+                }
+                loadPlanAccrual(activityPlanAccrual, loadActivity(activityPlanAccrual, activityPlan.getActivity()),
                         typeService.findById(activityPlanAccrual.getIdActivityType()),
-                        subtypeService.findById(activityPlanAccrual.getIdActivitySubtype()), value);
+                        subtypeService.findById(activityPlanAccrual.getIdActivitySubtype()), activityPlan);
                 return "Actividad actualizada correctamente";
             } else {
                 return "Problemas al cargar el tipo o subtipo enviados";

@@ -37,11 +37,13 @@ public class DescriptionServiceImpl implements DescriptionService {
     }
 
     @Override
+    @Transactional
     public Description save(Description description) {
         return repository.save(description);
     }
 
     @Override
+    @Transactional
     public String delete(Description description) {
         return repository.findById(description.getIdDescriptionSubtype()).map(value -> {
             repository.delete(value);
@@ -50,6 +52,7 @@ public class DescriptionServiceImpl implements DescriptionService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long idDescription) {
         return repository.findById(idDescription).map(value -> {
             repository.delete(value);
@@ -58,10 +61,24 @@ public class DescriptionServiceImpl implements DescriptionService {
     }
 
     @Override
+    @Transactional
+    public String deleteByActivityPlan(ActivityPlan activityPlan) {
+        repository.deleteDescriptionByActivityPlan(activityPlan);
+        return "Elimnado la descripcion subtipo con exito";
+    }
+
+    @Override
+    @Transactional
     public Description update(Description description, Long idDescription) {
         return repository.findById(idDescription).map(value -> {
             description.setIdDescriptionSubtype(idDescription);
             return repository.save(description);
         }).orElseGet(Description::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByActivityPlan(ActivityPlan activityPlan) {
+        return repository.existsByActivityPlan(activityPlan);
     }
 }

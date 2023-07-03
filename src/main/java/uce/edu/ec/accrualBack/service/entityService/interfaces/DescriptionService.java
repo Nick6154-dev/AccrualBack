@@ -19,6 +19,10 @@ public interface DescriptionService {
 
     String deleteById(Long idDescription);
 
+    String deleteByActivityPlan(ActivityPlan activityPlan);
+
     Description update(Description description, Long idDescription);
+
+    boolean existsByActivityPlan(ActivityPlan activityPlan);
 
 }
