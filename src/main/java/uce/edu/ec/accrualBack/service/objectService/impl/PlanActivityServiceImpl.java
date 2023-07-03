@@ -59,14 +59,13 @@ public class PlanActivityServiceImpl implements PlanActivityService {
     @Override
     @Transactional
     public String deleteByIdActivityPlan(Long idActivityPlan) {
-        return Optional.of(activityPlanService.findById(idActivityPlan)).map(value -> {
-            if (value.getType().getIdActivityType().intValue() == 2) {
-                if (descriptionService.findDescriptionByActivityPlan(value).getIdDescriptionSubtype() != null) {
-                    descriptionService.delete(descriptionService.findDescriptionByActivityPlan(value));
-                }
+        return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
+            if (activityPlan.getType().getIdActivityType().intValue() == 2) {
+                System.out.println("Entro a la condicion");
+                descriptionService.delete(descriptionService.findDescriptionByActivityPlan(activityPlan));
             }
-            activityService.delete(value.getActivity());
-            activityPlanService.delete(value);
+            activityService.delete(activityPlan.getActivity());
+            activityPlanService.delete(activityPlan);
             return "Eliminado con exito";
         }).orElse("El id especificado no se encuentra en el sistema");
     }
