@@ -61,7 +61,7 @@ public class PlanActivityServiceImpl implements PlanActivityService {
     public String deleteByIdActivityPlan(Long idActivityPlan) {
         return Optional.of(activityPlanService.findById(idActivityPlan)).map(value -> {
             if (value.getType().getIdActivityType().intValue() == 2) {
-                if (descriptionService.findDescriptionByActivityPlan(value) != null) {
+                if (descriptionService.findDescriptionByActivityPlan(value).getIdDescriptionSubtype() != null) {
                     descriptionService.delete(descriptionService.findDescriptionByActivityPlan(value));
                 }
             }
