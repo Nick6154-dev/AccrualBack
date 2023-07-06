@@ -10,6 +10,7 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionAc
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/activityPlanAccrual")
@@ -26,8 +27,11 @@ public class PlanInstitutionActivityController {
         if (result.hasErrors()) {
             return utilCommonsService.validate(result);
         }
+        HashMap<String, String> data = new HashMap<>();
+        data.put("respuesta", "Se guardo exitosamente");
+        planInstitutionActivityService.addNewActivityWithInstitution(converter);
         return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(planInstitutionActivityService.addNewActivityWithInstitution(converter));
+                .body(data);
     }
 
     @DeleteMapping("/{idActivityPlan}")
