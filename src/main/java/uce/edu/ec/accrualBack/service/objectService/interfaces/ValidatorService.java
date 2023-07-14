@@ -19,6 +19,6 @@ public interface ValidatorService {
 
     byte[] generateExcelDocentsInPlan();
 
-    byte[] generateExcelSelectDocentsActivitiesPlan(List<ValidatorObject> validatorsObjects);
+    byte[] generateExcelSelectDocentsActivitiesPlan(List<Long> idsPeople);
 
 }

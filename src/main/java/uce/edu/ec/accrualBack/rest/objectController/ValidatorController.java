@@ -64,8 +64,8 @@ public class ValidatorController {
     }
 
     @PostMapping("/generateExcelSelectDocentsActivitiesPlan")
-    public ResponseEntity<?> generateExcelSelectDocentsActivitiesPlan(@RequestBody List<ValidatorObject> validatorObjects) {
-        byte[] excelBytes = validatorService.generateExcelSelectDocentsActivitiesPlan(validatorObjects);
+    public ResponseEntity<?> generateExcelSelectDocentsActivitiesPlan(@RequestBody List<Long> idsPeople) {
+        byte[] excelBytes = validatorService.generateExcelSelectDocentsActivitiesPlan(idsPeople);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "Actividades de Docentes.xlsx");

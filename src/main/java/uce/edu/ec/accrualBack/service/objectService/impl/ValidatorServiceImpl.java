@@ -187,14 +187,15 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
-    public byte[] generateExcelSelectDocentsActivitiesPlan(List<ValidatorObject> validatorsObjects) {
+    public byte[] generateExcelSelectDocentsActivitiesPlan(List<Long> idsPeople) {
         Workbook workbook = new XSSFWorkbook();
-        for (ValidatorObject vo : validatorsObjects) {
-            String fullName = vo.getPerson().getName() + " " + vo.getPerson().getLastname();
+        for (Long idPerson : idsPeople) {
+            Person person = personService.findById(idPerson);
+            String fullName = person.getName() + " " + person.getLastname();
             Sheet sheet = workbook.createSheet(fullName);
             //Adding person information
-            docentContentExcelInformation(vo.getPerson(), sheet, 0);
-            Docent docent = docentService.findByIdPerson(vo.getPerson().getIdPerson());
+            docentContentExcelInformation(person, sheet, 0);
+            Docent docent = docentService.findByIdPerson(person.getIdPerson());
             List<Plan> plans = planService.findByDocent(docent);
             int row = 3;
             for (Plan p : plans) {
