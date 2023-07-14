@@ -16,7 +16,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uce.edu.ec.accrualBack.auth.filter.JWTAuthenticationFilter;
 import uce.edu.ec.accrualBack.auth.filter.JWTAuthorizationFilter;
 import uce.edu.ec.accrualBack.auth.service.JWTService;
-import uce.edu.ec.accrualBack.service.objectService.impl.AuthUserDetailsService;
+import uce.edu.ec.accrualBack.auth.service.AuthUserDetailsService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
+    private PeriodService periodService;
+
+    @Autowired
     private JWTService jwtService;
 
     @Value("${env.linkFront}")
@@ -43,7 +47,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/faculty/withoutToken", "/register/ByHimself")
                 .permitAll().anyRequest().authenticated()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService, periodService))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

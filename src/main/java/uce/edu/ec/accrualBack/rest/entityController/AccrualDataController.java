@@ -9,6 +9,7 @@ import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
+import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
@@ -22,6 +23,9 @@ public class AccrualDataController {
 
     @Autowired
     private DocentService docentService;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private UtilCommonsService commonsService;
@@ -57,6 +61,11 @@ public class AccrualDataController {
             return commonsService.validate(result);
         }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(accrualData));
+    }
+
+    @PatchMapping("/approveSettlement/{idPerson}")
+    public void approveSettlement(@PathVariable Long idPerson) {
+        mailService.sendSettlementNotificationMail(idPerson);
     }
 
     @DeleteMapping("/{idAccrualData}")

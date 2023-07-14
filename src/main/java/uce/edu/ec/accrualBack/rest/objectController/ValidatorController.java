@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.entity.Plan;
+import uce.edu.ec.accrualBack.object.ValidatorObject;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/validator")
@@ -55,6 +58,17 @@ public class ValidatorController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", "Lista Docentes.xlsx");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelBytes);
+    }
+
+    @PostMapping("/generateExcelSelectDocentsActivitiesPlan")
+    public ResponseEntity<?> generateExcelSelectDocentsActivitiesPlan(@RequestBody List<ValidatorObject> validatorObjects) {
+        byte[] excelBytes = validatorService.generateExcelSelectDocentsActivitiesPlan(validatorObjects);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", "Actividades de Docentes.xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);

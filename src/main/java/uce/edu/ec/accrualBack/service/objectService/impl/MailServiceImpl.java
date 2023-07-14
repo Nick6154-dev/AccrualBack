@@ -5,17 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class MailServiceImpl implements MailService {

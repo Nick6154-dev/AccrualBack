@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class Converter {
+public class PlanInstitutionActivity {
 
     private Long idPlan;
 
@@ -17,6 +17,7 @@ public class Converter {
 
     private LocalDate endDate;
 
+    //Validate
     private String evidences;
 
     private Long idActivityType;
@@ -31,6 +32,7 @@ public class Converter {
 
     private String otherInstitutionName;
 
+    //Validate
     private String verificationLink;
 
     private Long idUniversity;
@@ -43,29 +45,35 @@ public class Converter {
 
     private Long idPeriod;
 
-    public Converter() {
+    public PlanInstitutionActivity() {
     }
 
-    public Converter(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate, String evidences,
-                     Long idActivityType, Long idActivitySubtype, String descriptionSubtype, Long idActivity,
-                     String institutionName, String otherInstitutionName, String verificationLink, Long idUniversity,
-                     Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
+    //Constructor to validate activities
+    public PlanInstitutionActivity(String evidences, String verificationLink) {
+        this.evidences = evidences;
+        this.verificationLink = verificationLink;
+    }
+
+    //Constructor to register activities
+    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate,
+                                   Long idActivityType, Long idActivitySubtype, String descriptionSubtype, Long idActivity,
+                                   String institutionName, String otherInstitutionName, Long idUniversity,
+                                   Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
         this.idPlan = idPlan;
         this.descriptionActivity = descriptionActivity;
         this.starDate = starDate;
         this.endDate = endDate;
-        this.evidences = evidences;
         this.idActivityType = idActivityType;
         this.idActivitySubtype = idActivitySubtype;
         this.descriptionSubtype = descriptionSubtype;
         this.idActivity = idActivity;
         this.institutionName = institutionName;
         this.otherInstitutionName = otherInstitutionName;
-        this.verificationLink = verificationLink;
         this.idUniversity = idUniversity;
         this.idFaculty = idFaculty;
         this.idCareer = idCareer;
         this.idPerson = idPerson;
         this.idPeriod = idPeriod;
     }
+
 }

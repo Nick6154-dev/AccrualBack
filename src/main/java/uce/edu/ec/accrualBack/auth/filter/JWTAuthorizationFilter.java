@@ -45,7 +45,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     protected boolean requiresAuthentication(String header) {
-
         if (header == null || !header.startsWith(JWTServiceImpl.TOKEN_PREFIX)) {
             return false;
         }

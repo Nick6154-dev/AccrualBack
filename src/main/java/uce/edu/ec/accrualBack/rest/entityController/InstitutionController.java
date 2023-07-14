@@ -14,7 +14,7 @@ import uce.edu.ec.accrualBack.entity.UniversityInstitution;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.ActivityPlanService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.InstitutionService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.OtherInstitutionService;
-import uce.edu.ec.accrualBack.service.objectService.interfaces.UniversityInstitutionService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.UniversityInstitutionService;
 
 import java.util.ArrayList;
 import java.util.HashMap;

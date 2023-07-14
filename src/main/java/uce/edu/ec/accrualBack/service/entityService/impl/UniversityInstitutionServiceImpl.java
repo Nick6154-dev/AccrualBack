@@ -1,11 +1,11 @@
-package uce.edu.ec.accrualBack.service.objectService.impl;
+package uce.edu.ec.accrualBack.service.entityService.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.entity.Institution;
 import uce.edu.ec.accrualBack.entity.UniversityInstitution;
 import uce.edu.ec.accrualBack.repository.UniversityInstitutionRepository;
-import uce.edu.ec.accrualBack.service.objectService.interfaces.UniversityInstitutionService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.UniversityInstitutionService;
 
 import java.util.ArrayList;
 import java.util.List;

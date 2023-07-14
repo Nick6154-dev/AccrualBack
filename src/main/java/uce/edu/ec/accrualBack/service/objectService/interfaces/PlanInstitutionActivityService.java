@@ -1,13 +1,15 @@
 package uce.edu.ec.accrualBack.service.objectService.interfaces;
 
-import uce.edu.ec.accrualBack.object.Converter;
+import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
 
 public interface PlanInstitutionActivityService {
 
-    String addNewActivityWithInstitution(Converter converter);
+    String addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution);
 
     String deleteActivityWithInstitution(Long idActivityPlan);
 
-    String updateActivityWithInstitution(Converter converter, Long idActivityPlan);
+    String updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan);
+
+    String validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan);
 
 }

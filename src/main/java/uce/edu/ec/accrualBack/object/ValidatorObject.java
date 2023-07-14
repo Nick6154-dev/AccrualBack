@@ -24,6 +24,10 @@ public class ValidatorObject {
     public ValidatorObject() {
     }
 
+    public ValidatorObject(Person person) {
+        this.person = person;
+    }
+
     public ValidatorObject(Person person, Docent docent) {
         this.person = person;
         this.docent = docent;

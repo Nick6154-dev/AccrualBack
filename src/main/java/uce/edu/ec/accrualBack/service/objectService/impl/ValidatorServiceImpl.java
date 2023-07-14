@@ -9,7 +9,6 @@ import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.ValidatorObject;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
-import uce.edu.ec.accrualBack.service.objectService.interfaces.UniversityInstitutionService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
 import java.io.ByteArrayOutputStream;
@@ -116,19 +115,26 @@ public class ValidatorServiceImpl implements ValidatorService {
         //Create a sheet
         Sheet sheet = workbook.createSheet(person.getName() + " " + person.getLastname());
         //Now we add activities plan about docent
-        docentContentExcelInformation(person, sheet);
+        docentContentExcelInformation(person, sheet, 0);
+        //Adding period of this plan
+        periodPlanDocentContent(sheet, plan, 3);
         //Let's start with the content, first personal information about docent
-        planDocentContentInformation(activityPlans, sheet);
+        planDocentContentInformation(activityPlans, sheet, 5);
         //Let's apply some style
-        applyBorderStyle(sheet, createBorderStyle(workbook), 0, 1, 0, 3);
-        applyBorderStyle(sheet, createBorderStyle(workbook), 3, sheet.getLastRowNum()
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
+        applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 3, 3, 0, 3);
+        applyBorderStyle(sheet, createContentStyle(workbook), 4, 4, 0, 3);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 5, 5, 0
+                , sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+        applyBorderStyle(sheet, createContentStyle(workbook), 6, sheet.getLastRowNum()
                 , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
         adjustColumnRow(sheet.getRow(0), sheet);
+        adjustColumnRow(sheet.getRow(1), sheet);
         adjustColumnRow(sheet.getRow(3), sheet);
-        applyBoldStyleRow(sheet.getRow(0), createBoldStyle(workbook));
-        applyBoldStyleRow(sheet.getRow(3), createBoldStyle(workbook));
-        applyForegroundColorRow(sheet.getRow(0), createForegroundColorRow(workbook));
-        applyForegroundColorRow(sheet.getRow(3), createForegroundColorRow(workbook));
+        adjustColumnRow(sheet.getRow(4), sheet);
+        adjustColumnRow(sheet.getRow(5), sheet);
+        adjustColumnRow(sheet.getRow(6), sheet);
         try {
             //Save the workbook in a bytes array
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -166,11 +172,10 @@ public class ValidatorServiceImpl implements ValidatorService {
             docentsInPlanContentExcelInformation(personService.findById(d.getIdPerson()), sheet, row);
             row++;
         }
-        applyBorderStyle(sheet, createBorderStyle(workbook), 0, sheet.getLastRowNum()
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
+        applyBorderStyle(sheet, createContentStyle(workbook), 1, sheet.getLastRowNum()
                 , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
         adjustColumnRow(sheet.getRow(0), sheet);
-        applyBoldStyleRow(sheet.getRow(0), createBoldStyle(workbook));
-        applyForegroundColorRow(sheet.getRow(0), createForegroundColorRow(workbook));
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
@@ -181,8 +186,64 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    private void planDocentContentInformation(List<ActivityPlan> activityPlans, Sheet sheet) {
-        Row headerActivitiesPlan = sheet.createRow(3);
+    @Override
+    public byte[] generateExcelSelectDocentsActivitiesPlan(List<ValidatorObject> validatorsObjects) {
+        Workbook workbook = new XSSFWorkbook();
+        for (ValidatorObject vo : validatorsObjects) {
+            String fullName = vo.getPerson().getName() + " " + vo.getPerson().getLastname();
+            Sheet sheet = workbook.createSheet(fullName);
+            //Adding person information
+            docentContentExcelInformation(vo.getPerson(), sheet, 0);
+            Docent docent = docentService.findByIdPerson(vo.getPerson().getIdPerson());
+            List<Plan> plans = planService.findByDocent(docent);
+            int row = 3;
+            for (Plan p : plans) {
+                //Adding period of this plan
+                periodPlanDocentContent(sheet, p, row);
+                //Let's start with the content, first personal information about docent
+                row += 2;
+                List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(p.getIdPlan());
+                planDocentContentInformation(activityPlans, sheet, row);
+                //Let's apply some style
+                applyBorderStyle(sheet, createHeaderStyle(workbook), row - 2, row - 2, 0, 3);
+                applyBorderStyle(sheet, createContentStyle(workbook), row - 1, row - 1, 0, 3);
+                applyBorderStyle(sheet, createHeaderStyle(workbook), row, row, 0
+                        , sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+                applyBorderStyle(sheet, createContentStyle(workbook), row + 1, sheet.getLastRowNum()
+                        , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+                adjustColumnRow(sheet.getRow(row - 2), sheet);
+                adjustColumnRow(sheet.getRow(row - 1), sheet);
+                adjustColumnRow(sheet.getRow(row), sheet);
+                adjustColumnRow(sheet.getRow(row + 1), sheet);
+                row = sheet.getLastRowNum() + 2;
+            }
+            adjustColumnRow(sheet.getRow(0), sheet);
+            adjustColumnRow(sheet.getRow(1), sheet);
+            applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
+            applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
+        }
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void periodPlanDocentContent(Sheet sheet, Plan plan, int row) {
+        Row headerPeriodPlan = sheet.createRow(row);
+        headerPeriodPlan.createCell(0).setCellValue("PERIODO");
+        sheet.addMergedRegion(new CellRangeAddress(row, row, 0, 3));
+        row += 1;
+        Row contentPeriodPlan = sheet.createRow(row);
+        contentPeriodPlan.createCell(0).setCellValue(plan.getPeriod().getValuePeriod());
+        sheet.addMergedRegion(new CellRangeAddress(row, row, 0, 3));
+    }
+
+    private void planDocentContentInformation(List<ActivityPlan> activityPlans, Sheet sheet, int row) {
+        Row headerActivitiesPlan = sheet.createRow(row);
         headerActivitiesPlan.createCell(0).setCellValue("TIPO DE ACTIVIDAD");
         headerActivitiesPlan.createCell(1).setCellValue("SUBTIPO DE ACTIVIDAD");
         headerActivitiesPlan.createCell(2).setCellValue("DESCRIPCION DE ACTIVIDAD");
@@ -196,7 +257,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         headerActivitiesPlan.createCell(10).setCellValue("FACULTAD");
         headerActivitiesPlan.createCell(11).setCellValue("CARRERA");
         Row contentActivitiesPlan;
-        int numberRow = 4;
+        int numberRow = row + 1;
         int numberCell;
         Description description;
         Institution institution;
@@ -254,13 +315,14 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    private void docentContentExcelInformation(Person person, Sheet sheet) {
-        Row headerDocentInformation = sheet.createRow(0);
+    private void docentContentExcelInformation(Person person, Sheet sheet, int row) {
+        Row headerDocentInformation = sheet.createRow(row);
         headerDocentInformation.createCell(0).setCellValue("NOMBRES");
         headerDocentInformation.createCell(1).setCellValue("APELLIDOS");
         headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
         headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
-        Row contentDocentInformation = sheet.createRow(1);
+        row += 1;
+        Row contentDocentInformation = sheet.createRow(row);
         contentDocentInformation.createCell(0).setCellValue(person.getName());
         contentDocentInformation.createCell(1).setCellValue(person.getLastname());
         contentDocentInformation.createCell(2).setCellValue(person.getEmail());
@@ -275,34 +337,35 @@ public class ValidatorServiceImpl implements ValidatorService {
         contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
     }
 
-    private CellStyle createBoldStyle(Workbook workbook) {
-        CellStyle boldCellStyle = workbook.createCellStyle();
-        Font boldFont = workbook.createFont();
-        boldFont.setBold(true);
-        boldCellStyle.setFont(boldFont);
-        return boldCellStyle;
+    private CellStyle createHeaderStyle(Workbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        Font font = workbook.createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 14);
+        font.setBold(true);
+        cellStyle.setFont(font);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setFillForegroundColor(IndexedColors.AQUA.getIndex());
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        return cellStyle;
     }
 
-    private CellStyle createBorderStyle(Workbook workbook) {
-        CellStyle borderStyle = workbook.createCellStyle();
-        borderStyle.setBorderTop(BorderStyle.THIN);
-        borderStyle.setBorderBottom(BorderStyle.THIN);
-        borderStyle.setBorderLeft(BorderStyle.THIN);
-        borderStyle.setBorderRight(BorderStyle.THIN);
-        return borderStyle;
-    }
-
-    private CellStyle createForegroundColorRow(Workbook workbook) {
-        CellStyle foregroundCellStyle = workbook.createCellStyle();
-        foregroundCellStyle.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
-        foregroundCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        return foregroundCellStyle;
-    }
-
-    private void applyForegroundColorRow(Row row, CellStyle cellStyle) {
-        for (Cell cell : row) {
-            cell.setCellStyle(cellStyle);
-        }
+    private CellStyle createContentStyle(Workbook workbook) {
+        CellStyle cellStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setFontName("Arial");
+        font.setFontHeightInPoints((short) 12);
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        return cellStyle;
     }
 
     private void applyBorderStyle(Sheet sheet, CellStyle borderStyle, int x1, int x2, int y1, int y2) {
@@ -319,12 +382,6 @@ public class ValidatorServiceImpl implements ValidatorService {
                 }
                 cell.setCellStyle(borderStyle);
             }
-        }
-    }
-
-    private void applyBoldStyleRow(Row row, CellStyle cellStyle) {
-        for (Cell cell : row) {
-            cell.setCellStyle(cellStyle);
         }
     }
 

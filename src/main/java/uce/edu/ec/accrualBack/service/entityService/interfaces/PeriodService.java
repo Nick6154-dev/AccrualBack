@@ -18,6 +18,8 @@ public interface PeriodService {
 
     String switchActivePeriod(Long idPeriod);
 
+    String switchStatePeriod(Long idPeriod);
+
     Period update(Period period, Long idPeriod);
 
 }

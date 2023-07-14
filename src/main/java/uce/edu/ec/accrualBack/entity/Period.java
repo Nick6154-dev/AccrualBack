@@ -26,4 +26,8 @@ public class Period {
     @Column(name = "activo")
     private Boolean active;
 
+    @NotNull
+    @Column(name = "estado")
+    private Boolean state;
+
 }

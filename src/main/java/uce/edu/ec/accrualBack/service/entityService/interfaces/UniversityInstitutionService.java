@@ -1,4 +1,4 @@
-package uce.edu.ec.accrualBack.service.objectService.interfaces;
+package uce.edu.ec.accrualBack.service.entityService.interfaces;
 
 import uce.edu.ec.accrualBack.entity.Institution;
 import uce.edu.ec.accrualBack.entity.UniversityInstitution;

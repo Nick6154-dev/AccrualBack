@@ -34,6 +34,11 @@ public class PeriodController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.switchActivePeriod(idPeriod));
     }
 
+    @PatchMapping("/switchStatePeriod/{idPeriod}")
+    public ResponseEntity<?> switchStatePeriod(@PathVariable Long idPeriod) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.switchStatePeriod(idPeriod));
+    }
+
     @DeleteMapping("/deletePeriodById/{idPeriod}")
     public ResponseEntity<?> deletePeriodById(@PathVariable Long idPeriod) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.delete(periodService.findById(idPeriod)));

@@ -39,6 +39,7 @@ public class PeriodServiceImpl implements PeriodService {
     public Period save(Period period) {
         return repository.findPeriodByValuePeriod(period.getValuePeriod()).orElseGet(() -> {
             period.setActive(true);
+            period.setState(true);
             return repository.save(period);
         });
     }
@@ -53,12 +54,22 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
+    @Transactional
     public String switchActivePeriod(Long idPeriod) {
-        return repository.findById(idPeriod).map(value -> {
-            value.setActive(!value.getActive());
-            repository.save(value);
+        return repository.findById(idPeriod).map(period -> {
+            period.setActive(!period.getActive());
+            repository.save(period);
+            return "Periodo cambido activo exitosamente";
+        }).orElse("No se ha encontrado un periodo con ese id");
+    }
+
+    @Override
+    public String switchStatePeriod(Long idPeriod) {
+        return repository.findById(idPeriod).map(period -> {
+            period.setState(!period.getActive());
+            repository.save(period);
             return "Periodo actualizado su estado exitosamente";
-        }).orElseGet(() -> "No se ha encontrado un periodo con ese id");
+        }).orElse("No se ha encontrado el periodo por ese id");
     }
 
     @Override
