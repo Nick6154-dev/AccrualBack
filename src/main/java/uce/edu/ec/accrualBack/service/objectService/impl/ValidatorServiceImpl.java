@@ -13,10 +13,7 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ValidatorServiceImpl implements ValidatorService {
@@ -115,7 +112,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         //Create a sheet
         Sheet sheet = workbook.createSheet(person.getName() + " " + person.getLastname());
         //Now we add activities plan about docent
-        docentContentExcelInformation(person, sheet, 0);
+        docentContentExcelInformation(Collections.singletonList(person), sheet, 0);
         //Adding period of this plan
         periodPlanDocentContent(sheet, plan, 3);
         //Let's start with the content, first personal information about docent
@@ -151,27 +148,18 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Override
     public byte[] generateExcelDocentsInPlan() {
         List<Docent> docents = docentService.findAll();
-        List<Docent> docentsInPlan = new ArrayList<>();
+        List<Person> peopleInPlan = new ArrayList<>();
         List<Plan> plans = planService.findAll();
         for (Plan p : plans) {
             for (Docent d : docents) {
                 if (Objects.equals(p.getIdDocent(), d.getIdDocent())) {
-                    docentsInPlan.add(d);
+                    peopleInPlan.add(personService.findById(d.getIdPerson()));
                 }
             }
         }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Docentes");
-        Row headerDocentInformation = sheet.createRow(0);
-        headerDocentInformation.createCell(0).setCellValue("NOMBRES");
-        headerDocentInformation.createCell(1).setCellValue("APELLIDOS");
-        headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
-        headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
-        int row = 1;
-        for (Docent d : docentsInPlan) {
-            docentsInPlanContentExcelInformation(personService.findById(d.getIdPerson()), sheet, row);
-            row++;
-        }
+        docentContentExcelInformation(peopleInPlan, sheet, 0);
         applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
         applyBorderStyle(sheet, createContentStyle(workbook), 1, sheet.getLastRowNum()
                 , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
@@ -194,7 +182,7 @@ public class ValidatorServiceImpl implements ValidatorService {
             String fullName = person.getName() + " " + person.getLastname();
             Sheet sheet = workbook.createSheet(fullName);
             //Adding person information
-            docentContentExcelInformation(person, sheet, 0);
+            docentContentExcelInformation(Collections.singletonList(person), sheet, 0);
             Docent docent = docentService.findByIdPerson(person.getIdPerson());
             List<Plan> plans = planService.findByDocent(docent);
             int row = 3;
@@ -316,26 +304,20 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    private void docentContentExcelInformation(Person person, Sheet sheet, int row) {
+    private void docentContentExcelInformation(List<Person> people, Sheet sheet, int row) {
         Row headerDocentInformation = sheet.createRow(row);
         headerDocentInformation.createCell(0).setCellValue("NOMBRES");
         headerDocentInformation.createCell(1).setCellValue("APELLIDOS");
         headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
         headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
-        row += 1;
-        Row contentDocentInformation = sheet.createRow(row);
-        contentDocentInformation.createCell(0).setCellValue(person.getName());
-        contentDocentInformation.createCell(1).setCellValue(person.getLastname());
-        contentDocentInformation.createCell(2).setCellValue(person.getEmail());
-        contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
-    }
-
-    private void docentsInPlanContentExcelInformation(Person person, Sheet sheet, int row) {
-        Row contentDocentInformation = sheet.createRow(row);
-        contentDocentInformation.createCell(0).setCellValue(person.getName());
-        contentDocentInformation.createCell(1).setCellValue(person.getLastname());
-        contentDocentInformation.createCell(2).setCellValue(person.getEmail());
-        contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
+        for (Person person : people) {
+            row += 1;
+            Row contentDocentInformation = sheet.createRow(row);
+            contentDocentInformation.createCell(0).setCellValue(person.getName());
+            contentDocentInformation.createCell(1).setCellValue(person.getLastname());
+            contentDocentInformation.createCell(2).setCellValue(person.getEmail());
+            contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
+        }
     }
 
     private CellStyle createHeaderStyle(Workbook workbook) {
@@ -369,7 +351,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         return cellStyle;
     }
 
-    private void applyBorderStyle(Sheet sheet, CellStyle borderStyle, int x1, int x2, int y1, int y2) {
+    private void applyBorderStyle(Sheet sheet, CellStyle cellStyle, int x1, int x2, int y1, int y2) {
         CellRangeAddress tableRange = new CellRangeAddress(x1, x2, y1, y2);
         for (int rowNum = tableRange.getFirstRow(); rowNum <= tableRange.getLastRow(); rowNum++) {
             Row row = sheet.getRow(rowNum);
@@ -381,7 +363,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                 if (cell == null) {
                     cell = row.createCell(colNum);
                 }
-                cell.setCellStyle(borderStyle);
+                cell.setCellStyle(cellStyle);
             }
         }
     }

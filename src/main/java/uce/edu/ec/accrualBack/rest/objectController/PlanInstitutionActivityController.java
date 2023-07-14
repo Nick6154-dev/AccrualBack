@@ -5,15 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uce.edu.ec.accrualBack.entity.ActivityPlan;
-import uce.edu.ec.accrualBack.entity.Institution;
-import uce.edu.ec.accrualBack.entity.OtherInstitution;
-import uce.edu.ec.accrualBack.entity.UniversityInstitution;
+import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.ActivityPlanService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.InstitutionService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.OtherInstitutionService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.UniversityInstitutionService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
 import java.util.*;
@@ -21,6 +15,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/activityPlanAccrual")
 public class PlanInstitutionActivityController {
+
+    @Autowired
+    private PlanService planService;
+
+    @Autowired
+    private PeriodService periodService;
 
     @Autowired
     private PlanInstitutionActivityService planInstitutionActivityService;
@@ -43,9 +43,11 @@ public class PlanInstitutionActivityController {
     }
 
     @SneakyThrows
-    @GetMapping("/byPlan/{idPlan}")
-    public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPlan) {
-        List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(idPlan);
+    @GetMapping("/byPlan/{idPerson},{idPeriod}")
+    public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
+        Period period = periodService.findById(idPeriod);
+        Plan plan = planService.findByIdPersonAndPeriod(idPerson, period);
+        List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan());
         List<Map<String, Object>> activitiesInstitutions = new ArrayList<>();
         assert activityPlans != null;
         for (ActivityPlan ap : activityPlans) {

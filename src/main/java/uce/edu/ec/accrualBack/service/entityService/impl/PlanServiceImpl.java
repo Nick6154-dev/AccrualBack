@@ -46,9 +46,8 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional(readOnly = true)
     public Plan findByIdPersonAndPeriod(Long idPerson, Period period) {
-        return Optional.of(docentService.findByIdPerson(idPerson)).map(value -> {
-            return repository.findPlanByPeriodAndIdDocent(period, value.getIdDocent()).orElseGet(Plan::new);
-        }).orElseGet(Plan::new);
+        return Optional.of(docentService.findByIdPerson(idPerson)).map(value -> repository.findPlanByPeriodAndIdDocent
+                (period, value.getIdDocent()).orElseGet(Plan::new)).orElseGet(Plan::new);
     }
 
     @Override

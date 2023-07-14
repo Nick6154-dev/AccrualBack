@@ -62,28 +62,27 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     @Override
     public String addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution) {
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
-        if (docent != null) {
-            Plan plan = new Plan();
-            plan.setPeriod(periodService.findById(activityPlanInstitution.getIdPeriod()));
-            plan.setIdDocent(docent.getIdDocent());
-            plan.setStarDate(LocalDate.now());
-            plan.setEditable(true);
-            plan = planService.save(plan);
-            if (plan != null) {
-                if (!plan.getEditable()) return "Ya no se agregan mas actividades pues ya no es editable";
-                if (!plan.getPeriod().getActive()) return "Ya no se pueden agregar mas actividades, el periodo ya no esta activo";
-                if (!plan.getPeriod().getState()) return "Ya no se pueden agregar mas actividades, la etapa de registro ya paso";
-                activityPlanInstitution.setIdPlan(plan.getIdPlan());
-                ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
-                if (activityPlan == null) {
-                    return "Problemas al cargar el plan activity";
-                }
-                activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
-                saveInstitutionPlan(activityPlanInstitution);
-                return "Actividad nueva agregada";
-            } else {
-                return "Problemas al cargar el plan";
+        if (docent.getIdDocent() != null) {
+            Period period = periodService.findById(activityPlanInstitution.getIdPeriod());
+            Plan plan = planService.findByIdPersonAndPeriod(activityPlanInstitution.getIdPerson(), period);
+            if (plan.getIdPlan() == null) {
+                plan.setPeriod(period);
+                plan.setIdDocent(docent.getIdDocent());
+                plan.setStarDate(LocalDate.now());
+                plan.setEditable(true);
+                plan = planService.save(plan);
             }
+            if (!plan.getEditable()) return "Ya no se agregan mas actividades pues ya no es editable";
+            if (!plan.getPeriod().getActive()) return "Ya no se pueden agregar mas actividades, el periodo ya no esta activo";
+            if (!plan.getPeriod().getState()) return "Ya no se pueden agregar mas actividades, la etapa de registro ya paso";
+            activityPlanInstitution.setIdPlan(plan.getIdPlan());
+            ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
+            if (activityPlan == null) {
+                return "Problemas al cargar el plan activity";
+            }
+            activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
+            saveInstitutionPlan(activityPlanInstitution);
+            return "Actividad nueva agregada";
         }
         return "El id no pertenece a ningun docente";
     }

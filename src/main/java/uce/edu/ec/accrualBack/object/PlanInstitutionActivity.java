@@ -55,11 +55,10 @@ public class PlanInstitutionActivity {
     }
 
     //Constructor to register activities
-    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate,
-                                   Long idActivityType, Long idActivitySubtype, String descriptionSubtype, Long idActivity,
-                                   String institutionName, String otherInstitutionName, Long idUniversity,
-                                   Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
-        this.idPlan = idPlan;
+    public PlanInstitutionActivity(String descriptionActivity, LocalDate starDate, LocalDate endDate, Long idActivityType,
+                                   Long idActivitySubtype, String descriptionSubtype, Long idActivity, String institutionName,
+                                   String otherInstitutionName, Long idUniversity, Long idFaculty, Long idCareer, Long idPerson,
+                                   Long idPeriod) {
         this.descriptionActivity = descriptionActivity;
         this.starDate = starDate;
         this.endDate = endDate;
