@@ -9,6 +9,8 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -62,7 +64,8 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     */
     @Override
     @Transactional
-    public String addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution) {
+    public Map<Integer, String> addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
         if (docent.getIdDocent() != null) {
             Period period = periodService.findById(activityPlanInstitution.getIdPeriod());
@@ -74,41 +77,63 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 plan.setEditable(true);
                 plan = planService.save(plan);
             }
-            if (!plan.getEditable()) return "Ya no se agregan mas actividades pues ya no es editable";
-            if (!plan.getPeriod().getActive()) return "Ya no se pueden agregar mas actividades, el periodo ya no esta activo";
-            if (!plan.getPeriod().getState()) return "Ya no se pueden agregar mas actividades, la etapa de registro ya paso";
+            if (!plan.getEditable()) {
+                response.put(400, "Ya no se agregan mas actividades pues ya no es editable");
+                return response;
+            }
+            if (!plan.getPeriod().getActive()) {
+                response.put(400, "Ya no se pueden agregar mas actividades, el periodo ya no esta activo");
+                return response;
+            }
+            if (!plan.getPeriod().getState()) {
+                response.put(400, "Ya no se pueden agregar mas actividades, la etapa de registro ya paso");
+                return response;
+            }
             activityPlanInstitution.setIdPlan(plan.getIdPlan());
             ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
             if (activityPlan == null) {
-                return "Problemas al cargar el plan activity";
+                response.put(400, "Problemas al cargar el plan activity");
+                return response;
             }
             activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
             saveInstitutionPlan(activityPlanInstitution);
-            return "Actividad nueva agregada";
+            response.put(200, "Actividad nueva agregada");
+            return response;
         }
-        return "El id no pertenece a ningun docente";
+        response.put(400, "El id no pertenece a ningun docente");
+        return response;
     }
 
     @Override
     @Transactional
-    public String deleteActivityWithInstitution(Long idActivityPlan) {
+    public Map<Integer, String> deleteActivityWithInstitution(Long idActivityPlan) {
+        Map<Integer, String> response = new HashMap<>();
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
         if (activityPlan.getIdActivityPlan() != null) {
             Plan plan = planService.findById(activityPlan.getIdPlan());
-            if (plan.getIdPlan() == null) return "Error al buscar un plan asignado a la tabla actividad_plan";
-            if (!plan.getEditable()) return "Ya no se eliminan mas actividades pues ya no es editable";
-            String response = deleteActivityPlanById(idActivityPlan);
+            if (plan.getIdPlan() == null) {
+                response.put(400, "Error al buscar un plan asignado a la tabla actividad_plan");
+                return response;
+            }
+            if (!plan.getEditable()) {
+                response.put(400, "Ya no se eliminan mas actividades pues ya no es editable");
+                return response;
+            }
+            deleteActivityPlanById(idActivityPlan);
             Optional<Institution> institution = Optional.of(institutionService
                     .findInstitutionByActivity(activityPlan.getActivity().getIdActivity()));
             institution.ifPresent(this::deleteInstitutionPlan);
+            response.put(200, "Actividad eliminada con exito");
             return response;
         }
-        return "No se encontro el id proporcionado";
+        response.put(400, "No se encontro el id proporcionado");
+        return response;
     }
 
     @Override
     @Transactional
-    public String updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+    public Map<Integer, String> updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
         if (docent != null) {
             ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
@@ -116,24 +141,29 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 Plan plan = planService.findById(activityPlan.getIdPlan());
                 if (plan != null) {
                     if (!plan.getEditable()) {
-                        return "Ya no se actualizan mas actividades pues ya no es editable";
+                        response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
+                        return response;
                     }
                 }
                 activityPlanInstitution.setIdPlan(activityPlan.getIdPlan());
-                String response = updateActivityPlan(activityPlanInstitution, idActivityPlan);
+                updateActivityPlan(activityPlanInstitution, idActivityPlan);
                 activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
                 Optional<Institution> institution = Optional.of(institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity()));
                 institution.ifPresent(value -> updateInstitutionPlan(activityPlanInstitution, value.getIdInstitution()));
+                response.put(200, "Actividad actualizada con exito");
                 return response;
             }
-            return "Problemas al actualizar";
+            response.put(400, "Problemas al actualizar");
+            return response;
         }
-        return "Id de persona no encontrado";
+        response.put(400, "Id de persona no encontrado");
+        return response;
     }
 
     @Override
     @Transactional
-    public String validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+    public Map<Integer, String> validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+        Map<Integer, String> response = new HashMap<>();
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
         activityPlan.getActivity().setEvidences(activityPlanInstitution.getEvidences());
         activityPlanService.save(activityPlan);
@@ -143,7 +173,8 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             otherInstitution.setVerificationLink(activityPlanInstitution.getVerificationLink());
             otherInstitutionService.save(otherInstitution);
         }
-        return "Validaciones enviadas correctamente";
+        response.put(200, "Validaciones enviadas correctamente");
+        return response;
     }
     /*
         End of methods to register new activities

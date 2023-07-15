@@ -72,30 +72,33 @@ public class PlanInstitutionActivityController {
     }
 
     @PostMapping
-    ResponseEntity<?> save(@RequestBody PlanInstitutionActivity planInstitutionActivity) {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("response", planInstitutionActivityService.addNewActivityWithInstitution(planInstitutionActivity));
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(data);
+    ResponseEntity<String> save(@RequestBody PlanInstitutionActivity planInstitutionActivity) {
+        Map<Integer, String> response = planInstitutionActivityService.addNewActivityWithInstitution(planInstitutionActivity);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.get(400));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @DeleteMapping("/{idActivityPlan}")
-    public ResponseEntity<?> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(planInstitutionActivityService.deleteActivityWithInstitution(idActivityPlan));
+    public ResponseEntity<String> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
+        Map<Integer, String> response = planInstitutionActivityService.deleteActivityWithInstitution(idActivityPlan);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.get(400));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PutMapping("/{idActivityPlan}")
-    public ResponseEntity<?> update(@RequestBody PlanInstitutionActivity planInstitutionActivity,
+    public ResponseEntity<String> update(@RequestBody PlanInstitutionActivity planInstitutionActivity,
                                     @PathVariable Long idActivityPlan) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(planInstitutionActivityService.updateActivityWithInstitution(planInstitutionActivity, idActivityPlan));
+        Map<Integer, String> response = planInstitutionActivityService.updateActivityWithInstitution(planInstitutionActivity, idActivityPlan);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.get(400));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PatchMapping("/validateActivity/{idActivityPlan}")
-    public ResponseEntity<?> validateActivities(@RequestBody PlanInstitutionActivity planInstitutionActivity,
+    public ResponseEntity<String> validateActivities(@RequestBody PlanInstitutionActivity planInstitutionActivity,
                                                 @PathVariable Long idActivityPlan) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(planInstitutionActivityService.validateActivitiesByIdActivityPlan(planInstitutionActivity, idActivityPlan));
+        Map<Integer, String> response = planInstitutionActivityService.validateActivitiesByIdActivityPlan(planInstitutionActivity, idActivityPlan);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.get(400));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
 }
