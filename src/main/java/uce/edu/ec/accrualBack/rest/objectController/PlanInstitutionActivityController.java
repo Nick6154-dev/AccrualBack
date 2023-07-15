@@ -44,31 +44,10 @@ public class PlanInstitutionActivityController {
 
     @SneakyThrows
     @GetMapping("/byPlan/{idPerson},{idPeriod}")
-    public ResponseEntity<?> findActivityPlanByPlan(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
-        Period period = periodService.findById(idPeriod);
-        Plan plan = planService.findByIdPersonAndPeriod(idPerson, period);
-        List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan());
-        List<Map<String, Object>> activitiesInstitutions = new ArrayList<>();
-        assert activityPlans != null;
-        for (ActivityPlan ap : activityPlans) {
-            Long idActivity = ap.getActivity().getIdActivity();
-            Institution institution = institutionService.findInstitutionByActivity(idActivity);
-            if (institution.getIdInstitution() != null) {
-                OtherInstitution otherInstitution = otherInstitutionService
-                        .findOtherInstitutionByInstitution(institution);
-                UniversityInstitution universityInstitution = universityInstitutionService
-                        .findUniversityInstitutionByInstitution(institution);
-                Map<String, Object> activityInstitution = new LinkedHashMap<>();
-                activityInstitution.put("activityPlan", ap);
-                if (otherInstitution.getIdOther() != null) {
-                    activityInstitution.put("institutionPlan", otherInstitution);
-                } else {
-                    activityInstitution.put("institutionPlan", universityInstitution);
-                }
-                activitiesInstitutions.add(activityInstitution);
-            }
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(activitiesInstitutions);
+    public ResponseEntity<?> findActivitiesPlanByPlan(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
+        Map<Integer, Object> response = planInstitutionActivityService.findActivitiesPlanByPlan(idPerson, idPeriod);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(response.get(400));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PostMapping

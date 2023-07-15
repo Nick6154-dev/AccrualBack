@@ -14,4 +14,6 @@ public interface PlanInstitutionActivityService {
 
     Map<Integer, String> validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan);
 
+    Map<Integer, Object> findActivitiesPlanByPlan(Long idPerson, Long idPeriod);
+
 }

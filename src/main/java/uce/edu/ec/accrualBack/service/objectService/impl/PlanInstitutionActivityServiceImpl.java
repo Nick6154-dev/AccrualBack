@@ -9,10 +9,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivityService {
@@ -91,8 +88,8 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             }
             activityPlanInstitution.setIdPlan(plan.getIdPlan());
             ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
-            if (activityPlan == null) {
-                response.put(400, "Problemas al cargar el plan activity");
+            if (activityPlan.getIdActivityPlan() == null) {
+                response.put(400, "Problemas al guardar el plan activity");
                 return response;
             }
             activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
@@ -139,17 +136,23 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
             if (activityPlan != null) {
                 Plan plan = planService.findById(activityPlan.getIdPlan());
-                if (plan != null) {
-                    if (!plan.getEditable()) {
-                        response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
-                        return response;
-                    }
+                if (plan.getIdPlan() != null) {
+                    response.put(400, "Error al cargar el plan de las actividades");
+                    return response;
+                }
+                if (!plan.getEditable()) {
+                    response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
+                    return response;
                 }
                 activityPlanInstitution.setIdPlan(activityPlan.getIdPlan());
                 updateActivityPlan(activityPlanInstitution, idActivityPlan);
                 activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
-                Optional<Institution> institution = Optional.of(institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity()));
-                institution.ifPresent(value -> updateInstitutionPlan(activityPlanInstitution, value.getIdInstitution()));
+                Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
+                if (institution.getIdInstitution() == null) {
+                    response.put(400, "Error al econtrar la institucion con el id especificado, puede que la actividad se haya actualizado");
+                    return response;
+                }
+                updateInstitutionPlan(activityPlanInstitution, institution.getIdInstitution());
                 response.put(200, "Actividad actualizada con exito");
                 return response;
             }
@@ -165,15 +168,61 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     public Map<Integer, String> validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
         Map<Integer, String> response = new HashMap<>();
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
+        if (activityPlan.getIdActivityPlan() == null) {
+            response.put(400, "Error al encontrar la actividad especificada");
+            return response;
+        }
         activityPlan.getActivity().setEvidences(activityPlanInstitution.getEvidences());
         activityPlanService.save(activityPlan);
         Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
+        if (institution.getIdInstitution() == null) {
+            response.put(400, "Error al buscar la institucion especificada con el id de la actividad");
+        }
         if (!institution.getInstitutionName().equals("Universidad Central del Ecuador")) {
             OtherInstitution otherInstitution = otherInstitutionService.findOtherInstitutionByInstitution(institution);
             otherInstitution.setVerificationLink(activityPlanInstitution.getVerificationLink());
             otherInstitutionService.save(otherInstitution);
         }
         response.put(200, "Validaciones enviadas correctamente");
+        return response;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<Integer, Object> findActivitiesPlanByPlan(Long idPerson, Long idPeriod) {
+        List<Map<String, Object>> activitiesInstitutions = new ArrayList<>();
+        Map<Integer, Object> response = new HashMap<>();
+        Period period = periodService.findById(idPeriod);
+        Plan plan = planService.findByIdPersonAndPeriod(idPerson, period);
+        if (period.getIdPeriod() == null || plan.getIdPlan() == null) {
+            response.put(400, "Error al encontrar el periodo o el plan");
+            return response;
+        }
+        List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan());
+        if (activityPlans.isEmpty()) {
+            response.put(400, "Error al cargar las actividades del plan");
+            return response;
+        }
+        for (ActivityPlan ap : activityPlans) {
+            Long idActivity = ap.getActivity().getIdActivity();
+            Institution institution = institutionService.findInstitutionByActivity(idActivity);
+            if (institution.getIdInstitution() == null) {
+                response.put(400, "Error al encontrar la institucion a una actividad especifica");
+            }
+            OtherInstitution otherInstitution = otherInstitutionService
+                    .findOtherInstitutionByInstitution(institution);
+            UniversityInstitution universityInstitution = universityInstitutionService
+                    .findUniversityInstitutionByInstitution(institution);
+            Map<String, Object> activityInstitution = new LinkedHashMap<>();
+            activityInstitution.put("activityPlan", ap);
+            if (otherInstitution.getIdOther() != null) {
+                activityInstitution.put("institutionPlan", otherInstitution);
+            } else {
+                activityInstitution.put("institutionPlan", universityInstitution);
+            }
+            activitiesInstitutions.add(activityInstitution);
+        }
+        response.put(200, activitiesInstitutions);
         return response;
     }
     /*
