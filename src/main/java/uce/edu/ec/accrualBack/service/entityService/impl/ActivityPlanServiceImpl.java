@@ -30,8 +30,15 @@ public class ActivityPlanServiceImpl implements ActivityPlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ActivityPlan> findActivityPlansByState(Integer state) {
         return repository.findActivityPlansByState(state).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByIdPlan(Long idPlan) {
+        return repository.existsByIdPlan(idPlan);
     }
 
     @Override

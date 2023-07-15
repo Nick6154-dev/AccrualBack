@@ -12,6 +12,8 @@ public interface ActivityPlanService {
 
     List<ActivityPlan> findActivityPlansByState(Integer state);
 
+    boolean existsByIdPlan(Long idPlan);
+
     ActivityPlan findById(Long idActivityPlan);
 
     ActivityPlan save(ActivityPlan activityPlan);

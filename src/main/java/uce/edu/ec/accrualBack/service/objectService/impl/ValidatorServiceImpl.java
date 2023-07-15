@@ -59,6 +59,15 @@ public class ValidatorServiceImpl implements ValidatorService {
             Optional<List<Plan>> plans = Optional.of(planService.findByDocent(validatorObject.getDocent()));
             if (plans.get().isEmpty()) continue;
             validatorObject.setPlans(plans.get());
+            int count = plans.get().size();
+            for (Plan plan : plans.get()) {
+                if (activityPlanService.existsByIdPlan(plan.getIdPlan())) count--;
+            }
+            if (count == 0) {
+                validatorObject.setObservation("No existe novedad");
+            } else {
+                validatorObject.setObservation("Algun plan del docente no tiene registrado sus respectivas actividades");
+            }
             validatorObjects.add(validatorObject);
         }
         return validatorObjects;
@@ -116,7 +125,12 @@ public class ValidatorServiceImpl implements ValidatorService {
         //Adding period of this plan
         periodPlanDocentContent(sheet, plan, 3);
         //Let's start with the content, first personal information about docent
-        planDocentContentInformation(activityPlans, sheet, 5);
+        if (!activityPlans.isEmpty()) {
+            planDocentContentInformation(activityPlans, sheet, 5);
+            applyBorderStyle(sheet, createContentStyle(workbook), 6, sheet.getLastRowNum()
+                    , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+            adjustColumnRow(sheet.getRow(6), sheet);
+        }
         //Let's apply some style
         applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
         applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
@@ -124,14 +138,11 @@ public class ValidatorServiceImpl implements ValidatorService {
         applyBorderStyle(sheet, createContentStyle(workbook), 4, 4, 0, 3);
         applyBorderStyle(sheet, createHeaderStyle(workbook), 5, 5, 0
                 , sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
-        applyBorderStyle(sheet, createContentStyle(workbook), 6, sheet.getLastRowNum()
-                , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
         adjustColumnRow(sheet.getRow(0), sheet);
         adjustColumnRow(sheet.getRow(1), sheet);
         adjustColumnRow(sheet.getRow(3), sheet);
         adjustColumnRow(sheet.getRow(4), sheet);
         adjustColumnRow(sheet.getRow(5), sheet);
-        adjustColumnRow(sheet.getRow(6), sheet);
         try {
             //Save the workbook in a bytes array
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -192,18 +203,20 @@ public class ValidatorServiceImpl implements ValidatorService {
                 //Let's start with the content, first personal information about docent
                 row += 2;
                 List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(p.getIdPlan());
-                planDocentContentInformation(activityPlans, sheet, row);
+                if (!activityPlans.isEmpty()) {
+                    planDocentContentInformation(activityPlans, sheet, row);
+                    applyBorderStyle(sheet, createContentStyle(workbook), row + 1, sheet.getLastRowNum()
+                            , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
+                    adjustColumnRow(sheet.getRow(row + 1), sheet);
+                }
                 //Let's apply some style
                 applyBorderStyle(sheet, createHeaderStyle(workbook), row - 2, row - 2, 0, 3);
                 applyBorderStyle(sheet, createContentStyle(workbook), row - 1, row - 1, 0, 3);
                 applyBorderStyle(sheet, createHeaderStyle(workbook), row, row, 0
                         , sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
-                applyBorderStyle(sheet, createContentStyle(workbook), row + 1, sheet.getLastRowNum()
-                        , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
                 adjustColumnRow(sheet.getRow(row - 2), sheet);
                 adjustColumnRow(sheet.getRow(row - 1), sheet);
                 adjustColumnRow(sheet.getRow(row), sheet);
-                adjustColumnRow(sheet.getRow(row + 1), sheet);
                 row = sheet.getLastRowNum() + 2;
             }
             adjustColumnRow(sheet.getRow(0), sheet);

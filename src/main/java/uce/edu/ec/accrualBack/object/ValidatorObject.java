@@ -21,6 +21,8 @@ public class ValidatorObject {
 
     private List<ActivityPlan> activityPlans;
 
+    private String observation;
+
     public ValidatorObject() {
     }
 
