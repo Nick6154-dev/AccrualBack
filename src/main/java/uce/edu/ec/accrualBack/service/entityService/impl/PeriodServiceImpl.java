@@ -24,6 +24,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Period> findActivePeriodTrue() {
         return Optional.of(repository.findPeriodByActive(true)).orElseGet(ArrayList::new);
     }
@@ -64,6 +65,7 @@ public class PeriodServiceImpl implements PeriodService {
     }
 
     @Override
+    @Transactional
     public String switchStatePeriod(Long idPeriod) {
         return repository.findById(idPeriod).map(period -> {
             period.setState(!period.getActive());

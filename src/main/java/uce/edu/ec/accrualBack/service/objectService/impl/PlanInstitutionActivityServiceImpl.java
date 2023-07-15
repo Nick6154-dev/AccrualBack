@@ -2,6 +2,7 @@ package uce.edu.ec.accrualBack.service.objectService.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
@@ -60,6 +61,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Methods to register new activities
     */
     @Override
+    @Transactional
     public String addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution) {
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
         if (docent.getIdDocent() != null) {
@@ -88,25 +90,24 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     }
 
     @Override
+    @Transactional
     public String deleteActivityWithInstitution(Long idActivityPlan) {
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
-        if (activityPlan != null) {
+        if (activityPlan.getIdActivityPlan() != null) {
             Plan plan = planService.findById(activityPlan.getIdPlan());
-            if (plan != null) {
-                if (!plan.getEditable()) {
-                    return "Ya no se eliminan mas actividades pues ya no es editable";
-                }
-            }
+            if (plan.getIdPlan() == null) return "Error al buscar un plan asignado a la tabla actividad_plan";
+            if (!plan.getEditable()) return "Ya no se eliminan mas actividades pues ya no es editable";
             String response = deleteActivityPlanById(idActivityPlan);
             Optional<Institution> institution = Optional.of(institutionService
                     .findInstitutionByActivity(activityPlan.getActivity().getIdActivity()));
-            institution.ifPresent(value -> deleteActivityPlanById(value.getIdInstitution()));
+            institution.ifPresent(this::deleteInstitutionPlan);
             return response;
         }
-        return "Problemas al eliminar";
+        return "No se encontro el id proporcionado";
     }
 
     @Override
+    @Transactional
     public String updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
         if (docent != null) {
@@ -131,6 +132,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     }
 
     @Override
+    @Transactional
     public String validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
         activityPlan.getActivity().setEvidences(activityPlanInstitution.getEvidences());
@@ -174,10 +176,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
 
     private String deleteActivityPlanById(Long idActivityPlan) {
         return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
-            if (descriptionService.existsByActivityPlan(activityPlan)) {
-                descriptionService.deleteByActivityPlan(activityPlan);
-            }
-            activityService.delete(activityPlan.getActivity());
+            if (descriptionService.existsByActivityPlan(activityPlan)) descriptionService.deleteByActivityPlan(activityPlan);
             activityPlanService.delete(activityPlan);
             return "Eliminado con exito";
         }).orElse("El id especificado no se encuentra en el sistema");
@@ -255,6 +254,13 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             Institution institution = loadInstitution(activityPlanInstitution, new Institution());
             loadOtherInstitution(activityPlanInstitution, institution, new OtherInstitution());
         }
+    }
+
+    private void deleteInstitutionPlan(Institution institution) {
+        OtherInstitution otherInstitution = otherInstitutionService.findOtherInstitutionByInstitution(institution);
+        UniversityInstitution universityInstitution = universityInstitutionService.findUniversityInstitutionByInstitution(institution);
+        if (otherInstitution.getIdOther() != null) otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
+        if (universityInstitution.getIdUniversityInstitution() != null) universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
     }
 
     private void updateInstitutionPlan(PlanInstitutionActivity activityPlanInstitution, Long idInstitution) {

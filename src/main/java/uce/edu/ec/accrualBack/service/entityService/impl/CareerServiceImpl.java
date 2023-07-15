@@ -37,11 +37,13 @@ public class CareerServiceImpl implements CareerService {
     }
 
     @Override
+    @Transactional
     public Career save(Career career) {
         return repository.save(career);
     }
 
     @Override
+    @Transactional
     public String delete(Career career) {
         return repository.findById(career.getIdCareer()).map(value -> {
             repository.delete(value);
@@ -50,6 +52,7 @@ public class CareerServiceImpl implements CareerService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long idCareer) {
         return repository.findById(idCareer).map(value -> {
             repository.delete(value);
@@ -58,6 +61,7 @@ public class CareerServiceImpl implements CareerService {
     }
 
     @Override
+    @Transactional
     public Career update(Career career, Long idCareer) {
         return repository.findById(idCareer).map(value -> {
             career.setIdCareer(idCareer);

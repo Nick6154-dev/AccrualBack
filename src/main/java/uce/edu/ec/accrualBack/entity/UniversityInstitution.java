@@ -16,7 +16,7 @@ public class UniversityInstitution {
     @Column(name = "id_universidad_institucion")
     private Long idUniversityInstitution;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_institucion")
     private Institution institution;
 

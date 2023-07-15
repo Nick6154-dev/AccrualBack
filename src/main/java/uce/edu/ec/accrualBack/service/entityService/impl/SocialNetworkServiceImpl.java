@@ -40,6 +40,7 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<SocialNetwork> findByIdPerson(Long idPerson) {
         Docent docent = docentService.findByIdPerson(idPerson);
         if (docent != null) {

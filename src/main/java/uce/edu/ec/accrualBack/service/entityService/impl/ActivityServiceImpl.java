@@ -28,11 +28,13 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @Transactional
     public Activity save(Activity activity) {
         return repository.save(activity);
     }
 
     @Override
+    @Transactional
     public String delete(Activity activity) {
         return repository.findById(activity.getIdActivity()).map(value -> {
             repository.delete(value);
@@ -41,6 +43,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long idActivity) {
         return repository.findById(idActivity).map(value -> {
             repository.deleteById(idActivity);
@@ -49,6 +52,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    @Transactional
     public Activity update(Activity activity, Long idActivity) {
         return repository.findById(idActivity).map(value -> {
             activity.setIdActivity(value.getIdActivity());

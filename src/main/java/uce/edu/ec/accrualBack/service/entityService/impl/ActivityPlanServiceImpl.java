@@ -48,23 +48,27 @@ public class ActivityPlanServiceImpl implements ActivityPlanService {
     }
 
     @Override
+    @Transactional
     public ActivityPlan save(ActivityPlan activityPlan) {
         return repository.save(activityPlan);
     }
 
     @Override
+    @Transactional
     public String delete(ActivityPlan activityPlan) {
         repository.delete(activityPlan);
         return "Actividad de plan eliminada con exito";
     }
 
     @Override
+    @Transactional
     public String deleteById(Long idActivityPlan) {
         repository.deleteById(idActivityPlan);
         return "Actividad de plan eliminada con exito";
     }
 
     @Override
+    @Transactional
     public ActivityPlan update(ActivityPlan activityPlan, Long idActivityPlan) {
         return Optional.of(repository.findById(idActivityPlan)).map(value -> {
             activityPlan.setIdActivityPlan(idActivityPlan);

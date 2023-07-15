@@ -25,7 +25,7 @@ public class OtherInstitution {
     @Column(name = "enlace_verificacion")
     private String verificationLink;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_institucion")
     private Institution institution;
 

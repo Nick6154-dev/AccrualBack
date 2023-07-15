@@ -37,11 +37,13 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
+    @Transactional
     public Faculty save(Faculty faculty) {
         return repository.save(faculty);
     }
 
     @Override
+    @Transactional
     public String delete(Faculty faculty) {
         return repository.findById(faculty.getIdFaculty()).map(value -> {
             repository.delete(value);
@@ -50,6 +52,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
+    @Transactional
     public String deleteById(Long idFaculty) {
         return repository.findById(idFaculty).map(value -> {
             repository.delete(value);
@@ -58,6 +61,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
+    @Transactional
     public Faculty update(Faculty faculty, Long idFaculty) {
         return repository.findById(idFaculty).map(value -> {
             faculty.setIdFaculty(idFaculty);

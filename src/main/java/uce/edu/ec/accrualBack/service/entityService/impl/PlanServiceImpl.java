@@ -51,11 +51,13 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Plan> findByDocent(Docent docent) {
         return repository.findPlansByIdDocent(docent.getIdDocent()).orElseGet(ArrayList::new);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Plan> findPlansByStateIs(Integer state) {
         return repository.findPlansByStateIs(state).orElseGet(ArrayList::new);
     }
@@ -92,6 +94,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
+    @Transactional
     public String updateNotEditable(Long idPerson, Long idPeriod) {
         Period period = periodService.findById(idPeriod);
         return Optional.of(docentService.findByIdPerson(idPerson))

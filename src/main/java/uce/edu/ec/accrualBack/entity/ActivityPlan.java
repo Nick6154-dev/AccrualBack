@@ -25,7 +25,7 @@ public class ActivityPlan {
     @Column(name = "estado")
     private Integer state;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_actividad")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Activity activity;

@@ -51,6 +51,7 @@ public class InstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
+    @Transactional
     public String delete(Institution institution) {
         return repository.findById(institution.getIdInstitution()).map(value -> {
             repository.delete(value);
