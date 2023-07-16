@@ -177,6 +177,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
         if (institution.getIdInstitution() == null) {
             response.put(400, "Error al buscar la institucion especificada con el id de la actividad");
+            return response;
         }
         if (!institution.getInstitutionName().equals("Universidad Central del Ecuador")) {
             OtherInstitution otherInstitution = otherInstitutionService.findOtherInstitutionByInstitution(institution);
@@ -206,15 +207,16 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         for (ActivityPlan ap : activityPlans) {
             Long idActivity = ap.getActivity().getIdActivity();
             Institution institution = institutionService.findInstitutionByActivity(idActivity);
+            Map<String, Object> activityInstitution = new LinkedHashMap<>();
+            activityInstitution.put("activityPlan", ap);
             if (institution.getIdInstitution() == null) {
-                response.put(400, "Error al encontrar la institucion a una actividad especifica");
+                response.put(400, "Error al encontrar la institucion a una actividad especifica " + ap.getIdActivityPlan());
+                return response;
             }
             OtherInstitution otherInstitution = otherInstitutionService
                     .findOtherInstitutionByInstitution(institution);
             UniversityInstitution universityInstitution = universityInstitutionService
                     .findUniversityInstitutionByInstitution(institution);
-            Map<String, Object> activityInstitution = new LinkedHashMap<>();
-            activityInstitution.put("activityPlan", ap);
             if (otherInstitution.getIdOther() != null) {
                 activityInstitution.put("institutionPlan", otherInstitution);
             } else {
