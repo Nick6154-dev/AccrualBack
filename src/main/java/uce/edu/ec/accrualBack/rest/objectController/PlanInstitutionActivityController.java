@@ -38,14 +38,14 @@ public class PlanInstitutionActivityController {
     ResponseEntity<?> save(@RequestBody PlanInstitutionActivity planInstitutionActivity) {
         Map<Integer, String> response = planInstitutionActivityService.addNewActivityWithInstitution(planInstitutionActivity);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/{idActivityPlan}")
     public ResponseEntity<?> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.deleteActivityWithInstitution(idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PutMapping("/{idActivityPlan}")
@@ -53,7 +53,7 @@ public class PlanInstitutionActivityController {
                                     @PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.updateActivityWithInstitution(planInstitutionActivity, idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PatchMapping("/validateActivity/{idActivityPlan}")
@@ -61,7 +61,7 @@ public class PlanInstitutionActivityController {
                                                 @PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.validateActivitiesByIdActivityPlan(planInstitutionActivity, idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
 }

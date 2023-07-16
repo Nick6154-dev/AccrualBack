@@ -351,7 +351,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         } else {
             universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
         }
-        System.out.println(activityPlanInstitution.getInstitutionName());
         if (activityPlanInstitution.getInstitutionName().equals("Universidad Central del Ecuador")) {
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
