@@ -136,7 +136,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
             if (activityPlan != null) {
                 Plan plan = planService.findById(activityPlan.getIdPlan());
-                if (plan.getIdPlan() != null) {
+                if (plan.getIdPlan() == null) {
                     response.put(400, "Error al cargar el plan de las actividades");
                     return response;
                 }
