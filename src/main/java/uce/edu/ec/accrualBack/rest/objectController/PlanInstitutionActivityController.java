@@ -31,21 +31,21 @@ public class PlanInstitutionActivityController {
     public ResponseEntity<?> findActivitiesPlanByPlan(@PathVariable Long idPerson, @PathVariable Long idPeriod) {
         Map<Integer, Object> response = planInstitutionActivityService.findActivitiesPlanByPlan(idPerson, idPeriod);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PostMapping
     ResponseEntity<?> save(@RequestBody PlanInstitutionActivity planInstitutionActivity) {
         Map<Integer, String> response = planInstitutionActivityService.addNewActivityWithInstitution(planInstitutionActivity);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @DeleteMapping("/{idActivityPlan}")
     public ResponseEntity<?> deleteByIdActivityPlan(@PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.deleteActivityWithInstitution(idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PutMapping("/{idActivityPlan}")
@@ -53,7 +53,7 @@ public class PlanInstitutionActivityController {
                                     @PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.updateActivityWithInstitution(planInstitutionActivity, idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
     @PatchMapping("/validateActivity/{idActivityPlan}")
@@ -61,7 +61,7 @@ public class PlanInstitutionActivityController {
                                                 @PathVariable Long idActivityPlan) {
         Map<Integer, String> response = planInstitutionActivityService.validateActivitiesByIdActivityPlan(planInstitutionActivity, idActivityPlan);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response.get(200));
     }
 
 }
