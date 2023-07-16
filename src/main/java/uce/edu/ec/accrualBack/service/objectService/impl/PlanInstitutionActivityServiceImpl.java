@@ -152,7 +152,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                     response.put(400, "Error al econtrar la institucion con el id especificado, puede que la actividad se haya actualizado");
                     return response;
                 }
-                updateInstitutionPlan(activityPlanInstitution, institution.getIdInstitution());
+                updateInstitutionPlan(activityPlanInstitution, institution);
                 response.put(200, "Actividad actualizada con exito");
                 return response;
             }
@@ -345,15 +345,13 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         if (universityInstitution.getIdUniversityInstitution() != null) universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
     }
 
-    private void updateInstitutionPlan(PlanInstitutionActivity activityPlanInstitution, Long idInstitution) {
-        Institution institution = institutionService.findById(idInstitution);
-        if (!activityPlanInstitution.getInstitutionName().equals(institution.getInstitutionName())) {
-            if (activityPlanInstitution.getInstitutionName().equals("Universidad Central del Ecuador")) {
-                otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
-            } else {
-                universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
-            }
+    private void updateInstitutionPlan(PlanInstitutionActivity activityPlanInstitution, Institution institution) {
+        if (otherInstitutionService.findOtherInstitutionByInstitution(institution).getIdOther() != null) {
+            otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
+        } else {
+            universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
         }
+        System.out.println(activityPlanInstitution.getInstitutionName());
         if (activityPlanInstitution.getInstitutionName().equals("Universidad Central del Ecuador")) {
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
@@ -361,13 +359,13 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             if (university != null && faculty != null && career != null) {
                 if (Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) &&
                         Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-                    Institution institutionSave = loadInstitution(activityPlanInstitution, institution);
+                    Institution institutionSave = loadInstitution(activityPlanInstitution, new Institution());
                     loadUniversityInstitution(activityPlanInstitution, institutionSave,
                             universityInstitutionService.findUniversityInstitutionByInstitution(institutionSave));
                 }
             }
         } else {
-            Institution institutionSave = loadInstitution(activityPlanInstitution, institution);
+            Institution institutionSave = loadInstitution(activityPlanInstitution, new Institution());
             loadOtherInstitution(activityPlanInstitution, institutionSave,
                     otherInstitutionService.findOtherInstitutionByInstitution(institutionSave));
         }
