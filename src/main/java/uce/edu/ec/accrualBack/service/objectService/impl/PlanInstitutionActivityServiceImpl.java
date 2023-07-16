@@ -200,10 +200,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             return response;
         }
         List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan());
-        if (activityPlans.isEmpty()) {
-            response.put(400, "Error al cargar las actividades del plan");
-            return response;
-        }
         for (ActivityPlan ap : activityPlans) {
             Long idActivity = ap.getActivity().getIdActivity();
             Institution institution = institutionService.findInstitutionByActivity(idActivity);
