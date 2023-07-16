@@ -206,7 +206,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             Map<String, Object> activityInstitution = new LinkedHashMap<>();
             activityInstitution.put("activityPlan", ap);
             if (institution.getIdInstitution() == null) {
-                response.put(400, "Error al encontrar la institucion a una actividad especifica " + ap.getIdActivityPlan());
+                response.put(400, "Error al encontrar la institucion a una actividad especifica ");
                 return response;
             }
             OtherInstitution otherInstitution = otherInstitutionService
