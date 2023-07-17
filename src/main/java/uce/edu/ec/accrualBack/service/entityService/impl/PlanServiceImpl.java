@@ -75,12 +75,14 @@ public class PlanServiceImpl implements PlanService {
                         plan.setStarDate(LocalDate.now());
                         plan.setState(0);
                         plan.setEditable(true);
+                        plan.setObservations("NA");
                         return repository.save(plan);
                     }).orElseGet(() -> {
                         plan.setNumberPlan(1);
                         plan.setStarDate(LocalDate.now());
                         plan.setState(0);
                         plan.setEditable(true);
+                        plan.setObservations("NA");
                         return repository.save(plan);
                     });
                 });
