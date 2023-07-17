@@ -8,6 +8,7 @@ import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -70,8 +71,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             if (plan.getIdPlan() == null) {
                 plan.setPeriod(period);
                 plan.setIdDocent(docent.getIdDocent());
-                plan.setStarDate(LocalDate.now());
-                plan.setEditable(true);
                 plan = planService.save(plan);
             }
             if (!plan.getEditable()) {
@@ -195,9 +194,14 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Map<Integer, Object> response = new HashMap<>();
         Period period = periodService.findById(idPeriod);
         Plan plan = planService.findByIdPersonAndPeriod(idPerson, period);
-        if (period.getIdPeriod() == null || plan.getIdPlan() == null) {
-            response.put(400, "Error al encontrar el periodo o el plan");
+        if (period.getIdPeriod() == null) {
+            response.put(400, "Error al encontrar el periodo");
             return response;
+        }
+        if (plan.getIdPlan() == null) {
+            plan.setPeriod(period);
+            plan.setIdDocent(docentService.findByIdPerson(idPerson).getIdDocent());
+            plan = planService.save(plan);
         }
         List<ActivityPlan> activityPlans = activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan());
         for (ActivityPlan ap : activityPlans) {

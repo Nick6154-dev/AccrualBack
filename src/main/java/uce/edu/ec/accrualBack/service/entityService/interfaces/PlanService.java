@@ -26,4 +26,6 @@ public interface PlanService {
 
     String updateNotEditable(Long idPerson, Long idPeriod);
 
+    String setPlansEditableByPeriod(Period period);
+
 }

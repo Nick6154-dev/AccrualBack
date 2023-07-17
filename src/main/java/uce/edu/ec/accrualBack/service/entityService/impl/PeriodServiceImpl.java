@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.repository.PeriodRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,9 @@ public class PeriodServiceImpl implements PeriodService {
 
     @Autowired
     private PeriodRepository repository;
+
+    @Autowired
+    private PlanService planService;
 
     @Override
     @Transactional(readOnly = true)
@@ -69,7 +73,8 @@ public class PeriodServiceImpl implements PeriodService {
     public String switchStatePeriod(Long idPeriod) {
         return repository.findById(idPeriod).map(period -> {
             period.setState(!period.getActive());
-            repository.save(period);
+            period = repository.save(period);
+            planService.setPlansEditableByPeriod(period);
             return "Periodo actualizado su estado exitosamente";
         }).orElse("No se ha encontrado el periodo por ese id");
     }

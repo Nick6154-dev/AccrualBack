@@ -12,6 +12,8 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,9 +72,15 @@ public class PlanServiceImpl implements PlanService {
                     Optional<Plan> optionalPlan = repository.findNextNumberPlanByIdDocent(plan.getIdDocent());
                     return optionalPlan.map(value -> {
                         plan.setNumberPlan(value.getNumberPlan() + 1);
+                        plan.setStarDate(LocalDate.now());
+                        plan.setState(0);
+                        plan.setEditable(true);
                         return repository.save(plan);
                     }).orElseGet(() -> {
                         plan.setNumberPlan(1);
+                        plan.setStarDate(LocalDate.now());
+                        plan.setState(0);
+                        plan.setEditable(true);
                         return repository.save(plan);
                     });
                 });
@@ -107,4 +115,16 @@ public class PlanServiceImpl implements PlanService {
                         }).orElseGet(() -> "No se pudo encontrar un plan"))
                 .orElseGet(() -> "No se ha encontrado un plan asignado a ese id persona");
     }
+
+    @Override
+    public String setPlansEditableByPeriod(Period period) {
+        List<Plan> plans = repository.findAllByEditableIsAndPeriod(false, period).orElseGet(ArrayList::new);
+        if (plans.isEmpty()) return "No hay planes por actualizar";
+        for (Plan plan : plans) {
+            plan.setEditable(true);
+            repository.save(plan);
+        }
+        return "Planes actualizados, ya se pueden activar las evidencias";
+    }
+
 }

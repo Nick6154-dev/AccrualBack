@@ -19,4 +19,6 @@ public interface PlanRepository extends CrudRepository<Plan, Long> {
 
     Optional<List<Plan>> findPlansByStateIs(Integer state);
 
+    Optional<List<Plan>> findAllByEditableIsAndPeriod(Boolean editable, Period period);
+
 }
