@@ -188,7 +188,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Map<Integer, Object> findActivitiesPlanByPlan(Long idPerson, Long idPeriod) {
         List<Map<String, Object>> activitiesInstitutions = new ArrayList<>();
         Map<Integer, Object> response = new HashMap<>();

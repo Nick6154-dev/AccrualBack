@@ -70,21 +70,16 @@ public class PlanServiceImpl implements PlanService {
         return repository.findPlanByPeriodAndIdDocent(plan.getPeriod(), plan.getIdDocent())
                 .orElseGet(() -> {
                     Optional<Plan> optionalPlan = repository.findNextNumberPlanByIdDocent(plan.getIdDocent());
-                    return optionalPlan.map(value -> {
-                        plan.setNumberPlan(value.getNumberPlan() + 1);
-                        plan.setStarDate(LocalDate.now());
-                        plan.setState(0);
-                        plan.setEditable(true);
-                        plan.setObservations("NA");
-                        return repository.save(plan);
-                    }).orElseGet(() -> {
+                    if (optionalPlan.isPresent()) {
+                        plan.setNumberPlan(optionalPlan.get().getNumberPlan() + 1);
+                    } else {
                         plan.setNumberPlan(1);
-                        plan.setStarDate(LocalDate.now());
-                        plan.setState(0);
-                        plan.setEditable(true);
-                        plan.setObservations("NA");
-                        return repository.save(plan);
-                    });
+                    }
+                    plan.setStarDate(LocalDate.now());
+                    plan.setState(0);
+                    plan.setEditable(true);
+                    plan.setObservations("NA");
+                    return repository.save(plan);
                 });
     }
 
