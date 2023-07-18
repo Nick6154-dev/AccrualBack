@@ -9,4 +9,8 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
     Optional<Person> findByEmailAndIdentification(String email, String identification);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByIdentification(String identification);
+
 }

@@ -61,4 +61,16 @@ public class PersonServiceImpl implements PersonService {
                 });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByIdentification(String identification) {
+        return repository.existsByIdentification(identification);
+    }
+
 }

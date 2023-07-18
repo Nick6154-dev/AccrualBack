@@ -42,7 +42,8 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Map<Integer, String> registerNewDocentByHimself(RegisterObject registerObject) {
-        Map<Integer, String> response = new HashMap<>();
+        Map<Integer, String> response = validateEmailAndIdentification(registerObject);
+        if (response.containsKey(400)) return response;
         Docent docent = registerNewDocent(registerObject);
         registerObject.getAccrualData().setDocent(docent);
         registerObject.getAccrualData().setSettlement(false);
@@ -56,7 +57,8 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Override
     public Map<Integer, String> registerNewDocentByAnotherOne(RegisterObject registerObject) {
-        Map<Integer, String> response = new HashMap<>();
+        Map<Integer, String> response = validateEmailAndIdentification(registerObject);
+        if (response.containsKey(400)) return response;
         Docent docent = registerNewDocent(registerObject);
         registerNewUser(docent);
         response.put(200, "Nuevo docente registrado con exito");
@@ -101,6 +103,19 @@ public class RegisterServiceImpl implements RegisterService {
         accrualDataService.deleteById(accrualDataService.findByDocent(docent).getIdAccrualData());
         docentService.deleteById(docent.getIdDocent());
         response.put(200, "Docente eliminado por no ser aprobado");
+        return response;
+    }
+
+    private Map<Integer, String> validateEmailAndIdentification(RegisterObject registerObject) {
+        Map<Integer, String> response = new HashMap<>();
+        if (personService.existsByEmail(registerObject.getPerson().getEmail())) {
+            response.put(400, "Ya existe un usuario con ese correo registrado");
+            return response;
+        }
+        if (personService.existsByIdentification(registerObject.getPerson().getIdentification())) {
+            response.put(400, "Ya existe un usuario con esa cedula/pasaporte registrado");
+            return response;
+        }
         return response;
     }
 

@@ -18,4 +18,8 @@ public interface PersonService {
 
     Person update(Person person, Long idPerson);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByIdentification(String identification);
+
 }
