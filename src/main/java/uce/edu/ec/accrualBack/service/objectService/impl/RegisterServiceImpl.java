@@ -101,6 +101,7 @@ public class RegisterServiceImpl implements RegisterService {
         if (network.getIdNetworks() != null) networkService.deleteById(network.getIdNetworks());
         if (accrualData.getIdAccrualData() != null) accrualDataService.deleteById(accrualData.getIdAccrualData());
         docentService.deleteById(docent.getIdDocent());
+        personService.deleteById(idPerson);
         response.put(200, "Docente eliminado por no ser aprobado");
         return response;
     }
