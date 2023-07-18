@@ -2,10 +2,7 @@ package uce.edu.ec.accrualBack.service.objectService.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uce.edu.ec.accrualBack.entity.Docent;
-import uce.edu.ec.accrualBack.entity.Person;
-import uce.edu.ec.accrualBack.entity.Role;
-import uce.edu.ec.accrualBack.entity.User;
+import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.RegisterObject;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
@@ -99,8 +96,10 @@ public class RegisterServiceImpl implements RegisterService {
     public Map<Integer, String> deleteDocentNotApproved(Long idPerson) {
         Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(idPerson);
-        networkService.deleteById(networkService.findByDocent(docent).getIdNetworks());
-        accrualDataService.deleteById(accrualDataService.findByDocent(docent).getIdAccrualData());
+        Network network = networkService.findByDocent(docent);
+        AccrualData accrualData = accrualDataService.findByDocent(docent);
+        if (network.getIdNetworks() != null) networkService.deleteById(network.getIdNetworks());
+        if (accrualData.getIdAccrualData() != null) accrualDataService.deleteById(accrualData.getIdAccrualData());
         docentService.deleteById(docent.getIdDocent());
         response.put(200, "Docente eliminado por no ser aprobado");
         return response;
