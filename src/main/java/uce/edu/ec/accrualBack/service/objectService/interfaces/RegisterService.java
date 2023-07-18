@@ -4,17 +4,20 @@ import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.object.RegisterObject;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RegisterService {
 
-    String registerNewDocentByHimself(RegisterObject registerObject);
+    Map<Integer, String> registerNewDocentByHimself(RegisterObject registerObject);
 
-    String registerNewDocentByAnotherOne(RegisterObject registerObject);
+    Map<Integer, String> registerNewDocentByAnotherOne(RegisterObject registerObject);
 
     List<Person> listDocentsWithOutUser();
 
-    String registerNewUserToDocentWithOutIt(Long idPerson);
+    Map<Integer, String> registerNewUserToDocentWithOutIt(Long idPerson);
 
-    void deleteDocentNotApproved(Long idPerson);
+    Map<Integer, String> registerAllNewUsersToDocents();
+
+    Map<Integer, String> deleteDocentNotApproved(Long idPerson);
 
 }

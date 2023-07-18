@@ -11,10 +11,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.RegisterService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -44,7 +41,8 @@ public class RegisterServiceImpl implements RegisterService {
     private MailService mailService;
 
     @Override
-    public String registerNewDocentByHimself(RegisterObject registerObject) {
+    public Map<Integer, String> registerNewDocentByHimself(RegisterObject registerObject) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = registerNewDocent(registerObject);
         registerObject.getAccrualData().setDocent(docent);
         registerObject.getAccrualData().setSettlement(false);
@@ -52,14 +50,17 @@ public class RegisterServiceImpl implements RegisterService {
         registerObject.getNetwork().setDocent(docent);
         networkService.save(registerObject.getNetwork());
         mailService.sendNewDocentStateNotificationMail(docent.getIdPerson());
-        return "Nuevo docente registrado con exito";
+        response.put(200, "Nuevo docente registrado con exito");
+        return response;
     }
 
     @Override
-    public String registerNewDocentByAnotherOne(RegisterObject registerObject) {
+    public Map<Integer, String> registerNewDocentByAnotherOne(RegisterObject registerObject) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = registerNewDocent(registerObject);
         registerNewUser(docent);
-        return "Nuevo docente registrado con exito";
+        response.put(200, "Nuevo docente registrado con exito");
+        return response;
     }
 
     @Override
@@ -73,18 +74,34 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     @Override
-    public String registerNewUserToDocentWithOutIt(Long idPerson) {
+    public Map<Integer, String> registerNewUserToDocentWithOutIt(Long idPerson) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(idPerson);
         registerNewUser(docent);
-        return "Usuario registrado con exito";
+        response.put(200, "Usuario registrado con exito");
+        return response;
     }
 
     @Override
-    public void deleteDocentNotApproved(Long idPerson) {
+    public Map<Integer, String> registerAllNewUsersToDocents() {
+        Map<Integer, String> response = new HashMap<>();
+        List<Person> people = this.listDocentsWithOutUser();
+        for (Person person : people) {
+            this.registerNewUserToDocentWithOutIt(person.getIdPerson());
+        }
+        response.put(200, "Docentes registrados de una");
+        return response;
+    }
+
+    @Override
+    public Map<Integer, String> deleteDocentNotApproved(Long idPerson) {
+        Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(idPerson);
         networkService.deleteById(networkService.findByDocent(docent).getIdNetworks());
         accrualDataService.deleteById(accrualDataService.findByDocent(docent).getIdAccrualData());
         docentService.deleteById(docent.getIdDocent());
+        response.put(200, "Docente eliminado por no ser aprobado");
+        return response;
     }
 
     private Docent registerNewDocent(RegisterObject registerObject) {

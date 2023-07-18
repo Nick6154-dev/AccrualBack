@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.object.RegisterObject;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.RegisterService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/register")
 public class RegisterController {
@@ -21,21 +23,35 @@ public class RegisterController {
 
     @PostMapping("/ByHimself")
     public ResponseEntity<?> registerByHimself(@RequestBody RegisterObject registerObject) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewDocentByHimself(registerObject));
+        Map<Integer, String> response = registerService.registerNewDocentByHimself(registerObject);
+        if (response.containsKey(200)) return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PostMapping("/ByAnotherOne")
     public ResponseEntity<?> registerByAnotherOne(@RequestBody RegisterObject registerObject) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewDocentByAnotherOne(registerObject));
+        Map<Integer, String> response = registerService.registerNewDocentByAnotherOne(registerObject);
+        if (response.containsKey(200)) ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PostMapping("/registerUserToDocentWithOutIt/{idPerson},{approved}")
     public ResponseEntity<?> registerNewUserToDocentWithOutIt(@PathVariable Long idPerson, @PathVariable boolean approved) {
+        Map<Integer, String> response;
         if (approved) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(registerService.registerNewUserToDocentWithOutIt(idPerson));
+            response = registerService.registerNewUserToDocentWithOutIt(idPerson);
+        } else {
+            response = registerService.deleteDocentNotApproved(idPerson);
         }
-        registerService.deleteDocentNotApproved(idPerson);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Docente eliminado con exito");
+        if (response.containsKey(200)) return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @PostMapping("/registerAllNewUsersToDocents")
+    public ResponseEntity<?> registerAllNewUsersToDocents() {
+        Map<Integer, String> response = registerService.registerAllNewUsersToDocents();
+        if (response.containsKey(200)) return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
 }
