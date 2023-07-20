@@ -81,8 +81,12 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 response.put(400, "Ya no se pueden agregar mas actividades, el periodo ya no esta activo");
                 return response;
             }
-            if (!plan.getPeriod().getState()) {
+            if (plan.getPeriod().getState() == 3) {
                 response.put(400, "Ya no se pueden agregar mas actividades, la etapa de registro ya paso");
+                return response;
+            }
+            if (plan.getPeriod().getState() == 0) {
+                response.put(400, "No se pueden agregar actividades pues el periodo aun no tiene un modo");
                 return response;
             }
             activityPlanInstitution.setIdPlan(plan.getIdPlan());
@@ -133,7 +137,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
         if (docent != null) {
             ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
-            if (activityPlan != null) {
+            if (activityPlan.getIdActivityPlan() != null) {
                 Plan plan = planService.findById(activityPlan.getIdPlan());
                 if (plan.getIdPlan() == null) {
                     response.put(400, "Error al cargar el plan de las actividades");
@@ -155,7 +159,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 response.put(200, "Actividad actualizada con exito");
                 return response;
             }
-            response.put(400, "Problemas al actualizar");
+            response.put(400, "No se encontro la actividad a actualizar");
             return response;
         }
         response.put(400, "Id de persona no encontrado");
@@ -294,7 +298,11 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         activity.setStartDate(activityPlanInstitution.getStarDate());
         activity.setEndDate(activityPlanInstitution.getEndDate());
         activity.setDescription(activityPlanInstitution.getDescriptionActivity());
-        activity.setEvidences("Etapa de registro");
+        if (periodService.findById(activityPlanInstitution.getIdPeriod()).getState() == 1) {
+            activity.setEvidences(activityPlanInstitution.getEvidences());
+        } else {
+            activity.setEvidences("Etapa de registro");
+        }
         return activityService.save(activity);
     }
 
@@ -380,7 +388,11 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                                       OtherInstitution otherInstitution) {
         otherInstitution.setOtherName(activityPlanInstitution.getOtherInstitutionName());
         otherInstitution.setInstitution(institution);
-        otherInstitution.setVerificationLink("Etapa de registro");
+        if (periodService.findById(activityPlanInstitution.getIdPeriod()).getState() == 1) {
+            otherInstitution.setVerificationLink(activityPlanInstitution.getVerificationLink());
+        } else {
+            otherInstitution.setVerificationLink("Etapa de registro");
+        }
         otherInstitutionService.save(otherInstitution);
     }
 

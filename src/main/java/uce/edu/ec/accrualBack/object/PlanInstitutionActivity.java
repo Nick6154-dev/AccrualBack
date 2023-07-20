@@ -75,4 +75,26 @@ public class PlanInstitutionActivity {
         this.idPeriod = idPeriod;
     }
 
+    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate,
+                                   String evidences, Long idActivityType, Long idActivitySubtype, String descriptionSubtype,
+                                   Long idActivity, String institutionName, String otherInstitutionName, String verificationLink,
+                                   Long idUniversity, Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
+        this.idPlan = idPlan;
+        this.descriptionActivity = descriptionActivity;
+        this.starDate = starDate;
+        this.endDate = endDate;
+        this.evidences = evidences;
+        this.idActivityType = idActivityType;
+        this.idActivitySubtype = idActivitySubtype;
+        this.descriptionSubtype = descriptionSubtype;
+        this.idActivity = idActivity;
+        this.institutionName = institutionName;
+        this.otherInstitutionName = otherInstitutionName;
+        this.verificationLink = verificationLink;
+        this.idUniversity = idUniversity;
+        this.idFaculty = idFaculty;
+        this.idCareer = idCareer;
+        this.idPerson = idPerson;
+        this.idPeriod = idPeriod;
+    }
 }

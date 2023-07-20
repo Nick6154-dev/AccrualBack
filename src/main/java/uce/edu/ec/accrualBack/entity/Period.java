@@ -28,6 +28,6 @@ public class Period {
 
     @NotNull
     @Column(name = "estado")
-    private Boolean state;
+    private Integer state;
 
 }

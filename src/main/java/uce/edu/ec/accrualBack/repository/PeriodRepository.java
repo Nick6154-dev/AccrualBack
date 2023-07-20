@@ -12,4 +12,6 @@ public interface PeriodRepository extends CrudRepository<Period, Long> {
 
     List<Period> findPeriodByActive(Boolean active);
 
+    boolean existsByValuePeriod(String valuePeriod);
+
 }
