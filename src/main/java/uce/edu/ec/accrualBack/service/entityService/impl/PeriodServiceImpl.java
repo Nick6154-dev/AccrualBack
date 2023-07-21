@@ -134,7 +134,13 @@ public class PeriodServiceImpl implements PeriodService {
     @Transactional
     public Map<Integer, String> switchStatePeriods(Map<String, Object> objects) {
         Map<Integer, String> response = new HashMap<>();
-        List<Long> idPeriods = (List<Long>) objects.get("periods");
+        Object periodsObject = objects.get("periods");
+        List<Long> idPeriods;
+        if (periodsObject instanceof List<?>) {
+            idPeriods = (List<Long>) objects.get("periods");
+        } else {
+            idPeriods = Collections.singletonList((Long) periodsObject);
+        }
         if (idPeriods.isEmpty()) {
             response.put(400, "Se necesita enviar al menos el id de un periodo para actualizar el estado del mismo");
             return response;
