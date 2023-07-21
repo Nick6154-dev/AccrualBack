@@ -143,8 +143,8 @@ public class PeriodServiceImpl implements PeriodService {
                     .map(obj -> ((Number) obj).longValue())
                     .collect(Collectors.toList());
         } else {
-            Integer aux = (Integer) periodsObject;
-            idPeriods = Collections.singletonList(aux.longValue());
+            Integer periodObject = (Integer) periodsObject;
+            idPeriods = Collections.singletonList(periodObject.longValue());
         }
         if (idPeriods.isEmpty()) {
             response.put(400, "Se necesita enviar al menos el id de un periodo para actualizar el estado del mismo");
@@ -156,13 +156,17 @@ public class PeriodServiceImpl implements PeriodService {
             return response;
         }
         List<Long> idDocents;
-        if (state == 1) {
+        if (state != 1) {
             idDocents = docentService.findAllDocentSettlementNoApproved()
                     .stream()
                     .map(Docent::getIdDocent)
                     .collect(Collectors.toList());
         } else {
-            idDocents = (List<Long>) objects.get("docents");
+            List<?> docentsList = (List<?>) objects.get("docents");
+            idDocents = docentsList.stream()
+                    .filter(obj -> obj instanceof Number)
+                    .map(obj -> ((Number) obj).longValue())
+                    .collect(Collectors.toList());
         }
         if (idDocents.isEmpty()) {
             response.put(400, "Ha existido un error al cargar los ids de docentes");
