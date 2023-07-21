@@ -34,7 +34,6 @@ public class MailServiceImpl implements MailService {
     public void sendSettlementNotificationMail(Long idPerson) {
         Docent docent = docentService.findByIdPerson(idPerson);
         Person person = personService.findById(idPerson);
-        accrualDataService.updateSettlement(true, docent);
         String fullName = person.getName() + " " + person.getLastname();
         String message = "Por medio de la presente, me dirijo a usted para notificarle que el docente " +
                 fullName + " con C.I: " + person.getIdentification() + " ha presentado una solicitud de finiquito de su " +

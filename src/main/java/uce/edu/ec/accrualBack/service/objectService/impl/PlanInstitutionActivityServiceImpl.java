@@ -8,8 +8,6 @@ import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
-import java.sql.Time;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -57,6 +55,9 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     @Autowired
     private UniversityService universityService;
 
+    @Autowired
+    private PeriodDocentService periodDocentService;
+
     /*
         Methods to register new activities
     */
@@ -89,10 +90,14 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 response.put(400, "No se pueden agregar actividades pues el periodo aun no tiene un modo");
                 return response;
             }
+            if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+                response.put(400, "El docente o el periodo no pertenecen");
+                return response;
+            }
             activityPlanInstitution.setIdPlan(plan.getIdPlan());
             ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
             if (activityPlan.getIdActivityPlan() == null) {
-                response.put(400, "Problemas al guardar el plan activity");
+                response.put(400, "Problemas al guardar el plan activity, se ha guardado actividades sin la institucion");
                 return response;
             }
             activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
@@ -117,6 +122,10 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             }
             if (!plan.getEditable()) {
                 response.put(400, "Ya no se eliminan mas actividades pues ya no es editable");
+                return response;
+            }
+            if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+                response.put(400, "El docente o el periodo no pertenecen");
                 return response;
             }
             deleteActivityPlanById(idActivityPlan);
@@ -145,6 +154,10 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 }
                 if (!plan.getEditable()) {
                     response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
+                    return response;
+                }
+                if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+                    response.put(400, "El docente o el periodo no pertenecen");
                     return response;
                 }
                 activityPlanInstitution.setIdPlan(activityPlan.getIdPlan());

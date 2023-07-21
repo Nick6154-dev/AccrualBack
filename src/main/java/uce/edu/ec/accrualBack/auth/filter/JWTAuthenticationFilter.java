@@ -3,16 +3,12 @@ package uce.edu.ec.accrualBack.auth.filter;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.auth.service.JWTService;
 import uce.edu.ec.accrualBack.auth.service.JWTServiceImpl;
 import uce.edu.ec.accrualBack.entity.Period;
@@ -69,10 +65,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        String token = jwtService.create(authResult);
+                                            Authentication authentication) throws IOException, ServletException {
+        String token = jwtService.create(authentication);
         response.addHeader(JWTServiceImpl.HEADER_STRING, JWTServiceImpl.TOKEN_PREFIX + token);
-        List<Period> periods = periodService.findActivePeriodTrue();
+        String username = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+        List<Period> periods = periodService.findAllByUsername(username);
         Map<String, Object> body = new HashMap<String, Object>();
         body.put("token", token);
         body.put("periods", periods);

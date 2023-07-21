@@ -9,15 +9,16 @@ import java.util.Collection;
 
 public interface JWTService {
 
-    public String create(Authentication auth) throws IOException;
+    String create(Authentication auth) throws IOException;
 
-    public boolean validate(String token);
+    boolean validate(String token);
 
-    public Claims getClaims(String token);
+    Claims getClaims(String token);
 
-    public String getUsername(String token);
+    String getUsername(String token);
 
-    public Collection<? extends GrantedAuthority> getRoles(String token) throws IOException;
+    Collection<? extends GrantedAuthority> getRoles(String token) throws IOException;
 
-    public String resolve(String token);
+    String resolve(String token);
+
 }

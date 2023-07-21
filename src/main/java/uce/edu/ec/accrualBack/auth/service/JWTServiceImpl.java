@@ -13,15 +13,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Base64Utils;
 import uce.edu.ec.accrualBack.auth.SimpleGrantedAuthorityMixin;
-import uce.edu.ec.accrualBack.entity.Period;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JWTServiceImpl implements JWTService {

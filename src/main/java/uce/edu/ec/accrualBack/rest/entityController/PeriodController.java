@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/period")
@@ -33,23 +35,30 @@ public class PeriodController {
 
     @PostMapping("/save")
     public ResponseEntity<?> savePeriod(@RequestBody Period period) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.save(period));
+        Map<Integer, String> response = periodService.save(period);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PatchMapping("/switchActivePeriod/{idPeriod}")
     public ResponseEntity<?> switchActivePeriod(@PathVariable Long idPeriod) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.switchActivePeriod(idPeriod));
+        Map<Integer, String> response = periodService.switchActivePeriod(idPeriod);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
-    @PatchMapping("/switchStatePeriod/{idPeriod},{state}")
-    public ResponseEntity<?> switchStatePeriod(@PathVariable Long idPeriod, @PathVariable Integer state,
-                                               @RequestBody List<Long> docents) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.switchStatePeriod(idPeriod, state, docents));
+    @PatchMapping("/switchStatePeriods")
+    public ResponseEntity<?> switchStatePeriods(@RequestBody Map<String, Object> objects) {
+        Map<Integer, String> response = periodService.switchStatePeriods(objects);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/deletePeriodById/{idPeriod}")
     public ResponseEntity<?> deletePeriodById(@PathVariable Long idPeriod) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.delete(periodService.findById(idPeriod)));
+        Map<Integer, String> response = periodService.deleteById(idPeriod);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
 }

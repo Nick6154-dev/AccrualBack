@@ -4,10 +4,13 @@ import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AccrualDataService {
 
     List<AccrualData> findAll();
+
+    List<AccrualData> findAllByAccrualData(boolean settlement);
 
     AccrualData findById(Long idAccrualData);
 
@@ -21,6 +24,8 @@ public interface AccrualDataService {
 
     String updateObservations(String observations, Long idAccrualData);
 
-    String updateSettlement(Boolean settlement, Docent docent);
+    void updateSettlement(Boolean settlement, AccrualData accrualData);
+
+    Map<Integer, String> approveSettlement(Long idPerson);
 
 }

@@ -13,43 +13,41 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/accrualData")
 public class AccrualDataController {
 
     @Autowired
-    private AccrualDataService service;
+    private AccrualDataService accrualDataService;
 
     @Autowired
     private DocentService docentService;
-
-    @Autowired
-    private MailService mailService;
 
     @Autowired
     private UtilCommonsService commonsService;
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findAll());
     }
 
     @GetMapping("/{idAccrualData}")
     public ResponseEntity<?> findById(@PathVariable Long idAccrualData) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idAccrualData));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findById(idAccrualData));
     }
 
     @GetMapping("/byIdDocent/{idDocent}")
     public ResponseEntity<?> findByDocent(@PathVariable Long idDocent) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docentService.findById(idDocent)));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findByDocent(docentService.findById(idDocent)));
     }
 
     @GetMapping("/ByIdPerson/{idPerson}")
     public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
         Docent docent = docentService.findByIdPerson(idPerson);
         if (docent.getCategory() != null) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByDocent(docent));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findByDocent(docent));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Id persona no encontrada: " + idPerson);
         }
@@ -60,17 +58,19 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(accrualData));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.save(accrualData));
     }
 
     @PatchMapping("/approveSettlement/{idPerson}")
-    public void approveSettlement(@PathVariable Long idPerson) {
-        mailService.sendSettlementNotificationMail(idPerson);
+    public ResponseEntity<?> approveSettlement(@PathVariable Long idPerson) {
+        Map<Integer, String> response = accrualDataService.approveSettlement(idPerson);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/{idAccrualData}")
     public ResponseEntity<?> delete(@PathVariable Long idAccrualData) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idAccrualData));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.deleteById(idAccrualData));
     }
 
     @PutMapping("/{idAccrualData}")
@@ -78,7 +78,7 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(accrualData, idAccrualData));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.update(accrualData, idAccrualData));
     }
 
     @PatchMapping("/observation/{idAccrualData}")
@@ -86,7 +86,7 @@ public class AccrualDataController {
         if (result.hasErrors()) {
             return commonsService.validate(result);
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateObservations(observations, idAccrualData));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.updateObservations(observations, idAccrualData));
     }
 
 }

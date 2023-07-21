@@ -28,6 +28,8 @@ public interface PeriodDocentService {
 
     boolean existsByIdPeriod(Long idPeriod);
 
+    boolean existsByIdDocentAndIdPeriod(Long idDocent, Long idPeriod);
+
     Integer countAllByIdDocent(Long idDocent);
 
     Integer countAllByIdPeriod(Long idPeriod);

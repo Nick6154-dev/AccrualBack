@@ -11,17 +11,19 @@ public interface PeriodService {
 
     List<Map<String, Object>> findAllWithDetails();
 
+    List<Period> findAllByUsername(String username);
+
     List<Period> findActivePeriodTrue();
 
     Period findById(Long idPeriod);
 
-    Period save(Period period);
+    Map<Integer, String> save(Period period);
 
-    String delete(Period period);
+    Map<Integer, String> deleteById(Long idPeriod);
 
-    String switchActivePeriod(Long idPeriod);
+    Map<Integer, String> switchActivePeriod(Long idPeriod);
 
-    String switchStatePeriod(Long idPeriod, Integer state, List<Long> docents);
+    Map<Integer, String> switchStatePeriods(Map<String, Object> objects);
 
     Period update(Period period, Long idPeriod);
 

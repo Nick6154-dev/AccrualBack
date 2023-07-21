@@ -30,6 +30,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Person findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     @Transactional
     public Person save(Person person) {
         return repository.findByEmailAndIdentification(person.getEmail(), person.getIdentification()).orElseGet(() -> repository.save(person));

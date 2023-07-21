@@ -10,6 +10,8 @@ public interface PersonService {
 
     Person findById(Long idPerson);
 
+    Person findByEmail(String email);
+
     Person save(Person person);
 
     String delete(Person person);

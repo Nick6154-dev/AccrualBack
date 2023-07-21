@@ -8,6 +8,8 @@ public interface DocentService {
 
     List<Docent> findAll();
 
+    List<Docent> findAllDocentSettlementNoApproved();
+
     Docent findById(Long idDocent);
 
     Docent findByIdPerson(Long idPerson);
