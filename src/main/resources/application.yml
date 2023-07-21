@@ -12,7 +12,9 @@ spring:
     generate-ddl: true
   data:
     mongodb:
-      uri: mongodb://localhost:27017/railway
+      uri: mongodb://localhost:27017
+      authentication-database: root
+      database: railway
   mail:
     host: unknown
     port: 1

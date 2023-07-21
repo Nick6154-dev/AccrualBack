@@ -26,6 +26,6 @@ public interface AccrualDataService {
 
     void updateSettlement(Boolean settlement, AccrualData accrualData);
 
-    Map<Integer, String> approveSettlement(Long idPerson);
+    Map<Integer, String> requestApproval(Long idPerson);
 
 }

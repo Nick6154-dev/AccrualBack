@@ -3,15 +3,9 @@ package uce.edu.ec.accrualBack.service.entityService.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uce.edu.ec.accrualBack.entity.AccrualData;
-import uce.edu.ec.accrualBack.entity.ActivityPlan;
-import uce.edu.ec.accrualBack.entity.Docent;
-import uce.edu.ec.accrualBack.entity.Plan;
+import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.repository.AccrualDataRepository;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.ActivityPlanService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 
 import java.util.*;
@@ -33,6 +27,9 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Autowired
     private ActivityPlanService activityPlanService;
+
+    @Autowired
+    private SettlementDocentService settlementDocentService;
 
     @Override
     @Transactional(readOnly = true)
@@ -98,7 +95,7 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Override
     @Transactional
-    public Map<Integer, String> approveSettlement(Long idPerson) {
+    public Map<Integer, String> requestApproval(Long idPerson) {
         Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(idPerson);
         Optional<AccrualData> accrualData = repository.findAccrualDataByDocent(docent);
@@ -116,7 +113,8 @@ public class AccrualDataServiceImpl implements AccrualDataService {
                     return response;
                 }
             }
-            this.updateSettlement(true, accrualData.get());
+            //this.updateSettlement(true, accrualData.get());
+            settlementDocentService.save(new SettlementDocent(accrualData.get().getDocent().getIdDocent()));
             mailService.sendSettlementNotificationMail(accrualData.get().getDocent().getIdPerson());
             response.put(200, "Finiquito aprovado y mail enviado");
             return response;

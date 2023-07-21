@@ -9,7 +9,6 @@ import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
-import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
@@ -63,7 +62,7 @@ public class AccrualDataController {
 
     @PatchMapping("/approveSettlement/{idPerson}")
     public ResponseEntity<?> approveSettlement(@PathVariable Long idPerson) {
-        Map<Integer, String> response = accrualDataService.approveSettlement(idPerson);
+        Map<Integer, String> response = accrualDataService.requestApproval(idPerson);
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
