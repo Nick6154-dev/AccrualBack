@@ -3,14 +3,13 @@ package uce.edu.ec.accrualBack.service.entityService.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.repository.PersonRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,10 +29,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Person> findALlPeopleWithSettlementNotApproved() {
-        return docentService.findAllDocentSettlementNoApproved().stream()
-                .map(docent -> findById(docent.getIdPerson()))
-                .collect(Collectors.toList());
+    public List<Map<String, Object>> findALlPeopleWithSettlementNotApproved() {
+        List<Map<String, Object>> response = new ArrayList<>();
+        List<Docent> docents = docentService.findAllDocentSettlementNoApproved();
+        for (Docent docent : docents) {
+            Map<String, Object> aux = new HashMap<>();
+            aux.put("person", findById(docent.getIdPerson()));
+            aux.put("faculty", docent.getFaculty());
+            response.add(aux);
+        }
+        return response;
     }
 
     @Override

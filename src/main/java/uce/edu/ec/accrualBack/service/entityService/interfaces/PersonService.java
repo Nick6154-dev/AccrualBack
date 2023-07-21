@@ -3,12 +3,13 @@ package uce.edu.ec.accrualBack.service.entityService.interfaces;
 import uce.edu.ec.accrualBack.entity.Person;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PersonService {
 
     List<Person> findAll();
 
-    List<Person> findALlPeopleWithSettlementNotApproved();
+    List<Map<String, Object>> findALlPeopleWithSettlementNotApproved();
 
     Person findById(Long idPerson);
 
