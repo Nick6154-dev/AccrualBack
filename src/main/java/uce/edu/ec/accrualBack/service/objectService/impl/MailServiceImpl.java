@@ -32,7 +32,6 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendSettlementNotificationMail(Long idPerson) {
-        Docent docent = docentService.findByIdPerson(idPerson);
         Person person = personService.findById(idPerson);
         String fullName = person.getName() + " " + person.getLastname();
         String message = "Por medio de la presente, me dirijo a usted para notificarle que el docente " +
@@ -40,6 +39,22 @@ public class MailServiceImpl implements MailService {
                 "devengamiento para doctorados. Dicha solicitud ha sido realizada de acuerdo con los procedimientos y " +
                 "requisitos establecidos por la institución y las regulaciones vigentes.";
         String subject = "Solicitud finiquito - " + fullName;
+        //Email to send is validator_role, should be the next function
+        sendMail(message, subject, "nikomont123@gmail.com");
+    }
+
+    @Override
+    public void sendSettlementApproveMail(Long idPerson, boolean approved) {
+        Person person = personService.findById(idPerson);
+        String response;
+        if (approved) {
+            response = "aprovado";
+        } else {
+            response = "denegado";
+        }
+        String message = "Por medio de la presente, me dirijo a usted para notificarle que su solicitud de finiquito de " +
+                "devengamiento para doctorados ha sido " + response + ".";
+        String subject = "Respuesta solicitud finiquito";
         //Email to send is validator_role, should be the next function
         sendMail(message, subject, "nikomont123@gmail.com");
     }

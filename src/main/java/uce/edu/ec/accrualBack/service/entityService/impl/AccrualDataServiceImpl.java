@@ -9,12 +9,16 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Autowired
     private AccrualDataRepository repository;
+
+    @Autowired
+    private PersonService personService;
 
     @Autowired
     private DocentService docentService;
@@ -35,6 +39,16 @@ public class AccrualDataServiceImpl implements AccrualDataService {
     @Transactional(readOnly = true)
     public List<AccrualData> findAll() {
         return (List<AccrualData>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Person> findAllPeopleSettlementRequest() {
+        List<SettlementDocent> settlementDocents = settlementDocentService.findAll();
+        return settlementDocents.stream()
+                .map(settlementDocent -> docentService.findById(settlementDocent.getIdDocent()))
+                .map(docent -> personService.findById(docent.getIdPerson()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -113,13 +127,48 @@ public class AccrualDataServiceImpl implements AccrualDataService {
                     return response;
                 }
             }
-            //this.updateSettlement(true, accrualData.get());
             settlementDocentService.save(new SettlementDocent(accrualData.get().getDocent().getIdDocent()));
             mailService.sendSettlementNotificationMail(accrualData.get().getDocent().getIdPerson());
-            response.put(200, "Finiquito aprovado y mail enviado");
+            response.put(200, "Solicitud de finiquito guardada y mail enviado");
             return response;
         }
         response.put(400, "No se a encontrado datos de devengamiento de este docente, porfavor cargar esos datos");
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public Map<Integer, String> approveSettlement(Long idPerson, boolean approved) {
+        Map<Integer, String> response = new HashMap<>();
+        Docent docent = docentService.findByIdPerson(idPerson);
+        if (settlementDocentService.existsByIdDocent(docent.getIdDocent())) {
+            settlementDocentService.deleteByIdDocent(docent.getIdDocent());
+            if (approved) {
+                mailService.sendSettlementApproveMail(idPerson, true);
+                response.put(200, "La solicitud ha sido aprobada y el estado de finiquito ha cambiado exitosamente.");
+            } else {
+                mailService.sendSettlementApproveMail(idPerson, false);
+                response.put(200, "La solicitud ha sido denegada y el estado de finiquito ha cambiado exitosamente.");
+            }
+            AccrualData accrualData = findByDocent(docent);
+            updateSettlement(approved, accrualData);
+            mailService.sendSettlementApproveMail(idPerson, approved);
+            return response;
+        }
+        response.put(400, "El docente no ha enviado solicitud para finiquito.");
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public Map<Integer, String> approveAllRequestSettlement() {
+        List<SettlementDocent> settlementDocents = settlementDocentService.findAll();
+        Map<Integer, String> response = new HashMap<>();
+        for (SettlementDocent settlementDocent : settlementDocents) {
+            Docent docent = docentService.findById(settlementDocent.getIdDocent());
+            Map<Integer, String> aux = approveSettlement(docent.getIdPerson(), true);
+            response.putAll(aux);
+        }
         return response;
     }
 

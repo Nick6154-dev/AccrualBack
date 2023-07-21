@@ -95,6 +95,7 @@ public class PeriodServiceImpl implements PeriodService {
         } else {
             period.setActive(true);
             period.setState(0);
+            repository.save(period);
             response.put(200, "El periodo ha sido guardado exitosamente");
         }
         return response;

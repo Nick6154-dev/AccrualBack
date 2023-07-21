@@ -32,6 +32,11 @@ public class AccrualDataController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findAll());
     }
 
+    @GetMapping("/findAllPeopleSettlementRequest")
+    public ResponseEntity<?> findAllPeopleSettlementRequest() {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findAllPeopleSettlementRequest());
+    }
+
     @GetMapping("/{idAccrualData}")
     public ResponseEntity<?> findById(@PathVariable Long idAccrualData) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.findById(idAccrualData));
@@ -60,9 +65,23 @@ public class AccrualDataController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.save(accrualData));
     }
 
-    @PatchMapping("/approveSettlement/{idPerson}")
-    public ResponseEntity<?> approveSettlement(@PathVariable Long idPerson) {
+    @PatchMapping("/requestSettlement/{idPerson}")
+    public ResponseEntity<?> requestSettlement(@PathVariable Long idPerson) {
         Map<Integer, String> response = accrualDataService.requestApproval(idPerson);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+
+    @PatchMapping("/approveSettlement/{idPerson},{approved}")
+    public ResponseEntity<?> approveSettlement(@PathVariable Long idPerson, @PathVariable boolean approved) {
+        Map<Integer, String> response = accrualDataService.approveSettlement(idPerson, approved);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+
+    @PatchMapping("/approveAllSettlementRequest")
+    public ResponseEntity<?> approveAllSettlementRequest() {
+        Map<Integer, String> response = accrualDataService.approveAllRequestSettlement();
         if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
