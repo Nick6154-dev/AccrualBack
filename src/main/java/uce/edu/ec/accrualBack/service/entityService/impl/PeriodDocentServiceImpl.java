@@ -102,6 +102,7 @@ public class PeriodDocentServiceImpl implements PeriodDocentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByIdDocentAndIdPeriod(Long idDocent, Long idPeriod) {
         return repository.existsByIdDocentAndIdPeriod(idDocent, idPeriod);
     }

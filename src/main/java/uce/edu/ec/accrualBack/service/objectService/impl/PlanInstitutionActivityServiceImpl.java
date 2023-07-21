@@ -160,7 +160,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                     response.put(400, "Ya no se puede actualizar toda la actividad pues la etapa de registro ya paso");
                     return response;
                 }
-                if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+                if (!periodDocentService.existsByIdDocentAndIdPeriod(docent.getIdDocent(), plan.getPeriod().getIdPeriod())) {
                     response.put(400, "El docente o el periodo no pertenecen");
                     return response;
                 }
