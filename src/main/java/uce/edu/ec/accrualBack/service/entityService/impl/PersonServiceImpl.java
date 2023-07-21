@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.repository.PersonRepository;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -17,10 +19,21 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepository repository;
 
+    @Autowired
+    private DocentService docentService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Person> findAll() {
         return Optional.of((List<Person>) repository.findAll()).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Person> findALlPeopleWithSettlementNotApproved() {
+        return docentService.findAllDocentSettlementNoApproved().stream()
+                .map(docent -> findById(docent.getIdPerson()))
+                .collect(Collectors.toList());
     }
 
     @Override

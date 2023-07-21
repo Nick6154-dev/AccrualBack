@@ -26,6 +26,11 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findAll());
     }
 
+    @GetMapping("/findAllWithSettlementNotApproved")
+    public ResponseEntity<?> findAllWithSettlementNotApproved() {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findALlPeopleWithSettlementNotApproved());
+    }
+
     @GetMapping("/{idPerson}")
     public ResponseEntity<?> findById(@PathVariable Long idPerson) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idPerson));

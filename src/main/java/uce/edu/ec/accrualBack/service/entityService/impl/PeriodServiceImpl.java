@@ -163,10 +163,12 @@ public class PeriodServiceImpl implements PeriodService {
                     .map(Docent::getIdDocent)
                     .collect(Collectors.toList());
         } else {
-            List<?> docentsList = (List<?>) objects.get("docents");
+            List<?> docentsList = (List<?>) objects.get("people");
             idDocents = docentsList.stream()
                     .filter(obj -> obj instanceof Number)
                     .map(obj -> ((Number) obj).longValue())
+                    .map(idPerson -> docentService.findByIdPerson(idPerson))
+                    .map(Docent::getIdDocent)
                     .collect(Collectors.toList());
         }
         if (idDocents.isEmpty()) {

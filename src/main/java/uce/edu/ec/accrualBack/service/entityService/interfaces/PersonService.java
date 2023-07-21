@@ -8,6 +8,8 @@ public interface PersonService {
 
     List<Person> findAll();
 
+    List<Person> findALlPeopleWithSettlementNotApproved();
+
     Person findById(Long idPerson);
 
     Person findByEmail(String email);
