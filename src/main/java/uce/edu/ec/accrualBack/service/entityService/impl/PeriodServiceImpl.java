@@ -137,9 +137,14 @@ public class PeriodServiceImpl implements PeriodService {
         Object periodsObject = objects.get("periods");
         List<Long> idPeriods;
         if (periodsObject instanceof List<?>) {
-            idPeriods = (List<Long>) objects.get("periods");
+            List<?> periodsList = (List<?>) periodsObject;
+            idPeriods = periodsList.stream()
+                    .filter(obj -> obj instanceof Number)
+                    .map(obj -> ((Number) obj).longValue())
+                    .collect(Collectors.toList());
         } else {
-            idPeriods = Collections.singletonList((Long) periodsObject);
+            Integer aux = (Integer) periodsObject;
+            idPeriods = Collections.singletonList(aux.longValue());
         }
         if (idPeriods.isEmpty()) {
             response.put(400, "Se necesita enviar al menos el id de un periodo para actualizar el estado del mismo");
