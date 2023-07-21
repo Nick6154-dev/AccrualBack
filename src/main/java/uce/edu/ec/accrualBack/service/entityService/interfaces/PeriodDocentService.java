@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PeriodDocentService {
 
-    PeriodDocent findById(Long idPeriodDocent);
+    PeriodDocent findById(String idPeriodDocent);
 
     List<PeriodDocent> findAll();
 
@@ -18,15 +18,21 @@ public interface PeriodDocentService {
 
     PeriodDocent save(PeriodDocent periodDocent);
 
-    void deleteById(Long idPeriodDocent);
+    void deleteById(String idPeriodDocent);
 
     void delete(PeriodDocent periodDocent);
 
-    PeriodDocent update(PeriodDocent periodDocent, Long idPeriodDocent);
+    void deleteAllByIdDocent(Long idDocent);
+
+    void deleteAllByIdPeriod(Long idPeriod);
+
+    PeriodDocent update(PeriodDocent periodDocent, String idPeriodDocent);
 
     boolean existsByIdDocent(Long idDocent);
 
     boolean existsByIdPeriod(Long idPeriod);
+
+    boolean existsByIdDocentAndIdPeriodAndState(Long idDocent, Long idPeriod, Integer State);
 
     boolean existsByIdDocentAndIdPeriod(Long idDocent, Long idPeriod);
 

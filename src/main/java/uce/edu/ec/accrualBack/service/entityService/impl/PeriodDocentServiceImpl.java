@@ -18,7 +18,7 @@ public class PeriodDocentServiceImpl implements PeriodDocentService {
 
     @Override
     @Transactional(readOnly = true)
-    public PeriodDocent findById(Long idPeriodDocent) {
+    public PeriodDocent findById(String idPeriodDocent) {
         return repository.findById(idPeriodDocent).orElseGet(PeriodDocent::new);
     }
 
@@ -53,7 +53,7 @@ public class PeriodDocentServiceImpl implements PeriodDocentService {
 
     @Override
     @Transactional
-    public void deleteById(Long idPeriodDocent) {
+    public void deleteById(String idPeriodDocent) {
         if (repository.existsById(idPeriodDocent)) repository.deleteById(idPeriodDocent);
     }
 
@@ -64,8 +64,18 @@ public class PeriodDocentServiceImpl implements PeriodDocentService {
     }
 
     @Override
+    public void deleteAllByIdDocent(Long idDocent) {
+        repository.deleteAllByIdDocent(idDocent);
+    }
+
+    @Override
+    public void deleteAllByIdPeriod(Long idPeriod) {
+        repository.deleteAllByIdPeriod(idPeriod);
+    }
+
+    @Override
     @Transactional
-    public PeriodDocent update(PeriodDocent periodDocent, Long idPeriodDocent) {
+    public PeriodDocent update(PeriodDocent periodDocent, String idPeriodDocent) {
         if (repository.existsById(idPeriodDocent)) {
             periodDocent.setIdPeriodDocent(idPeriodDocent);
             return repository.save(periodDocent);
@@ -87,6 +97,11 @@ public class PeriodDocentServiceImpl implements PeriodDocentService {
 
     @Override
     @Transactional(readOnly = true)
+    public boolean existsByIdDocentAndIdPeriodAndState(Long idDocent, Long idPeriod, Integer state) {
+        return repository.existsByIdDocentAndIdPeriodAndState(idDocent, idPeriod, state);
+    }
+
+    @Override
     public boolean existsByIdDocentAndIdPeriod(Long idDocent, Long idPeriod) {
         return repository.existsByIdDocentAndIdPeriod(idDocent, idPeriod);
     }

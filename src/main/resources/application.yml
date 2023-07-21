@@ -10,6 +10,9 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/railway
   mail:
     host: unknown
     port: 1

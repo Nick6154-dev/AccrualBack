@@ -150,8 +150,8 @@ public class PeriodServiceImpl implements PeriodService {
             response.put(400, "Se necesita enviar al menos el id de un periodo para actualizar el estado del mismo");
             return response;
         }
-        Integer state = (Integer) objects.get("state");
-        if (state == null || state == 0) {
+        Integer state = ((Number) objects.get("state")).intValue();
+        if (state == 0) {
             response.put(400, "Se necesita enviar el estado a actualizar");
             return response;
         }
@@ -172,6 +172,7 @@ public class PeriodServiceImpl implements PeriodService {
             response.put(400, "Ha existido un error al cargar los ids de docentes");
             return response;
         }
+        deleteDocentsFromPeriodsAssigned(idPeriods);
         for (Long idPeriod : idPeriods) {
             Optional<Period> optionalPeriod = repository.findById(idPeriod);
             if (optionalPeriod.isPresent()){
@@ -179,7 +180,7 @@ public class PeriodServiceImpl implements PeriodService {
                 period.setState(state);
                 period = repository.save(period);
                 planService.setPlansEditableByPeriod(period);
-                this.assignDocentsToPeriod(idPeriod, state, idDocents);
+                assignDocentsToPeriod(idPeriod, state, idDocents);
             } else {
                 response.put(400, "No se ha encontrado el periodo con id: " + idPeriod + ", no se ha podido actualizar " +
                         "el estado de ese periodo");
@@ -250,6 +251,12 @@ public class PeriodServiceImpl implements PeriodService {
                 startValue = aux;
             }
         }
+    }
+
+    private void deleteDocentsFromPeriodsAssigned(List<Long> idPeriods) {
+        idPeriods.forEach(idPeriod -> {
+            periodDocentService.deleteAllByIdPeriod(idPeriod);
+        });
     }
 
 }
