@@ -90,7 +90,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 response.put(400, "No se pueden agregar actividades pues el periodo aun no tiene un modo");
                 return response;
             }
-            if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+            if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
                 response.put(400, "El docente o el periodo no pertenecen");
                 return response;
             }
@@ -124,7 +124,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
                 response.put(400, "Ya no se eliminan mas actividades pues ya no es editable");
                 return response;
             }
-            if (periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+            if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
                 response.put(400, "El docente o el periodo no pertenecen");
                 return response;
             }
