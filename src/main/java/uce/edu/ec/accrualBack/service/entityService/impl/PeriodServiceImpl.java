@@ -201,6 +201,10 @@ public class PeriodServiceImpl implements PeriodService {
             Optional<Period> optionalPeriod = repository.findById(idPeriod);
             if (optionalPeriod.isPresent()){
                 Period period = optionalPeriod.get();
+                if (!period.getActive()) {
+                    response.put(400, "El periodo " + period.getValuePeriod() + " no se encuentra activo como para cambiar la etapa");
+                    return response;
+                }
                 period.setState(state);
                 period = repository.save(period);
                 planService.setPlansEditableByPeriod(period);
