@@ -28,7 +28,7 @@ public class PersonController {
 
     @GetMapping("/findAllWithSettlementNotApproved")
     public ResponseEntity<?> findAllWithSettlementNotApproved() {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findALlPeopleWithSettlementNotApproved());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findALlPeopleWithSettlementNotApprovedAndBeUser());
     }
 
     @GetMapping("/{idPerson}")

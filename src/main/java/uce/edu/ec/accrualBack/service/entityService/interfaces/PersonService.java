@@ -9,7 +9,7 @@ public interface PersonService {
 
     List<Person> findAll();
 
-    List<Map<String, Object>> findALlPeopleWithSettlementNotApproved();
+    List<Map<String, Object>> findALlPeopleWithSettlementNotApprovedAndBeUser();
 
     Person findById(Long idPerson);
 

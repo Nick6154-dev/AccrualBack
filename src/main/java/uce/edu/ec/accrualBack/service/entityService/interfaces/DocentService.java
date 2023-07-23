@@ -10,6 +10,8 @@ public interface DocentService {
 
     List<Docent> findAllDocentSettlementNoApproved();
 
+    List<Docent> findAllDocentSettlementApproved();
+
     Docent findById(Long idDocent);
 
     Docent findByIdPerson(Long idPerson);

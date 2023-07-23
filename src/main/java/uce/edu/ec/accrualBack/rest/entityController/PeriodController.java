@@ -23,6 +23,11 @@ public class PeriodController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.findAll());
     }
 
+    @GetMapping("/findAllByIdPerson/{idPerson}")
+    public ResponseEntity<?> findAllByIdPerson(@PathVariable Long idPerson) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.findAllByIdPerson(idPerson));
+    }
+
     @GetMapping("/findAllWithDetails")
     public ResponseEntity<?> findAllWithDetails() {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(periodService.findAllWithDetails());

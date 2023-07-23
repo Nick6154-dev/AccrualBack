@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Person;
+import uce.edu.ec.accrualBack.entity.User;
 import uce.edu.ec.accrualBack.repository.PersonRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.RoleService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +24,12 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private DocentService docentService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Person> findAll() {
@@ -29,9 +38,16 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Map<String, Object>> findALlPeopleWithSettlementNotApproved() {
+    public List<Map<String, Object>> findALlPeopleWithSettlementNotApprovedAndBeUser() {
         List<Map<String, Object>> response = new ArrayList<>();
-        List<Docent> docents = docentService.findAllDocentSettlementNoApproved();
+        List<Docent> docents = userService.findAllByRolesIs(roleService.findRoleByRoleName("ROLE_USER"))
+                .stream()
+                .map(user -> docentService.findByIdPerson(user.getIdPerson()))
+                .filter(
+                        docent -> docentService.findAllDocentSettlementApproved()
+                        .stream()
+                        .anyMatch(aux -> !docent.equals(aux))
+                ).collect(Collectors.toList());
         for (Docent docent : docents) {
             Map<String, Object> aux = new HashMap<>();
             aux.put("person", findById(docent.getIdPerson()));

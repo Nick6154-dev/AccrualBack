@@ -10,6 +10,7 @@ import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.repository.PeriodRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,15 @@ public class PeriodServiceImpl implements PeriodService {
     @Transactional(readOnly = true)
     public List<Period> findAll() {
         return (List<Period>) Optional.of(repository.findAll()).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Period> findAllByIdPerson(Long idPerson) {
+        Docent docent = docentService.findByIdPerson(idPerson);
+        return periodDocentService.findAllByIdDocent(docent.getIdDocent()).stream()
+                .map(periodDocent -> findById(periodDocent.getIdPeriod()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -156,6 +166,15 @@ public class PeriodServiceImpl implements PeriodService {
             response.put(400, "Se necesita enviar el estado a actualizar");
             return response;
         }
+        for (Long idPeriod : idPeriods) {
+            if (!periodCanBeXState(idPeriod, state)) {
+                String stringState = "completo";
+                if (state == 2) stringState = "registro";
+                if (state == 3) stringState = "validacion";
+                response.put(400, "No se puede asignar el estado " + stringState + " al periodo " + findById(idPeriod).getValuePeriod());
+                return response;
+            }
+        }
         List<Long> idDocents;
         if (state != 1) {
             idDocents = docentService.findAllDocentSettlementNoApproved()
@@ -260,6 +279,30 @@ public class PeriodServiceImpl implements PeriodService {
         idPeriods.forEach(idPeriod -> {
             periodDocentService.deleteAllByIdPeriod(idPeriod);
         });
+    }
+
+    @Transactional(readOnly = true)
+    public boolean periodCanBeXState(Long idPeriod, Integer state) {
+        Period period = findById(idPeriod);
+        String valuePeriod = period.getValuePeriod().replace(" ", "");
+        String[] valuePeriodByParts = valuePeriod.split("-");
+        int startValue = Integer.parseInt(valuePeriodByParts[0]);
+        int endValue = Integer.parseInt(valuePeriodByParts[1]);
+        LocalDate actualDate = LocalDate.now();
+        int actualYear = actualDate.getYear();
+        int actualMonth = actualDate.getMonthValue();
+        if (state == 1) {
+            if (endValue == actualYear) {
+                return actualMonth > 3;
+            }
+            return endValue < actualYear;
+        }
+        if (endValue >= actualYear) {
+            if (actualMonth <= 3 && startValue == (actualYear - 1)) return true;
+            if (actualMonth > 3 && actualMonth <= 9 && startValue == actualYear && endValue == actualYear) return true;
+            return actualMonth > 9 && startValue == actualYear && (endValue - 1) == actualYear;
+        }
+        return false;
     }
 
 }

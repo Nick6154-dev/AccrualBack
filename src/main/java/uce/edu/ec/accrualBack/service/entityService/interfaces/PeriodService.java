@@ -9,6 +9,8 @@ public interface PeriodService {
 
     List<Period> findAll();
 
+    List<Period> findAllByIdPerson(Long idPerson);
+
     List<Map<String, Object>> findAllWithDetails();
 
     List<Period> findAllByUsername(String username);

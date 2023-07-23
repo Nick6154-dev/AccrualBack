@@ -5,11 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
+import uce.edu.ec.accrualBack.entity.Role;
+import uce.edu.ec.accrualBack.entity.User;
 import uce.edu.ec.accrualBack.repository.DocentRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.RoleService;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +38,14 @@ public class DocentServiceImpl implements DocentService {
     @Transactional(readOnly = true)
     public List<Docent> findAllDocentSettlementNoApproved() {
         return accrualDataService.findAllByAccrualData(false)
+                .stream()
+                .map(AccrualData::getDocent)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Docent> findAllDocentSettlementApproved() {
+        return accrualDataService.findAllByAccrualData(true)
                 .stream()
                 .map(AccrualData::getDocent)
                 .collect(Collectors.toList());
