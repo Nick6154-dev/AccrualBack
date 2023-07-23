@@ -134,6 +134,7 @@ public class PeriodServiceImpl implements PeriodService {
             Period period = optionalPeriod.get();
             period.setActive(!period.getActive());
             repository.save(period);
+            deleteDocentsFromPeriodsAssigned(Collections.singletonList(period.getIdPeriod()));
             response.put(200, "Periodo in/activado exitosamente");
         } else {
             response.put(400, "No se ha encontrado el id especificado");
