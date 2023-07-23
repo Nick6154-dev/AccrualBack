@@ -13,7 +13,7 @@ public class PlanInstitutionActivity {
 
     private String descriptionActivity;
 
-    private LocalDate starDate;
+    private LocalDate startDate;
 
     private LocalDate endDate;
 
@@ -55,12 +55,12 @@ public class PlanInstitutionActivity {
     }
 
     //Constructor to register activities
-    public PlanInstitutionActivity(String descriptionActivity, LocalDate starDate, LocalDate endDate, Long idActivityType,
+    public PlanInstitutionActivity(String descriptionActivity, LocalDate startDate, LocalDate endDate, Long idActivityType,
                                    Long idActivitySubtype, String descriptionSubtype, Long idActivity, String institutionName,
                                    String otherInstitutionName, Long idUniversity, Long idFaculty, Long idCareer, Long idPerson,
                                    Long idPeriod) {
         this.descriptionActivity = descriptionActivity;
-        this.starDate = starDate;
+        this.startDate = startDate;
         this.endDate = endDate;
         this.idActivityType = idActivityType;
         this.idActivitySubtype = idActivitySubtype;
@@ -75,13 +75,13 @@ public class PlanInstitutionActivity {
         this.idPeriod = idPeriod;
     }
 
-    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate starDate, LocalDate endDate,
+    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate startDate, LocalDate endDate,
                                    String evidences, Long idActivityType, Long idActivitySubtype, String descriptionSubtype,
                                    Long idActivity, String institutionName, String otherInstitutionName, String verificationLink,
                                    Long idUniversity, Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
         this.idPlan = idPlan;
         this.descriptionActivity = descriptionActivity;
-        this.starDate = starDate;
+        this.startDate = startDate;
         this.endDate = endDate;
         this.evidences = evidences;
         this.idActivityType = idActivityType;

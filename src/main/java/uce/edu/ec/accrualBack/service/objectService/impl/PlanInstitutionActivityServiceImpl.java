@@ -312,7 +312,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     }
 
     private Activity loadActivity(PlanInstitutionActivity activityPlanInstitution, Activity activity) {
-        activity.setStartDate(activityPlanInstitution.getStarDate());
+        activity.setStartDate(activityPlanInstitution.getStartDate());
         activity.setEndDate(activityPlanInstitution.getEndDate());
         activity.setDescription(activityPlanInstitution.getDescriptionActivity());
         if (periodService.findById(activityPlanInstitution.getIdPeriod()).getState() == 1) {
