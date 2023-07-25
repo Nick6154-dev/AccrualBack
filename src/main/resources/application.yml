@@ -10,6 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
+    open-in-view: false
   data:
     mongodb:
       uri: mongodb://localhost:27017
