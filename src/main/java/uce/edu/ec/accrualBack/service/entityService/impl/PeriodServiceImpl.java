@@ -32,6 +32,12 @@ public class PeriodServiceImpl implements PeriodService {
     @Autowired
     private PersonService personService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Period> findAll() {
@@ -179,8 +185,12 @@ public class PeriodServiceImpl implements PeriodService {
         }
         List<Long> idDocents;
         if (state != 1) {
-            idDocents = docentService.findAllDocentSettlementNoApproved()
+            idDocents = userService.findAllByRolesIs(roleService.findRoleByRoleName("ROLE_USER"))
                     .stream()
+                    .map(user -> docentService.findByIdPerson(user.getIdPerson()))
+                    .filter(docent -> docentService.findAllDocentSettlementApproved()
+                                    .stream()
+                                    .anyMatch(aux -> !docent.equals(aux)))
                     .map(Docent::getIdDocent)
                     .collect(Collectors.toList());
         } else {
