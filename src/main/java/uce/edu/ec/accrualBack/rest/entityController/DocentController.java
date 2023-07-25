@@ -10,6 +10,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/docent")
@@ -55,6 +56,13 @@ public class DocentController {
             return commonsService.validate(result);
         }
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.updateAll(docent, idDocent));
+    }
+
+    @PatchMapping("/updateCategoryModalityDocent/{idPerson}")
+    public ResponseEntity<?> updateCategoryModalityDocent(@RequestBody Map<String, String> newValues, @PathVariable Long idPerson) {
+        Map<Integer, String> response = service.updateCategoryModality(idPerson, newValues);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
 }

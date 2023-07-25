@@ -19,11 +19,11 @@ public interface AccrualDataService {
 
     AccrualData findByDocent(Docent docent);
 
-    AccrualData save(AccrualData accrualData);
+    Map<Integer, String> save(AccrualData accrualData, Long idPerson);
 
     String deleteById(Long idAccrualData);
 
-    AccrualData update(AccrualData accrualData, Long idAccrualData);
+    Map<Integer, String> update(AccrualData accrualData, Long idAccrualData);
 
     String updateObservations(String observations, Long idAccrualData);
 

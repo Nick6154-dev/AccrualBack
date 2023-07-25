@@ -3,6 +3,7 @@ package uce.edu.ec.accrualBack.service.entityService.interfaces;
 import uce.edu.ec.accrualBack.entity.SocialNetwork;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SocialNetworkService {
 
@@ -12,10 +13,10 @@ public interface SocialNetworkService {
 
     List<SocialNetwork> findByIdPerson(Long idPerson);
 
-    SocialNetwork save(SocialNetwork socialNetwork);
+    Map<Integer, String> save(SocialNetwork socialNetwork, Long idPerson);
 
     String deleteById(Long idSocialNetwork);
 
-    SocialNetwork update(SocialNetwork socialNetwork, Long idSocialNetwork);
+    Map<Integer, String> update(SocialNetwork socialNetwork, Long idSocialNetwork);
 
 }

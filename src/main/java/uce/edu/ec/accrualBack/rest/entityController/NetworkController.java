@@ -12,6 +12,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.NetworkService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/network")
@@ -51,12 +52,11 @@ public class NetworkController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody Network network, BindingResult result) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(network));
+    @PostMapping("/save/{idPerson}")
+    public ResponseEntity<?> save(@RequestBody Network network, @PathVariable Long idPerson) {
+        Map<Integer, String> response = service.save(network, idPerson);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/{idNetwork}")
@@ -64,12 +64,11 @@ public class NetworkController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idNetwork));
     }
 
-    @PutMapping("/{idNetwork}")
-    public ResponseEntity<?> update(@Valid @RequestBody Network network, BindingResult result, @PathVariable Long idNetwork) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(network, idNetwork));
+    @PutMapping("/update/{idNetwork}")
+    public ResponseEntity<?> update(@RequestBody Network network, @PathVariable Long idNetwork) {
+        Map<Integer, String> response = service.update(network, idNetwork);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
 }

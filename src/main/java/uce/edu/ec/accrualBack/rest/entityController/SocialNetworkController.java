@@ -10,6 +10,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.SocialNetworkServ
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/socialNetwork")
@@ -17,9 +18,6 @@ public class SocialNetworkController {
 
     @Autowired
     private SocialNetworkService service;
-
-    @Autowired
-    private UtilCommonsService commonsService;
 
     @GetMapping
     public ResponseEntity<?> findAll() {
@@ -31,12 +29,11 @@ public class SocialNetworkController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idSocialNetwork));
     }
 
-    @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody SocialNetwork socialNetwork, BindingResult result) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.save(socialNetwork));
+    @PostMapping("/save/{idPerson}")
+    public ResponseEntity<?> save(@RequestBody SocialNetwork socialNetwork, @PathVariable Long idPerson) {
+        Map<Integer, String> response = service.save(socialNetwork, idPerson);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @DeleteMapping("/{idSocialNetwork}")
@@ -44,12 +41,11 @@ public class SocialNetworkController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.deleteById(idSocialNetwork));
     }
 
-    @PutMapping("/{idSocialNetwork}")
-    public ResponseEntity<?> update(@Valid @RequestBody SocialNetwork socialNetwork, BindingResult result, @PathVariable Long idSocialNetwork) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.update(socialNetwork, idSocialNetwork));
+    @PutMapping("/update/{idSocialNetwork}")
+    public ResponseEntity<?> update(@RequestBody SocialNetwork socialNetwork, @PathVariable Long idSocialNetwork) {
+        Map<Integer, String> response = service.update(socialNetwork, idSocialNetwork);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
 }

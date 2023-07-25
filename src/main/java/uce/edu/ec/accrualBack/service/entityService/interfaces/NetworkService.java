@@ -2,8 +2,10 @@ package uce.edu.ec.accrualBack.service.entityService.interfaces;
 
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Network;
+import uce.edu.ec.accrualBack.entity.SocialNetwork;
 
 import java.util.List;
+import java.util.Map;
 
 public interface NetworkService {
 
@@ -13,10 +15,12 @@ public interface NetworkService {
 
     Network findByDocent(Docent docent);
 
-    Network save(Network network);
+    Map<Integer, String> save(Network network, Long idPerson);
 
     String deleteById(Long idNetwork);
 
-    Network update(Network network, Long idNetwork);
+    Map<Integer, String> update(Network network, Long idNetwork);
+
+    Map<Integer, String> updateSocialNetworks(List<SocialNetwork> socialNetworks, Long idNetworks);
 
 }

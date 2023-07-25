@@ -57,12 +57,11 @@ public class AccrualDataController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody AccrualData accrualData, BindingResult result) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.save(accrualData));
+    @PostMapping("/save/{idPerson}")
+    public ResponseEntity<?> save(@RequestBody AccrualData accrualData, @PathVariable Long idPerson) {
+        Map<Integer, String> response = accrualDataService.save(accrualData, idPerson);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PatchMapping("/requestSettlement/{idPerson}")
@@ -91,12 +90,11 @@ public class AccrualDataController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.deleteById(idAccrualData));
     }
 
-    @PutMapping("/{idAccrualData}")
-    public ResponseEntity<?> update(@Valid @RequestBody AccrualData accrualData, BindingResult result, @PathVariable Long idAccrualData) {
-        if (result.hasErrors()) {
-            return commonsService.validate(result);
-        }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(accrualDataService.update(accrualData, idAccrualData));
+    @PutMapping("/update/{idAccrualData}")
+    public ResponseEntity<?> update(@RequestBody AccrualData accrualData, @PathVariable Long idAccrualData) {
+        Map<Integer, String> response = accrualDataService.update(accrualData, idAccrualData);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PatchMapping("/observation/{idAccrualData}")

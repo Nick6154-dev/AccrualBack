@@ -11,9 +11,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.NetworkService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.SocialNetworkService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SocialNetworkServiceImpl implements SocialNetworkService {
@@ -54,8 +52,23 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
 
     @Override
     @Transactional
-    public SocialNetwork save(SocialNetwork socialNetwork) {
-        return repository.save(socialNetwork);
+    public Map<Integer, String> save(SocialNetwork socialNetwork, Long idPerson) {
+        Map<Integer, String> response = new HashMap<>();
+        Docent docent = docentService.findByIdPerson(idPerson);
+        if (docent.getIdDocent() == null) {
+            response.put(400, "Docente no encontrado en el sistema");
+            return response;
+        }
+        Network network = networkService.findByDocent(docent);
+        if (network.getIdNetworks() == null) {
+            response.put(400, "No tiene cargado redes el docente indicado");
+            return response;
+        }
+        socialNetwork.setNetwork(network);
+        socialNetwork = repository.save(socialNetwork);
+        networkService.updateSocialNetworks(Collections.singletonList(socialNetwork), network.getIdNetworks());
+        response.put(200, "Red social guardada exitosamente");
+        return response;
     }
 
     @Override
@@ -69,7 +82,17 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
 
     @Override
     @Transactional
-    public SocialNetwork update(SocialNetwork socialNetwork, Long idSocialNetwork) {
-        return repository.findById(idSocialNetwork).map(value -> repository.save(socialNetwork)).orElseGet(SocialNetwork::new);
+    public Map<Integer, String> update(SocialNetwork socialNetwork, Long idSocialNetwork) {
+        Map<Integer, String> response = new HashMap<>();
+        SocialNetwork oldSocialNetwork = findById(idSocialNetwork);
+        if (oldSocialNetwork.getIdSocialNetwork() == null) {
+            response.put(400, "No se ha encontrado la red social especificada");
+            return response;
+        }
+        socialNetwork.setIdSocialNetwork(oldSocialNetwork.getIdSocialNetwork());
+        socialNetwork.setNetwork(oldSocialNetwork.getNetwork());
+        repository.save(socialNetwork);
+        response.put(200, "Red social actualizada exitosamente");
+        return response;
     }
 }

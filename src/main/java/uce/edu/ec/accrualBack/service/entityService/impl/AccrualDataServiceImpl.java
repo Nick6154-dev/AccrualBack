@@ -71,8 +71,23 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Override
     @Transactional
-    public AccrualData save(AccrualData accrualData) {
-        return repository.findAccrualDataByDocent(accrualData.getDocent()).orElseGet(() -> repository.save(accrualData));
+    public Map<Integer, String> save(AccrualData accrualData, Long idPerson) {
+        Map<Integer, String> response = new HashMap<>();
+        Docent docent = docentService.findByIdPerson(idPerson);
+        if (docent.getIdDocent() == null) {
+            response.put(400, "No se ha encontrado el docente");
+            return response;
+        }
+        if (findByDocent(docent).getIdAccrualData() != null) {
+            response.put(400, "Ya existen datos de devengamiento asignados al docente");
+            return response;
+        }
+        accrualData.setDocent(docent);
+        accrualData.setSettlement(false);
+        accrualData.setObservations("NA");
+        repository.save(accrualData);
+        response.put(200, "Datos de devengamiento guardados exitosamente");
+        return response;
     }
 
     @Override
@@ -83,11 +98,20 @@ public class AccrualDataServiceImpl implements AccrualDataService {
 
     @Override
     @Transactional
-    public AccrualData update(AccrualData accrualData, Long idAccrualData) {
-        return repository.findById(idAccrualData).map(value -> {
-            accrualData.setIdAccrualData(value.getIdAccrualData());
-            return repository.save(accrualData);
-        }).orElseGet(AccrualData::new);
+    public Map<Integer, String> update(AccrualData accrualData, Long idAccrualData) {
+        Map<Integer, String> response = new HashMap<>();
+        AccrualData oldAccrualData = findById(idAccrualData);
+        if (oldAccrualData.getIdAccrualData() == null) {
+            response.put(400, "No se ha encontrado datos de devengamiento");
+            return response;
+        }
+        accrualData.setDocent(oldAccrualData.getDocent());
+        accrualData.setSettlement(oldAccrualData.getSettlement());
+        accrualData.setObservations(oldAccrualData.getObservations());
+        accrualData.setIdAccrualData(oldAccrualData.getIdAccrualData());
+        repository.save(accrualData);
+        response.put(200, "Datos de devengamiento actualizados correctamente");
+        return response;
     }
 
     @Override

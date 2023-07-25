@@ -10,7 +10,7 @@
     </parent>
     <groupId>uce.edu.ec.accrual</groupId>
     <artifactId>AccrualBack</artifactId>
-    <version>1.7.5</version>
+    <version>1.9.0</version>
     <name>AccrualBack</name>
     <description>AccrualBack</description>
     <properties>

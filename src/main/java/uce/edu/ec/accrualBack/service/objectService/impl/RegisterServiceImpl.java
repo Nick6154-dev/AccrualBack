@@ -44,9 +44,9 @@ public class RegisterServiceImpl implements RegisterService {
         Docent docent = registerNewDocent(registerObject);
         registerObject.getAccrualData().setDocent(docent);
         registerObject.getAccrualData().setSettlement(false);
-        accrualDataService.save(registerObject.getAccrualData());
+        accrualDataService.save(registerObject.getAccrualData(), docent.getIdPerson());
         registerObject.getNetwork().setDocent(docent);
-        networkService.save(registerObject.getNetwork());
+        networkService.save(registerObject.getNetwork(), docent.getIdPerson());
         mailService.sendNewDocentStateNotificationMail(docent.getIdPerson());
         response.put(200, "Nuevo docente registrado con exito");
         return response;

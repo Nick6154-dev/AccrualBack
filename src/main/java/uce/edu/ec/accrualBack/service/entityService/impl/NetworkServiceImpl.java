@@ -5,18 +5,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Network;
+import uce.edu.ec.accrualBack.entity.SocialNetwork;
 import uce.edu.ec.accrualBack.repository.NetworkRepository;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.NetworkService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class NetworkServiceImpl implements NetworkService {
 
     @Autowired
     private NetworkRepository repository;
+
+    @Autowired
+    private DocentService docentService;
 
     @Override
     @Transactional(readOnly = true)
@@ -38,8 +41,18 @@ public class NetworkServiceImpl implements NetworkService {
 
     @Override
     @Transactional
-    public Network save(Network network) {
-        return Optional.ofNullable(findByDocent(network.getDocent())).orElseGet(() -> repository.save(network));
+    public Map<Integer, String> save(Network network, Long idPerson) {
+        Map<Integer, String> response = new HashMap<>();
+        Docent docent = docentService.findByIdPerson(idPerson);
+        if (docent.getIdDocent() == null) {
+            response.put(400, "No se ha encontrado el docente en el sistema");
+            return response;
+        }
+        network.setDocent(docent);
+        network.setSocialNetworks(new ArrayList<>());
+        repository.save(network);
+        response.put(200, "Redes guardadas al docente exitosamente");
+        return response;
     }
 
     @Override
@@ -53,11 +66,34 @@ public class NetworkServiceImpl implements NetworkService {
 
     @Override
     @Transactional
-    public Network update(Network network, Long idNetwork) {
-        return repository.findById(idNetwork).map(value -> {
-            network.setIdNetworks(value.getIdNetworks());
-            return repository.save(network);
-        }).orElseGet(Network::new);
+    public Map<Integer, String> update(Network network, Long idNetwork) {
+        Map<Integer, String> response = new HashMap<>();
+        Network oldNetwork = findById(idNetwork);
+        if (oldNetwork.getIdNetworks() == null) {
+            response.put(400, "No existen redes asociadas");
+            return response;
+        }
+        network.setIdNetworks(oldNetwork.getIdNetworks());
+        network.setDocent(oldNetwork.getDocent());
+        network.setSocialNetworks(oldNetwork.getSocialNetworks());
+        repository.save(network);
+        response.put(200, "Redes actualizadas exitosamente");
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public Map<Integer, String> updateSocialNetworks(List<SocialNetwork> socialNetworks, Long idNetworks) {
+        Map<Integer, String> response = new HashMap<>();
+        Network network = findById(idNetworks);
+        if (network.getIdNetworks() == null) {
+            response.put(400, "No existen redes asociadas");
+            return response;
+        }
+        network.getSocialNetworks().addAll(socialNetworks);
+        repository.save(network);
+        response.put(200, "Redes sociales actualizadas en redes exitosamente");
+        return response;
     }
 
 }

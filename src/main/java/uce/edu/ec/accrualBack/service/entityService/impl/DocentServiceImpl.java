@@ -13,10 +13,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.RoleService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,4 +77,31 @@ public class DocentServiceImpl implements DocentService {
     public Docent updateAll(Docent docent, Long idDocent) {
         return repository.findById(idDocent).map(value -> repository.save(value)).orElseGet(Docent::new);
     }
+
+    @Override
+    @Transactional
+    public Map<Integer, String> updateCategoryModality(Long idPerson, Map<String, String> newValues) {
+        Map<Integer, String> response = new HashMap<>();
+        Docent docent = findByIdPerson(idPerson);
+        if (docent.getIdDocent() == null) {
+            response.put(400, "No se ha encontrado el docente solicitado");
+            return response;
+        }
+        String categoryDocent = newValues.get("categoryDocent");
+        if (categoryDocent == null || categoryDocent.equals("")) {
+            response.put(400, "Tiene que especificar la categoria a cambiar/agregar");
+            return response;
+        }
+        String modalityAccrual = newValues.get("modalityAccrual");
+        if (modalityAccrual == null || modalityAccrual.equals("")) {
+            response.put(400, "Tiene que especificar la modalidad a cambiar/agregar");
+            return response;
+        }
+        docent.setCategory(categoryDocent);
+        docent.setModality(modalityAccrual);
+        repository.save(docent);
+        response.put(200, "Valores actualizados del docente exitosamente");
+        return response;
+    }
+
 }
