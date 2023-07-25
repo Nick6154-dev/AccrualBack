@@ -41,9 +41,9 @@ public class SocialNetworkServiceImpl implements SocialNetworkService {
     @Transactional(readOnly = true)
     public List<SocialNetwork> findByIdPerson(Long idPerson) {
         Docent docent = docentService.findByIdPerson(idPerson);
-        if (docent != null) {
+        if (docent.getIdDocent() != null) {
             Network network = networkService.findByDocent(docent);
-            if (network != null) {
+            if (network.getIdNetworks() != null) {
                 return network.getSocialNetworks();
             }
         }

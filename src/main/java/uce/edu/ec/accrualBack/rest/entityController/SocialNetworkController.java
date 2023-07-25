@@ -29,6 +29,11 @@ public class SocialNetworkController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findById(idSocialNetwork));
     }
 
+    @GetMapping("/findByIdPerson/{idPerson}")
+    public ResponseEntity<?> findByIdPerson(@PathVariable Long idPerson) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(service.findByIdPerson(idPerson));
+    }
+
     @PostMapping("/save/{idPerson}")
     public ResponseEntity<?> save(@RequestBody SocialNetwork socialNetwork, @PathVariable Long idPerson) {
         Map<Integer, String> response = service.save(socialNetwork, idPerson);
