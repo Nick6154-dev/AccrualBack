@@ -1,5 +1,6 @@
 package uce.edu.ec.accrualBack.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +37,7 @@ public class Network {
 
     @OneToMany
     @JoinColumn(name = "id_red_social")
+    @JsonBackReference
     private List<SocialNetwork> socialNetworks;
 
 }

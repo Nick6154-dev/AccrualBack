@@ -1,5 +1,6 @@
 package uce.edu.ec.accrualBack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,7 @@ public class SocialNetwork {
 
     @ManyToOne
     @JoinColumn(name = "id_redes")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Network network;
 
 }
