@@ -1,5 +1,7 @@
 package uce.edu.ec.accrualBack.service.objectService.interfaces;
 
+import uce.edu.ec.accrualBack.entity.Period;
+
 public interface MailService {
 
     void sendSettlementNotificationMail(Long idPerson);
@@ -8,7 +10,7 @@ public interface MailService {
 
     void sendPlanNotificationMail(Long idPerson);
 
-    void sendStatePlanNotificationMail(Long idDocent, Long state, String observations, String period);
+    void sendStatePlanNotificationMail(Long idDocent, int state, String observations, Period period);
 
     void sendNewUserNotificationMail(Long idPerson);
 

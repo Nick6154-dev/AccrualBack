@@ -48,6 +48,10 @@ public class NetworkServiceImpl implements NetworkService {
             response.put(400, "No se ha encontrado el docente en el sistema");
             return response;
         }
+        if (findByDocent(docent).getIdNetworks() != null) {
+            response.put(400, "No se pueden guardar mas datos de redes");
+            return response;
+        }
         network.setDocent(docent);
         network.setSocialNetworks(new ArrayList<>());
         repository.save(network);

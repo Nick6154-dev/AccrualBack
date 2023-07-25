@@ -45,16 +45,19 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private StatePlanService statePlanService;
+
     @Override
     public List<ValidatorObject> findAllPersonDocentPlan() {
         List<ValidatorObject> validatorObjects = new ArrayList<>();
         List<Person> people = personService.findAll();
         ValidatorObject validatorObject;
         for (Person p : people) {
-            validatorObject = new ValidatorObject();
-            validatorObject.setPerson(p);
             Optional<Docent> docent = Optional.of(docentService.findByIdPerson(p.getIdPerson()));
             if (docent.get().getIdDocent() == null || docent.get().getIdDocent() == 0) continue;
+            validatorObject = new ValidatorObject();
+            validatorObject.setPerson(p);
             validatorObject.setDocent(docent.get());
             Optional<List<Plan>> plans = Optional.of(planService.findByDocent(validatorObject.getDocent()));
             if (plans.get().isEmpty()) continue;
@@ -82,26 +85,44 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
-    public String validatePlanByPerson(Plan plan) {
-        return Optional.of(planService.findById(plan.getIdPlan())).map(value -> {
-            value.setState(plan.getState());
-            value.setObservations(plan.getObservations());
-            planService.save(value);
-            mailService.sendStatePlanNotificationMail(value.getIdDocent(), Long.valueOf(value.getState()), value.getObservations(),
-                    value.getPeriod().getValuePeriod());
-            return "Estado de plan actualizado junto con las observaciones";
-        }).orElseGet(() -> "No se encontro el id del plan para la actualizacion");
+    public Map<Integer, String> validatePlanByPerson(Map<String, String> newValues) {
+        Map<Integer, String> response = new HashMap<>();
+        if (newValues.isEmpty()) {
+            response.put(400, "El objeto enviado esta vacio");
+            return response;
+        }
+        long idPlan = Long.parseLong(newValues.get("idPlan"));
+        if (idPlan == 0) {
+            response.put(400, "El id del plan no puede ser 0");
+            return response;
+        }
+        Plan plan = planService.findById(idPlan);
+        if (plan.getIdPlan() == null) {
+            response.put(400, "No se ha encontrado un plan a ese id especificado");
+            return response;
+        }
+        boolean approved = Boolean.parseBoolean(newValues.get("approved"));
+        String observations = newValues.get("observations");
+        if (observations.equals("")) {
+            response.put(400, "Deberia especificar una observacion al plan");
+            return response;
+        }
+        return validatePlan(plan, observations, approved);
     }
 
     @Override
-    public void approveAllPlans() {
+    public Map<Integer, String> approveAllPlans() {
+        Map<Integer, String> response = new HashMap<>();
         List<Plan> plans = planService.findPlansByStateIs(0);
-        for (Plan p : plans) {
-            p.setState(1);
-            planService.save(p);
-            mailService.sendStatePlanNotificationMail(p.getIdDocent(), Long.valueOf(p.getState()), "Sin observaciones",
-                    p.getPeriod().getValuePeriod());
+        if (plans.isEmpty()) {
+            response.put(400, "No hay planes por aprobar");
+            return response;
         }
+        for (Plan plan : plans) {
+            response.putAll(validatePlan(plan, "Sin observaciones", true));
+        }
+        response.put(200, "Planes aprobados");
+        return response;
     }
 
     @Override
@@ -385,6 +406,46 @@ public class ValidatorServiceImpl implements ValidatorService {
         for (int i = 0; i < row.getLastCellNum(); i++) {
             sheet.autoSizeColumn(i);
         }
+    }
+
+    private Map<Integer, String> validatePlan(Plan plan, String observations, boolean approved) {
+        Map<Integer, String> response = new HashMap<>();
+        int state;
+        if (plan.getPeriod().getState() == 1) {
+            if (approved) {
+                plan.setState(true);
+                state = 1;
+            } else {
+                statePlanService.save(new StatePlan(plan.getIdPlan(), plan.getPeriod().getState(), 0));
+                state = 0;
+            }
+        } else if (plan.getPeriod().getState() == 2) {
+            if (approved) {
+                statePlanService.save(new StatePlan(plan.getIdPlan(), plan.getPeriod().getState(), 1));
+                state = 1;
+            } else {
+                statePlanService.save(new StatePlan(plan.getIdPlan(), plan.getPeriod().getState(), 0));
+                state = 0;
+            }
+        } else {
+            StatePlan statePlan = statePlanService.findByIdPlan(plan.getIdPlan());
+            if (statePlan.getIdStatePlan() == null || statePlan.getStatePlan() == 0) {
+                response.put(400, "El plan " + plan.getPeriod().getValuePeriod() + " no fue aprobado en la etapa de registro");
+                return response;
+            }
+            if (approved) {
+                plan.setState(true);
+                state = 1;
+            } else {
+                statePlanService.save(new StatePlan(plan.getIdPlan(), plan.getPeriod().getState(), 0));
+                state = 0;
+            }
+        }
+        plan.setObservations(observations);
+        planService.save(plan);
+        mailService.sendStatePlanNotificationMail(plan.getIdDocent(), state, plan.getObservations(), plan.getPeriod());
+        response.put(200, "Plan actualizado su estado correctamente");
+        return response;
     }
 
 }

@@ -76,7 +76,7 @@ public class PlanServiceImpl implements PlanService {
                         plan.setNumberPlan(1);
                     }
                     plan.setStarDate(LocalDate.now());
-                    plan.setState(0);
+                    plan.setState(false);
                     plan.setEditable(true);
                     plan.setObservations("NA");
                     return repository.save(plan);

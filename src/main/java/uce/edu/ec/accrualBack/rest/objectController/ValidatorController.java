@@ -13,6 +13,7 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/validator")
@@ -34,9 +35,18 @@ public class ValidatorController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(validatorService.findPlansByPerson(idPerson));
     }
 
-    @PatchMapping("/updateStateObservationsPlan")
-    public ResponseEntity<?> updateStateObservationsPlan(@RequestBody Plan plan) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(validatorService.validatePlanByPerson(plan));
+    @PatchMapping("/approvePlan")
+    public ResponseEntity<?> validatePlanByPerson(@RequestBody Map<String, String> newValues) {
+        Map<Integer, String> response = validatorService.validatePlanByPerson(newValues);
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+    }
+
+    @PatchMapping("/approveAllPlans")
+    public ResponseEntity<?> approveAllPlans() {
+        Map<Integer, String> response = validatorService.approveAllPlans();
+        if (response.containsKey(400)) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
     }
 
     @PostMapping("/generateExcel/{idPerson},{idPlan}")
@@ -72,12 +82,6 @@ public class ValidatorController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);
-    }
-
-    @PostMapping("/approveAllPlans")
-    public ResponseEntity<?> approveAllPlans() {
-        validatorService.approveAllPlans();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Todos los planes aprobados");
     }
 
 }

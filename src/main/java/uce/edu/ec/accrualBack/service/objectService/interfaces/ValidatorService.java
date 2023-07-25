@@ -4,6 +4,7 @@ import uce.edu.ec.accrualBack.entity.Plan;
 import uce.edu.ec.accrualBack.object.ValidatorObject;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ValidatorService {
 
@@ -11,9 +12,9 @@ public interface ValidatorService {
 
     ValidatorObject findPlansByPerson(Long idPerson);
 
-    String validatePlanByPerson(Plan plan);
+    Map<Integer, String> validatePlanByPerson(Map<String, String> newValues);
 
-    void approveAllPlans();
+    Map<Integer, String> approveAllPlans();
 
     byte[] generateExcelActivitiesPlan(Long idPerson, Long idPlan);
 

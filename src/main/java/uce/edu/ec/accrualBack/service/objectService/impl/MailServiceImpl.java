@@ -6,6 +6,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.entity.Docent;
+import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Person;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
@@ -72,26 +73,34 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendStatePlanNotificationMail(Long idDocent, Long state, String observations, String period) {
+    public void sendStatePlanNotificationMail(Long idDocent, int state, String observations, Period period) {
         Docent docent = docentService.findById(idDocent);
         Person person = personService.findById(docent.getIdPerson());
         String fullName = person.getName() + " " + person.getLastname();
-        String stateString = "";
+        String modePeriodString = "";
+        String stateString = "negada";
         if (state == 1) {
-            stateString = "aprobado";
-        } else {
-            stateString = "negado";
+            stateString = "aprobada";
+        }
+        if (period.getState() == 1) {
+            modePeriodString = "etapa completa ";
+        }
+        if (period.getState() == 2) {
+            modePeriodString = "etapa de registro ";
+        }
+        if (period.getState() == 3) {
+            modePeriodString = "etapa de validacion ";
         }
         String message = "Estimado/a docente " + fullName +  " con CI: " + person.getIdentification() + ",\n" +
                 "\n" +
                 "Mediante este mensaje, me dirijo a usted con el propósito de informarle sobre la revisión del plan enviado" +
-                " correspondiente al periodo " + period + ". Me complace comunicarle que dicho plan ha sido revisado y su estado " +
-                "actual es " + stateString + ". Además, me gustaría compartir las observaciones relevantes que se han identificado durante" +
+                " correspondiente al periodo " + period.getValuePeriod() + ". Me complace comunicarle que dicho plan ha sido revisado y su estado " +
+                "actual es " + modePeriodString + stateString + ". Además, me gustaría compartir las observaciones relevantes que se han identificado durante" +
                 " esta revisión, las cuales son las siguientes: " + observations + ".\n" +
                 "\n" +
                 "Si desea obtener más información o discutir estos aspectos con mayor detalle, le invito a que se comunique" +
                 " a través del correo institucional con la dirección de doctorados.";
-        String subject = "Estado Plan " + period + " - " + fullName;
+        String subject = "Estado Plan " + period.getValuePeriod() + " - " + fullName;
         //Email to send is user_role, should be the next function
         sendMail(message, subject, "nikomont123@gmail.com");
     }

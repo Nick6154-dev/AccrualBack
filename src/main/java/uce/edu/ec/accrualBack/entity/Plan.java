@@ -35,7 +35,7 @@ public class Plan {
 
     @NotNull
     @Column(name = "estado")
-    private Integer state;
+    private Boolean state;
 
     @OneToOne
     @JoinColumn(name = "id_periodo")
