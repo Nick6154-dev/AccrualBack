@@ -124,6 +124,7 @@ public class PeriodServiceImpl implements PeriodService {
         Optional<Period> optionalPeriod = repository.findById(idPeriod);
         if (optionalPeriod.isPresent()) {
             repository.delete(optionalPeriod.get());
+            deleteDocentsFromPeriodsAssigned(Collections.singletonList(optionalPeriod.get().getIdPeriod()));
             response.put(200, "Periodo eliminado exitosamente");
         } else {
             response.put(400, "No se ha encontrado el id especificado");
