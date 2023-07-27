@@ -89,30 +89,27 @@ public class ValidatorServiceImpl implements ValidatorService {
             aux.put("plan", plan);
             if (plan.getState()) {
                 aux.put("statePlan", "Aprobado");
-                continue;
             }
             StatePlan statePlan = statePlanService.findByIdPlan(plan.getIdPlan());
             if (statePlan.getIdStatePlan() == null) {
                 aux.put("statePlan", "Sin revisar");
-                continue;
-            }
-            if (statePlan.getStatePeriod() == 1) {
-                if (statePlan.getStatePlan() == 0) {
-                    aux.put("statePlan", "Negado etapa completa");
+            } else {
+                if (statePlan.getStatePeriod() == 1) {
+                    if (statePlan.getStatePlan() == 0) {
+                        aux.put("statePlan", "Negado etapa completa");
+                    }
                 }
-                continue;
-            }
-            if (statePlan.getStatePeriod() == 2) {
-                if (statePlan.getStatePlan() == 1) {
-                    aux.put("statePlan", "Aprobado etapa registro");
-                } else {
-                    aux.put("statePlan", "Negado etapa registro");
+                if (statePlan.getStatePeriod() == 2) {
+                    if (statePlan.getStatePlan() == 1) {
+                        aux.put("statePlan", "Aprobado etapa registro");
+                    } else {
+                        aux.put("statePlan", "Negado etapa registro");
+                    }
                 }
-                continue;
-            }
-            if (statePlan.getStatePeriod() == 3) {
-                if (statePlan.getStatePlan() == 0) {
-                    aux.put("statePlan", "Negado etapa registro");
+                if (statePlan.getStatePeriod() == 3) {
+                    if (statePlan.getStatePlan() == 0) {
+                        aux.put("statePlan", "Negado etapa registro");
+                    }
                 }
             }
             result.add(aux);
