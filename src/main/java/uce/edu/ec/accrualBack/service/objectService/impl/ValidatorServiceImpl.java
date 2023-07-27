@@ -79,10 +79,7 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Override
     public List<Object> findPlansByPerson(Long idPerson) {
         List<Object> result = new ArrayList<>();
-        Person person = personService.findById(idPerson);
         Docent docent = docentService.findByIdPerson(idPerson);
-        result.add(person);
-        result.add(docent);
         List<Plan> plans = planService.findByDocent(docent);
         for (Plan plan : plans) {
             Map<String, Object> aux = new LinkedHashMap<>();
@@ -108,7 +105,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                 }
                 if (statePlan.getStatePeriod() == 3) {
                     if (statePlan.getStatePlan() == 0) {
-                        aux.put("statePlan", "Negado etapa registro");
+                        aux.put("statePlan", "Negado etapa validacion");
                     }
                 }
             }
