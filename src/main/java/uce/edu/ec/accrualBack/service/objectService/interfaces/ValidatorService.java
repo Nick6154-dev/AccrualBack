@@ -10,7 +10,7 @@ public interface ValidatorService {
 
     List<ValidatorObject> findAllPersonDocentPlan();
 
-    ValidatorObject findPlansByPerson(Long idPerson);
+    List<Object> findPlansByPerson(Long idPerson);
 
     Map<Integer, String> validatePlanByPerson(Map<String, String> newValues);
 

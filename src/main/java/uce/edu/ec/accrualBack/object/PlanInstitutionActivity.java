@@ -9,8 +9,6 @@ import java.time.LocalDate;
 @Setter
 public class PlanInstitutionActivity {
 
-    private Long idPlan;
-
     private String descriptionActivity;
 
     private LocalDate startDate;
@@ -75,11 +73,10 @@ public class PlanInstitutionActivity {
         this.idPeriod = idPeriod;
     }
 
-    public PlanInstitutionActivity(Long idPlan, String descriptionActivity, LocalDate startDate, LocalDate endDate,
+    public PlanInstitutionActivity(String descriptionActivity, LocalDate startDate, LocalDate endDate,
                                    String evidences, Long idActivityType, Long idActivitySubtype, String descriptionSubtype,
                                    Long idActivity, String institutionName, String otherInstitutionName, String verificationLink,
                                    Long idUniversity, Long idFaculty, Long idCareer, Long idPerson, Long idPeriod) {
-        this.idPlan = idPlan;
         this.descriptionActivity = descriptionActivity;
         this.startDate = startDate;
         this.endDate = endDate;

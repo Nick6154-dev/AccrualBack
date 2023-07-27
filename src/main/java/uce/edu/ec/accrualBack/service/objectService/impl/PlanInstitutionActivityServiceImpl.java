@@ -66,46 +66,50 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     public Map<Integer, String> addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution) {
         Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
-        if (docent.getIdDocent() != null) {
-            Period period = periodService.findById(activityPlanInstitution.getIdPeriod());
-            Plan plan = planService.findByIdPersonAndPeriod(activityPlanInstitution.getIdPerson(), period);
-            if (plan.getIdPlan() == null) {
-                plan.setPeriod(period);
-                plan.setIdDocent(docent.getIdDocent());
-                plan = planService.save(plan);
-            }
-            if (!plan.getEditable()) {
-                response.put(400, "Ya no se agregan mas actividades pues ya no es editable");
-                return response;
-            }
-            if (!plan.getPeriod().getActive()) {
-                response.put(400, "Ya no se pueden agregar mas actividades, el periodo ya no esta activo");
-                return response;
-            }
-            if (plan.getPeriod().getState() == 3) {
-                response.put(400, "Ya no se pueden agregar mas actividades, la etapa de registro ya paso");
-                return response;
-            }
-            if (plan.getPeriod().getState() == 0) {
-                response.put(400, "No se pueden agregar actividades pues el periodo aun no tiene un modo");
-                return response;
-            }
-            if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
-                response.put(400, "El docente o el periodo no pertenecen");
-                return response;
-            }
-            activityPlanInstitution.setIdPlan(plan.getIdPlan());
-            ActivityPlan activityPlan = saveActivityPlan(activityPlanInstitution);
-            if (activityPlan.getIdActivityPlan() == null) {
-                response.put(400, "Problemas al guardar el plan activity, se ha guardado actividades sin la institucion");
-                return response;
-            }
-            activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
-            saveInstitutionPlan(activityPlanInstitution);
-            response.put(200, "Actividad nueva agregada");
+        if (docent.getIdDocent() == null) {
+            response.put(400, "El id no pertenece a ningun docente");
             return response;
         }
-        response.put(400, "El id no pertenece a ningun docente");
+        Period period = periodService.findById(activityPlanInstitution.getIdPeriod());
+        Plan plan = planService.findByIdPersonAndPeriod(activityPlanInstitution.getIdPerson(), period);
+        if (plan.getIdPlan() == null) {
+            plan.setPeriod(period);
+            plan.setIdDocent(docent.getIdDocent());
+            plan = planService.save(plan);
+        }
+        if (!plan.getEditable()) {
+            response.put(400, "Ya no se agregan mas actividades pues ya no es editable");
+            return response;
+        }
+        if (!plan.getPeriod().getActive()) {
+            response.put(400, "Ya no se pueden agregar mas actividades, el periodo ya no esta activo");
+            return response;
+        }
+        if (plan.getPeriod().getState() == 3) {
+            response.put(400, "Ya no se pueden agregar mas actividades, la etapa de registro ya paso");
+            return response;
+        }
+        if (plan.getPeriod().getState() == 0) {
+            response.put(400, "No se pueden agregar actividades pues el periodo aun no tiene un modo");
+            return response;
+        }
+        if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+            response.put(400, "El docente o el periodo no pertenecen");
+            return response;
+        }
+        Map<Integer, Object> resultActivityPlan = saveActivityPlan(activityPlanInstitution, plan);
+        if (resultActivityPlan.containsKey(400)) {
+            response.put(400, "Error dentro de guardad actividad plan: " + resultActivityPlan.get(400));
+            return response;
+        }
+        ActivityPlan activityPlan = (ActivityPlan) resultActivityPlan.get(200);
+        activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
+        Map<Integer, String> resultInstitutionPlan = saveInstitutionPlan(activityPlanInstitution);
+        if (resultInstitutionPlan.containsKey(400)) {
+            response.putAll(resultInstitutionPlan);
+            return response;
+        }
+        response.put(200, "Actividad nueva agregada");
         return response;
     }
 
@@ -114,78 +118,101 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     public Map<Integer, String> deleteActivityWithInstitution(Long idActivityPlan) {
         Map<Integer, String> response = new HashMap<>();
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
-        if (activityPlan.getIdActivityPlan() != null) {
-            Plan plan = planService.findById(activityPlan.getIdPlan());
-            if (plan.getIdPlan() == null) {
-                response.put(400, "Error al buscar un plan asignado a la tabla actividad_plan");
-                return response;
-            }
-            if (!plan.getEditable()) {
-                response.put(400, "Ya no se eliminan mas actividades pues ya no es editable");
-                return response;
-            }
-            if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
-                response.put(400, "El docente o el periodo no pertenecen");
-                return response;
-            }
-            deleteActivityPlanById(idActivityPlan);
-            Optional<Institution> institution = Optional.of(institutionService
-                    .findInstitutionByActivity(activityPlan.getActivity().getIdActivity()));
-            institution.ifPresent(this::deleteInstitutionPlan);
-            response.put(200, "Actividad eliminada con exito");
+        if (activityPlan.getIdActivityPlan() == null) {
+            response.put(400, "No se encontro el id proporcionado");
             return response;
         }
-        response.put(400, "No se encontro el id proporcionado");
+        Plan plan = planService.findById(activityPlan.getIdPlan());
+        if (plan.getIdPlan() == null) {
+            response.put(400, "Error al buscar un plan asignado a la tabla actividad_plan");
+            return response;
+        }
+        if (!plan.getEditable()) {
+            response.put(400, "Ya no se eliminan mas actividades pues ya no es editable");
+            return response;
+        }
+        if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+            response.put(400, "El docente o el periodo no pertenecen");
+            return response;
+        }
+        Map<Integer, String> resultActivityPlan = deleteActivityPlanById(idActivityPlan);
+        if (resultActivityPlan.containsKey(400)) {
+            response.putAll(resultActivityPlan);
+            return response;
+        }
+        Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
+        if (institution.getIdInstitution() == null) {
+            response.put(400, "No se ha encontrado una institucion a borrar");
+            return response;
+        }
+        Map<Integer, String> resultInstitutionPlan = deleteInstitutionPlan(institution);
+        if (resultInstitutionPlan.containsKey(400)) {
+            response.putAll(resultInstitutionPlan);
+            return response;
+        }
+        if (activityPlanService.findActivityPlansByIdPlan(plan.getIdPlan()).isEmpty()) {
+            planService.deleteById(plan.getIdPlan());
+        }
+        response.put(200, "Actividad eliminada con exito");
         return response;
     }
 
     @Override
     @Transactional
-    public Map<Integer, String> updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+    public Map<Integer, String> updateActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution, Long
+            idActivityPlan) {
         Map<Integer, String> response = new HashMap<>();
         Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
-        if (docent != null) {
-            ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
-            if (activityPlan.getIdActivityPlan() != null) {
-                Plan plan = planService.findById(activityPlan.getIdPlan());
-                if (plan.getIdPlan() == null) {
-                    response.put(400, "Error al cargar el plan de las actividades");
-                    return response;
-                }
-                if (!plan.getEditable()) {
-                    response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
-                    return response;
-                }
-                if (periodService.findById(plan.getIdPlan()).getState() == 3) {
-                    response.put(400, "Ya no se puede actualizar toda la actividad pues la etapa de registro ya paso");
-                    return response;
-                }
-                if (!periodDocentService.existsByIdDocentAndIdPeriod(docent.getIdDocent(), plan.getPeriod().getIdPeriod())) {
-                    response.put(400, "El docente o el periodo no pertenecen");
-                    return response;
-                }
-                activityPlanInstitution.setIdPlan(activityPlan.getIdPlan());
-                updateActivityPlan(activityPlanInstitution, idActivityPlan);
-                activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
-                Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
-                if (institution.getIdInstitution() == null) {
-                    response.put(400, "Error al econtrar la institucion con el id especificado, puede que la actividad se haya actualizado");
-                    return response;
-                }
-                updateInstitutionPlan(activityPlanInstitution, institution);
-                response.put(200, "Actividad actualizada con exito");
-                return response;
-            }
+        if (docent == null) {
+            response.put(400, "Id de persona no encontrado");
+            return response;
+        }
+        ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
+        if (activityPlan.getIdActivityPlan() == null) {
             response.put(400, "No se encontro la actividad a actualizar");
             return response;
         }
-        response.put(400, "Id de persona no encontrado");
+        Plan plan = planService.findById(activityPlan.getIdPlan());
+        if (plan.getIdPlan() == null) {
+            response.put(400, "Error al cargar el plan de las actividades");
+            return response;
+        }
+        if (!plan.getEditable()) {
+            response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
+            return response;
+        }
+        if (periodService.findById(plan.getIdPlan()).getState() == 3) {
+            response.put(400, "Ya no se puede actualizar toda la actividad pues la etapa de registro ya paso");
+            return response;
+        }
+        if (!periodDocentService.existsByIdDocentAndIdPeriod(docent.getIdDocent(), plan.getPeriod().getIdPeriod())) {
+            response.put(400, "El docente o el periodo no pertenecen");
+            return response;
+        }
+        Map<Integer, String> resultActivityPlan = updateActivityPlan(activityPlanInstitution, idActivityPlan, plan);
+        if (resultActivityPlan.containsKey(400)) {
+            response.putAll(resultActivityPlan);
+            return response;
+        }
+        activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
+        Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
+        if (institution.getIdInstitution() == null) {
+            response.put(400, "Error al econtrar la institucion con el id especificado, puede que la actividad se haya actualizado");
+            return response;
+        }
+        Map<Integer, String> resultInstitutionPlan = updateInstitutionPlan(activityPlanInstitution, institution);
+        if (resultInstitutionPlan.containsKey(400)) {
+            response.putAll(resultInstitutionPlan);
+            return response;
+        }
+        response.put(200, "Actividad actualizada con exito");
         return response;
     }
 
     @Override
     @Transactional
-    public Map<Integer, String> validateActivitiesByIdActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
+    public Map<Integer, String> validateActivitiesByIdActivityPlan(PlanInstitutionActivity
+                                                                           activityPlanInstitution, Long idActivityPlan) {
         Map<Integer, String> response = new HashMap<>();
         ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
         if (activityPlan.getIdActivityPlan() == null) {
@@ -255,88 +282,78 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     /*
         Methods to register just activityPlan
     */
-    private ActivityPlan saveActivityPlan(PlanInstitutionActivity activityPlanInstitution) {
+    private Map<Integer, Object> saveActivityPlan(PlanInstitutionActivity activityPlanInstitution, Plan plan) {
+        Map<Integer, Object> result = new HashMap<>();
         Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
         Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
-        Plan plan = planService.findById(activityPlanInstitution.getIdPlan());
-        if (plan != null) {
-            if (type != null && subtype != null) {
-                if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
-                    return new ActivityPlan();
-                }
-                Activity activity = loadActivity(activityPlanInstitution, new Activity());
-                ActivityPlan activityPlan = loadPlanAccrual(activityPlanInstitution, activity, type, subtype, new ActivityPlan());
-                if (type.getIdActivityType().intValue() == 2) {
-                    loadDescription(activityPlanInstitution, activityPlan, new Description());
-                }
-                return activityPlan;
-            } else {
-                return new ActivityPlan();
-            }
+        if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
+            result.put(400, "Error al encontrar el tipo o subtipo especificados");
+            return result;
         }
-        return new ActivityPlan();
-    }
-
-    private String deleteActivityPlanById(Long idActivityPlan) {
-        return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
-            if (descriptionService.existsByActivityPlan(activityPlan)) descriptionService.deleteByActivityPlan(activityPlan);
-            activityPlanService.delete(activityPlan);
-            return "Eliminado con exito";
-        }).orElse("El id especificado no se encuentra en el sistema");
-    }
-
-    private String updateActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long idActivityPlan) {
-        return Optional.of(activityPlanService.findById(idActivityPlan)).map(activityPlan -> {
-            if (typeService.findById(activityPlanInstitution.getIdActivityType()) != null &&
-                    subtypeService.findById(activityPlanInstitution.getIdActivitySubtype()) != null) {
-                if (!Objects.equals(subtypeService.findById(
-                                activityPlanInstitution.getIdActivitySubtype()).getActivityType().getIdActivityType(),
-                        typeService.findById(activityPlanInstitution.getIdActivityType()).getIdActivityType())) {
-                    return "El subtipo de actividad no pertenece";
-                }
-                if (descriptionService.existsByActivityPlan(activityPlan)) {
-                    descriptionService.deleteByActivityPlan(activityPlan);
-                }
-                if (activityPlan.getType().getIdActivityType().intValue() == 2
-                        && descriptionService.findDescriptionByActivityPlan(activityPlan) != null) {
-                    loadDescription(activityPlanInstitution, activityPlan, descriptionService.findDescriptionByActivityPlan(activityPlan));
-                }
-                loadPlanAccrual(activityPlanInstitution, loadActivity(activityPlanInstitution, activityPlan.getActivity()),
-                        typeService.findById(activityPlanInstitution.getIdActivityType()),
-                        subtypeService.findById(activityPlanInstitution.getIdActivitySubtype()), activityPlan);
-                return "Actividad actualizada correctamente";
-            } else {
-                return "Problemas al cargar el tipo o subtipo enviados";
-            }
-        }).orElse("El id especificado no se encuentra en el sistema");
-    }
-
-    private Activity loadActivity(PlanInstitutionActivity activityPlanInstitution, Activity activity) {
-        activity.setStartDate(activityPlanInstitution.getStartDate());
-        activity.setEndDate(activityPlanInstitution.getEndDate());
-        activity.setDescription(activityPlanInstitution.getDescriptionActivity());
-        if (periodService.findById(activityPlanInstitution.getIdPeriod()).getState() == 1) {
-            activity.setEvidences(activityPlanInstitution.getEvidences());
-        } else {
-            activity.setEvidences("Etapa de registro");
+        if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
+            result.put(400, "El tipo no concuerda con el subtipo de actividad");
+            return result;
         }
-        return activityService.save(activity);
+        Activity activity = activityService.save(new Activity(activityPlanInstitution.getDescriptionActivity(),
+                activityPlanInstitution.getEvidences(),
+                activityPlanInstitution.getStartDate(),
+                activityPlanInstitution.getEndDate()));
+        ActivityPlan activityPlan = activityPlanService.save(new ActivityPlan(plan.getIdPlan(),
+                0, activity, type, subtype));
+        if (type.getIdActivityType().intValue() == 2) {
+            descriptionService.save(new Description(activityPlanInstitution.getDescriptionSubtype(), activityPlan));
+        }
+        result.put(200, activityPlan);
+        return result;
     }
 
-    private ActivityPlan loadPlanAccrual(PlanInstitutionActivity activityPlanInstitution, Activity activity,
-                                         Type type, Subtype subtype, ActivityPlan activityPlan) {
-        activityPlan.setIdPlan(activityPlanInstitution.getIdPlan());
-        activityPlan.setActivity(activity);
-        activityPlan.setType(type);
-        activityPlan.setSubtype(subtype);
-        activityPlan.setState(0);
-        return activityPlanService.save(activityPlan);
+    private Map<Integer, String> deleteActivityPlanById(Long idActivityPlan) {
+        Map<Integer, String> result = new HashMap<>();
+        ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
+        if (activityPlan.getIdActivityPlan() == null) {
+            result.put(400, "No se encontro una actividad plan correspondiente a ese id");
+            return result;
+        }
+        if (descriptionService.existsByActivityPlan(activityPlan))
+            descriptionService.deleteByActivityPlan(activityPlan);
+        activityPlanService.delete(activityPlan);
+        result.put(200, "Eliminado actividad plan correctamente");
+        return result;
     }
 
-    private void loadDescription(PlanInstitutionActivity activityPlanInstitution, ActivityPlan activityPlan, Description description) {
-        description.setActivityPlan(activityPlan);
-        description.setDescription(activityPlanInstitution.getDescriptionSubtype());
-        descriptionService.save(description);
+    private Map<Integer, String> updateActivityPlan(PlanInstitutionActivity activityPlanInstitution, Long
+            idActivityPlan, Plan plan) {
+        Map<Integer, String> result = new HashMap<>();
+        ActivityPlan activityPlan = activityPlanService.findById(idActivityPlan);
+        if (activityPlan.getIdActivityPlan() == null) {
+            result.put(400, "No se encontro una actividad plan correspondiente a ese id");
+            return result;
+        }
+        Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
+        Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
+        if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
+            result.put(400, "Problema al encontrar el tipo o subtipo a cambiar");
+            return result;
+        }
+        if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
+            result.put(400, "El subtipo no pertenece al tipo de actividad");
+            return result;
+        }
+        if (descriptionService.existsByActivityPlan(activityPlan)) {
+            descriptionService.deleteByActivityPlan(activityPlan);
+        }
+        if (activityPlan.getType().getIdActivityType().intValue() == 2
+                && descriptionService.findDescriptionByActivityPlan(activityPlan) != null) {
+            descriptionService.save(new Description(activityPlanInstitution.getDescriptionSubtype(), activityPlan));
+        }
+        Activity activity = activityService.update(new Activity(activityPlanInstitution.getDescriptionActivity(),
+                activityPlanInstitution.getEvidences(),
+                activityPlanInstitution.getStartDate(),
+                activityPlanInstitution.getEndDate()), activityPlan.getActivity().getIdActivity());
+        activityPlanService.update(new ActivityPlan(plan.getIdPlan(),
+                0, activity, type, subtype), activityPlan.getIdActivityPlan());
+        result.put(200, "Actualizado actividad plan correctamente");
+        return result;
     }
     /*
         End of methods to register just activityPlan
@@ -345,32 +362,53 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     /*
         Methods to register just institutionPlan
     */
-    private void saveInstitutionPlan(PlanInstitutionActivity activityPlanInstitution) {
+    private Map<Integer, String> saveInstitutionPlan(PlanInstitutionActivity activityPlanInstitution) {
+        Map<Integer, String> result = new HashMap<>();
         if (activityPlanInstitution.getInstitutionName().equals("Universidad Central del Ecuador")) {
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
             Career career = careerService.findById(activityPlanInstitution.getIdCareer());
-            if (university != null && faculty != null && career != null) {
-                if (Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) &&
-                        Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-                    Institution institution = loadInstitution(activityPlanInstitution, new Institution());
-                    loadUniversityInstitution(activityPlanInstitution, institution, new UniversityInstitution());
-                }
+            if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
+                result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada");
+                return result;
             }
+            if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
+                    !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
+                result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera");
+                return result;
+            }
+            Institution institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
+                    activityPlanInstitution.getIdActivity()));
+            universityInstitutionService.save(new UniversityInstitution(institution, university, faculty, career));
         } else {
-            Institution institution = loadInstitution(activityPlanInstitution, new Institution());
-            loadOtherInstitution(activityPlanInstitution, institution, new OtherInstitution());
+            Institution institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
+                    activityPlanInstitution.getIdActivity()));
+            otherInstitutionService.save(new OtherInstitution(activityPlanInstitution.getOtherInstitutionName(),
+                    activityPlanInstitution.getVerificationLink(), institution));
         }
+        result.put(200, "Guardado institucion correctamente");
+        return result;
     }
 
-    private void deleteInstitutionPlan(Institution institution) {
+    private Map<Integer, String> deleteInstitutionPlan(Institution institution) {
+        Map<Integer, String> result = new HashMap<>();
         OtherInstitution otherInstitution = otherInstitutionService.findOtherInstitutionByInstitution(institution);
         UniversityInstitution universityInstitution = universityInstitutionService.findUniversityInstitutionByInstitution(institution);
-        if (otherInstitution.getIdOther() != null) otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
-        if (universityInstitution.getIdUniversityInstitution() != null) universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
+        if (otherInstitution.getIdOther() == null && universityInstitution.getIdUniversityInstitution() == null) {
+            result.put(400, "La institucion no tiene valores asociades en otra institucion o universidad");
+            return result;
+        }
+        if (otherInstitution.getIdOther() != null)
+            otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
+        if (universityInstitution.getIdUniversityInstitution() != null)
+            universityInstitutionService.deleteUniversityInstitutionByInstitution(institution);
+        result.put(200, "Eliminado institucion correctamente");
+        return result;
     }
 
-    private void updateInstitutionPlan(PlanInstitutionActivity activityPlanInstitution, Institution institution) {
+    private Map<Integer, String> updateInstitutionPlan(PlanInstitutionActivity activityPlanInstitution, Institution
+            institution) {
+        Map<Integer, String> result = new HashMap<>();
         if (otherInstitutionService.findOtherInstitutionByInstitution(institution).getIdOther() != null) {
             otherInstitutionService.deleteOtherInstitutionByInstitution(institution);
         } else {
@@ -380,46 +418,26 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
             Career career = careerService.findById(activityPlanInstitution.getIdCareer());
-            if (university != null && faculty != null && career != null) {
-                if (Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) &&
-                        Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-                    Institution institutionSave = loadInstitution(activityPlanInstitution, new Institution());
-                    loadUniversityInstitution(activityPlanInstitution, institutionSave,
-                            universityInstitutionService.findUniversityInstitutionByInstitution(institutionSave));
-                }
+            if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
+                result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada a actualizar");
+                return result;
             }
+            if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
+                    !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
+                result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera a actualizar");
+                return result;
+            }
+            institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
+                    activityPlanInstitution.getIdActivity()));
+            universityInstitutionService.save(new UniversityInstitution(institution, university, faculty, career));
         } else {
-            Institution institutionSave = loadInstitution(activityPlanInstitution, new Institution());
-            loadOtherInstitution(activityPlanInstitution, institutionSave,
-                    otherInstitutionService.findOtherInstitutionByInstitution(institutionSave));
+            institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
+                    activityPlanInstitution.getIdActivity()));
+            otherInstitutionService.save(new OtherInstitution(activityPlanInstitution.getOtherInstitutionName(),
+                    activityPlanInstitution.getVerificationLink(), institution));
         }
-    }
-
-    private Institution loadInstitution(PlanInstitutionActivity activityPlanInstitution, Institution institution) {
-        institution.setIdActivity(activityPlanInstitution.getIdActivity());
-        institution.setInstitutionName(activityPlanInstitution.getInstitutionName());
-        return institutionService.save(institution);
-    }
-
-    private void loadOtherInstitution(PlanInstitutionActivity activityPlanInstitution, Institution institution,
-                                      OtherInstitution otherInstitution) {
-        otherInstitution.setOtherName(activityPlanInstitution.getOtherInstitutionName());
-        otherInstitution.setInstitution(institution);
-        if (periodService.findById(activityPlanInstitution.getIdPeriod()).getState() == 1) {
-            otherInstitution.setVerificationLink(activityPlanInstitution.getVerificationLink());
-        } else {
-            otherInstitution.setVerificationLink("Etapa de registro");
-        }
-        otherInstitutionService.save(otherInstitution);
-    }
-
-    private void loadUniversityInstitution(PlanInstitutionActivity activityPlanInstitution, Institution institution,
-                                           UniversityInstitution universityInstitution) {
-        universityInstitution.setInstitution(institution);
-        universityInstitution.setUniversity(universityService.findById(activityPlanInstitution.getIdUniversity()));
-        universityInstitution.setFaculty(facultyService.findById(activityPlanInstitution.getIdFaculty()));
-        universityInstitution.setCareer(careerService.findById(activityPlanInstitution.getIdCareer()));
-        universityInstitutionService.save(universityInstitution);
+        result.put(200, "Actualizada institucion correctamente");
+        return result;
     }
     /*
         End of methods to register just institutionPlan

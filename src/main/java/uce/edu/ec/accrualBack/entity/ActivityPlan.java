@@ -40,4 +40,14 @@ public class ActivityPlan {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Subtype subtype;
 
+    public ActivityPlan() {
+    }
+
+    public ActivityPlan(Long idPlan, Integer state, Activity activity, Type type, Subtype subtype) {
+        this.idPlan = idPlan;
+        this.state = state;
+        this.activity = activity;
+        this.type = type;
+        this.subtype = subtype;
+    }
 }

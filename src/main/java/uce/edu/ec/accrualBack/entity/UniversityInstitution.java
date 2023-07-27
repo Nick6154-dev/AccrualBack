@@ -32,4 +32,14 @@ public class UniversityInstitution {
     @JoinColumn(name = "id_carrera")
     private Career career;
 
+    public UniversityInstitution() {
+    }
+
+    public UniversityInstitution(Institution institution, University university, Faculty faculty, Career career) {
+        this.institution = institution;
+        this.university = university;
+        this.faculty = faculty;
+        this.career = career;
+    }
+
 }

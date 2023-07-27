@@ -29,4 +29,16 @@ public class OtherInstitution {
     @JoinColumn(name = "id_institucion")
     private Institution institution;
 
+    public OtherInstitution() {
+    }
+
+    public OtherInstitution(String otherName, String verificationLink, Institution institution) {
+        this.otherName = otherName;
+        if (verificationLink == null || verificationLink.isEmpty()) {
+            this.verificationLink = "Etapa de registro";
+        } else {
+            this.verificationLink = verificationLink;
+        }
+        this.institution = institution;
+    }
 }

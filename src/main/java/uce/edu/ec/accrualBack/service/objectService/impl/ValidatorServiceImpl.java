@@ -77,11 +77,47 @@ public class ValidatorServiceImpl implements ValidatorService {
     }
 
     @Override
-    public ValidatorObject findPlansByPerson(Long idPerson) {
-        ValidatorObject validatorObject = new ValidatorObject();
-        Optional<Docent> docent = Optional.ofNullable(docentService.findByIdPerson(idPerson));
-        docent.flatMap(value -> Optional.ofNullable(planService.findByDocent(value))).ifPresent(validatorObject::setPlans);
-        return validatorObject;
+    public List<Object> findPlansByPerson(Long idPerson) {
+        List<Object> result = new ArrayList<>();
+        Person person = personService.findById(idPerson);
+        Docent docent = docentService.findByIdPerson(idPerson);
+        result.add(person);
+        result.add(docent);
+        List<Plan> plans = planService.findByDocent(docent);
+        for (Plan plan : plans) {
+            Map<String, Object> aux = new LinkedHashMap<>();
+            aux.put("plan", plan);
+            if (plan.getState()) {
+                aux.put("statePlan", "Aprobado");
+                continue;
+            }
+            StatePlan statePlan = statePlanService.findByIdPlan(plan.getIdPlan());
+            if (statePlan.getIdStatePlan() == null) {
+                aux.put("statePlan", "Sin revisar");
+                continue;
+            }
+            if (statePlan.getStatePeriod() == 1) {
+                if (statePlan.getStatePlan() == 0) {
+                    aux.put("statePlan", "Negado etapa completa");
+                }
+                continue;
+            }
+            if (statePlan.getStatePeriod() == 2) {
+                if (statePlan.getStatePlan() == 1) {
+                    aux.put("statePlan", "Aprobado etapa registro");
+                } else {
+                    aux.put("statePlan", "Negado etapa registro");
+                }
+                continue;
+            }
+            if (statePlan.getStatePeriod() == 3) {
+                if (statePlan.getStatePlan() == 0) {
+                    aux.put("statePlan", "Negado etapa registro");
+                }
+            }
+            result.add(aux);
+        }
+        return result;
     }
 
     @Override
@@ -412,6 +448,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         Map<Integer, String> response = new HashMap<>();
         int state;
         if (plan.getPeriod().getState() == 1) {
+            statePlanService.deleteByIdPlan(plan.getIdPlan());
             if (approved) {
                 plan.setState(true);
                 state = 1;
@@ -420,6 +457,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                 state = 0;
             }
         } else if (plan.getPeriod().getState() == 2) {
+            statePlanService.deleteByIdPlan(plan.getIdPlan());
             if (approved) {
                 statePlanService.save(new StatePlan(plan.getIdPlan(), plan.getPeriod().getState(), 1));
                 state = 1;
@@ -428,6 +466,7 @@ public class ValidatorServiceImpl implements ValidatorService {
                 state = 0;
             }
         } else {
+            statePlanService.deleteByIdPlan(plan.getIdPlan());
             StatePlan statePlan = statePlanService.findByIdPlan(plan.getIdPlan());
             if (statePlan.getIdStatePlan() == null || statePlan.getStatePlan() == 0) {
                 response.put(400, "El plan " + plan.getPeriod().getValuePeriod() + " no fue aprobado en la etapa de registro");

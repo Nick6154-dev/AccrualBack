@@ -26,4 +26,12 @@ public class Institution {
     @Column(name = "id_actividad")
     private Long idActivity;
 
+    public Institution() {
+    }
+
+    public Institution(String institutionName, Long idActivity) {
+        this.institutionName = institutionName;
+        this.idActivity = idActivity;
+    }
+
 }

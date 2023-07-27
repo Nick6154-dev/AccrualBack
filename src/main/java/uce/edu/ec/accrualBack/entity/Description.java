@@ -25,4 +25,11 @@ public class Description {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ActivityPlan activityPlan;
 
+    public Description() {
+    }
+
+    public Description(String description, ActivityPlan activityPlan) {
+        this.description = description;
+        this.activityPlan = activityPlan;
+    }
 }
