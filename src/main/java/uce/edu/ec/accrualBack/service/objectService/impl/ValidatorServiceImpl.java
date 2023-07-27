@@ -84,9 +84,6 @@ public class ValidatorServiceImpl implements ValidatorService {
         for (Plan plan : plans) {
             Map<String, Object> aux = new LinkedHashMap<>();
             aux.put("plan", plan);
-            if (plan.getState()) {
-                aux.put("statePlan", "Aprobado");
-            }
             StatePlan statePlan = statePlanService.findByIdPlan(plan.getIdPlan());
             if (statePlan.getIdStatePlan() == null) {
                 aux.put("statePlan", "Sin revisar");
@@ -108,6 +105,9 @@ public class ValidatorServiceImpl implements ValidatorService {
                         aux.put("statePlan", "Negado etapa validacion");
                     }
                 }
+            }
+            if (plan.getState()) {
+                aux.put("statePlan", "Aprobado");
             }
             result.add(aux);
         }
