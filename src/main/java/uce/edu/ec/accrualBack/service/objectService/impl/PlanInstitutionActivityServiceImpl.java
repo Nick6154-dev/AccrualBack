@@ -181,7 +181,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             response.put(400, "Ya no se actualizan mas actividades pues ya no es editable");
             return response;
         }
-        if (periodService.findById(plan.getIdPlan()).getState() == 3) {
+        if (periodService.findById(plan.getPeriod().getIdPeriod()).getState() == 3) {
             response.put(400, "Ya no se puede actualizar toda la actividad pues la etapa de registro ya paso");
             return response;
         }

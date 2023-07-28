@@ -23,9 +23,6 @@ public class MailServiceImpl implements MailService {
     private DocentService docentService;
 
     @Autowired
-    private AccrualDataService accrualDataService;
-
-    @Autowired
     private PersonService personService;
 
     @Autowired
@@ -93,8 +90,8 @@ public class MailServiceImpl implements MailService {
         }
         String message = "Estimado/a docente " + fullName +  " con CI: " + person.getIdentification() + ",\n" +
                 "\n" +
-                "Mediante este mensaje, me dirijo a usted con el propósito de informarle sobre la revisión del plan enviado" +
-                " correspondiente al periodo " + period.getValuePeriod() + ". Me complace comunicarle que dicho plan ha sido revisado y su estado " +
+                "Me dirijo a usted con el propósito de informarle sobre la revisión del plan enviado" +
+                " correspondiente al periodo " + period.getValuePeriod() + ". Dicho plan ha sido revisado y su estado " +
                 "actual es " + modePeriodString + stateString + ". Además, me gustaría compartir las observaciones relevantes que se han identificado durante" +
                 " esta revisión, las cuales son las siguientes: " + observations + ".\n" +
                 "\n" +
@@ -126,7 +123,7 @@ public class MailServiceImpl implements MailService {
     public void sendNewDocentStateNotificationMail(Long idPerson) {
         Person person = personService.findById(idPerson);
         String fullName = person.getName() + " " + person.getLastname();
-        String message = "Mediante esta comunicación, me dirijo a usted con el propósito de informarle de manera oficial" +
+        String message = "Mediante esta comunicación, me dirijo a usted con el propósito de informarle" +
                 " que el docente " + fullName + " con número de identificación " + person.getIdentification() + " ha presentado" +
                 " una solicitud de ingreso al sistema. Le instamos a que acceda a la página correspondiente para revisar y tomar" +
                 " una decisión sobre dicha solicitud, ya sea aprobándola o denegándola.";

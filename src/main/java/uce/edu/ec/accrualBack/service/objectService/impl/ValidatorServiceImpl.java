@@ -133,7 +133,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
         boolean approved = Boolean.parseBoolean(newValues.get("approved"));
         String observations = newValues.get("observations");
-        if (observations.equals("")) {
+        if (observations.isEmpty()) {
             response.put(400, "Deberia especificar una observacion al plan");
             return response;
         }
@@ -475,7 +475,7 @@ public class ValidatorServiceImpl implements ValidatorService {
             }
         }
         plan.setObservations(observations);
-        planService.save(plan);
+        plan = planService.update(plan, plan.getIdPlan());
         mailService.sendStatePlanNotificationMail(plan.getIdDocent(), state, plan.getObservations(), plan.getPeriod());
         response.put(200, "Plan actualizado su estado correctamente");
         return response;
