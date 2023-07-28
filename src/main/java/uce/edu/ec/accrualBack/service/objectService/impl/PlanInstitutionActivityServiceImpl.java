@@ -94,7 +94,12 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             return response;
         }
         if (!periodDocentService.existsByIdDocentAndIdPeriod(plan.getIdDocent(), plan.getPeriod().getIdPeriod())) {
-            response.put(400, "El docente o el periodo no pertenecen");
+            response.put(400, "El docente o el periodo no pertenecen para guardar una nueva actividad");
+            return response;
+        }
+        Map<Integer, String> validator = validateObjectPlanInstitutionActivity(activityPlanInstitution);
+        if (validator.containsKey(400)) {
+            response.putAll(validator);
             return response;
         }
         Map<Integer, Object> resultActivityPlan = saveActivityPlan(activityPlanInstitution, plan);
@@ -186,7 +191,12 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             return response;
         }
         if (!periodDocentService.existsByIdDocentAndIdPeriod(docent.getIdDocent(), plan.getPeriod().getIdPeriod())) {
-            response.put(400, "El docente o el periodo no pertenecen");
+            response.put(400, "El docente o el periodo no pertenecen al actualizar la actividad");
+            return response;
+        }
+        Map<Integer, String> validator = validateObjectPlanInstitutionActivity(activityPlanInstitution);
+        if (validator.containsKey(400)) {
+            response.putAll(validator);
             return response;
         }
         Map<Integer, String> resultActivityPlan = updateActivityPlan(activityPlanInstitution, idActivityPlan, plan);
@@ -197,7 +207,7 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
         Institution institution = institutionService.findInstitutionByActivity(activityPlan.getActivity().getIdActivity());
         if (institution.getIdInstitution() == null) {
-            response.put(400, "Error al econtrar la institucion con el id especificado, puede que la actividad se haya actualizado");
+            response.put(400, "Error al econtrar la institucion con el id especificado, puede que solo la actividad se haya actualizado");
             return response;
         }
         Map<Integer, String> resultInstitutionPlan = updateInstitutionPlan(activityPlanInstitution, institution);
@@ -286,14 +296,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Map<Integer, Object> result = new HashMap<>();
         Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
         Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
-        if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
-            result.put(400, "Error al encontrar el tipo o subtipo especificados");
-            return result;
-        }
-        if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
-            result.put(400, "El tipo no concuerda con el subtipo de actividad");
-            return result;
-        }
         Activity activity = activityService.save(new Activity(activityPlanInstitution.getDescriptionActivity(),
                 activityPlanInstitution.getEvidences(),
                 activityPlanInstitution.getStartDate(),
@@ -331,14 +333,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         }
         Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
         Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
-        if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
-            result.put(400, "Problema al encontrar el tipo o subtipo a cambiar");
-            return result;
-        }
-        if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
-            result.put(400, "El subtipo no pertenece al tipo de actividad");
-            return result;
-        }
         if (descriptionService.existsByActivityPlan(activityPlan)) {
             descriptionService.deleteByActivityPlan(activityPlan);
         }
@@ -368,15 +362,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
             Career career = careerService.findById(activityPlanInstitution.getIdCareer());
-            if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
-                result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada");
-                return result;
-            }
-            if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
-                    !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-                result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera");
-                return result;
-            }
             Institution institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
                     activityPlanInstitution.getIdActivity()));
             universityInstitutionService.save(new UniversityInstitution(institution, university, faculty, career));
@@ -418,15 +403,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             University university = universityService.findById(activityPlanInstitution.getIdUniversity());
             Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
             Career career = careerService.findById(activityPlanInstitution.getIdCareer());
-            if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
-                result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada a actualizar");
-                return result;
-            }
-            if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
-                    !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-                result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera a actualizar");
-                return result;
-            }
             institution = institutionService.save(new Institution(activityPlanInstitution.getInstitutionName(),
                     activityPlanInstitution.getIdActivity()));
             universityInstitutionService.save(new UniversityInstitution(institution, university, faculty, career));
@@ -442,5 +418,33 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
     /*
         End of methods to register just institutionPlan
     */
+
+    private Map<Integer, String> validateObjectPlanInstitutionActivity(PlanInstitutionActivity activityPlanInstitution) {
+        Map<Integer, String> result = new HashMap<>();
+        Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
+        Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
+        University university = universityService.findById(activityPlanInstitution.getIdUniversity());
+        Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
+        Career career = careerService.findById(activityPlanInstitution.getIdCareer());
+        if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
+            result.put(400, "Error al encontrar el tipo o subtipo especificados");
+            return result;
+        }
+        if (!Objects.equals(subtype.getActivityType().getIdActivityType(), type.getIdActivityType())) {
+            result.put(400, "El tipo no concuerda con el subtipo de actividad");
+            return result;
+        }
+        if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
+            result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada");
+            return result;
+        }
+        if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
+                !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
+            result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera");
+            return result;
+        }
+        result.put(200, "Sin errores");
+        return result;
+    }
 
 }
