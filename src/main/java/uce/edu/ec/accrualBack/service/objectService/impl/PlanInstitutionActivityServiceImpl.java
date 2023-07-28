@@ -423,9 +423,6 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
         Map<Integer, String> result = new HashMap<>();
         Type type = typeService.findById(activityPlanInstitution.getIdActivityType());
         Subtype subtype = subtypeService.findById(activityPlanInstitution.getIdActivitySubtype());
-        University university = universityService.findById(activityPlanInstitution.getIdUniversity());
-        Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
-        Career career = careerService.findById(activityPlanInstitution.getIdCareer());
         if (type.getIdActivityType() == null || subtype.getIdActivitySubtype() == null) {
             result.put(400, "Error al encontrar el tipo o subtipo especificados");
             return result;
@@ -434,14 +431,19 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
             result.put(400, "El tipo no concuerda con el subtipo de actividad");
             return result;
         }
-        if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
-            result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada");
-            return result;
-        }
-        if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
-                !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
-            result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera");
-            return result;
+        if (activityPlanInstitution.getInstitutionName().equals("Universidad Central del Ecuador")) {
+            University university = universityService.findById(activityPlanInstitution.getIdUniversity());
+            Faculty faculty = facultyService.findById(activityPlanInstitution.getIdFaculty());
+            Career career = careerService.findById(activityPlanInstitution.getIdCareer());
+            if (university.getIdUniversity() == null || faculty.getIdFaculty() == null || career.getIdCareer() == null) {
+                result.put(400, "Error al encontrar la universidad, facultad o carrera proporcionada");
+                return result;
+            }
+            if (!Objects.equals(university.getIdUniversity(), faculty.getUniversity().getIdUniversity()) ||
+                    !Objects.equals(faculty.getIdFaculty(), career.getFaculty().getIdFaculty())) {
+                result.put(400, "No concuerda la carrera con la facultad, o la facultad con la carrera");
+                return result;
+            }
         }
         result.put(200, "Sin errores");
         return result;
