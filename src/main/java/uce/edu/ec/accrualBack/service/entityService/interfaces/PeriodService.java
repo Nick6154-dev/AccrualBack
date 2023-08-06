@@ -21,6 +21,8 @@ public interface PeriodService {
 
     Map<Integer, String> save(Period period);
 
+    Period saveByValuePeriod(String valuePeriod);
+
     Map<Integer, String> deleteById(Long idPeriod);
 
     Map<Integer, String> switchActivePeriod(Long idPeriod);

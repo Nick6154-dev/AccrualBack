@@ -21,6 +21,12 @@ public class PlanInstitutionActivityController {
     @Autowired
     private ActivityPlanService activityPlanService;
 
+    @GetMapping("/updateDataBase")
+    public ResponseEntity<?> updateDataBase() {
+        planInstitutionActivityService.temporalMethod();
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("ok");
+    }
+
     @GetMapping("/{idActivityPlan}")
     public ResponseEntity<?> findById(@PathVariable Long idActivityPlan) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(activityPlanService.findById(idActivityPlan));

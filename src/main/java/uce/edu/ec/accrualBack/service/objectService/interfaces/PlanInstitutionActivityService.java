@@ -6,6 +6,8 @@ import java.util.Map;
 
 public interface PlanInstitutionActivityService {
 
+    void temporalMethod();
+
     Map<Integer, String> addNewActivityWithInstitution(PlanInstitutionActivity activityPlanInstitution);
 
     Map<Integer, String> deleteActivityWithInstitution(Long idActivityPlan);

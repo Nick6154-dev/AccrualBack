@@ -119,10 +119,29 @@ public class PeriodServiceImpl implements PeriodService {
 
     @Override
     @Transactional
+    public Period saveByValuePeriod(String valuePeriod) {
+        Optional<Period> periodOptional = repository.findPeriodByValuePeriod(valuePeriod);
+        if (periodOptional.isPresent()) {
+            return periodOptional.get();
+        } else {
+            Period period = new Period();
+            period.setValuePeriod(valuePeriod);
+            period.setActive(true);
+            period.setState(0);
+            return repository.save(period);
+        }
+    }
+
+    @Override
+    @Transactional
     public Map<Integer, String> deleteById(Long idPeriod) {
         Map<Integer, String> response = new HashMap<>();
         Optional<Period> optionalPeriod = repository.findById(idPeriod);
         if (optionalPeriod.isPresent()) {
+            if (planService.existsPlanByPeriod(optionalPeriod.get())) {
+                response.put(400, "No se puede eliminar el periodo pues ya tiene asignado planes de docentes");
+                return response;
+            }
             repository.delete(optionalPeriod.get());
             deleteDocentsFromPeriodsAssigned(Collections.singletonList(optionalPeriod.get().getIdPeriod()));
             response.put(200, "Periodo eliminado exitosamente");

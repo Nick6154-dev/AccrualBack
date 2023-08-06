@@ -1,5 +1,8 @@
 package uce.edu.ec.accrualBack.service.objectService.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +11,10 @@ import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -57,6 +64,33 @@ public class PlanInstitutionActivityServiceImpl implements PlanInstitutionActivi
 
     @Autowired
     private PeriodDocentService periodDocentService;
+
+
+    @SneakyThrows
+    @Override
+    @Transactional
+    public void temporalMethod() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        File jsonFile = new File("activities.json");
+        List<PlanInstitutionActivity> planInstitutionActivities = objectMapper
+                .readValue(jsonFile, objectMapper.getTypeFactory().constructCollectionType(List.class, PlanInstitutionActivity.class));
+        for (PlanInstitutionActivity activityPlanInstitution : planInstitutionActivities) {
+            Docent docent = docentService.findByIdPerson(activityPlanInstitution.getIdPerson());
+            Period period = periodService.saveByValuePeriod(activityPlanInstitution.getValuePeriod());
+            Plan plan = planService.findByIdPersonAndPeriod(activityPlanInstitution.getIdPerson(), period);
+            if (plan.getIdPlan() == null) {
+                plan.setPeriod(period);
+                plan.setIdDocent(docent.getIdDocent());
+                plan = planService.save(plan);
+            }
+            Map<Integer, Object> resultActivityPlan = saveActivityPlan(activityPlanInstitution, plan);
+            ActivityPlan activityPlan = (ActivityPlan) resultActivityPlan.get(200);
+            activityPlanInstitution.setIdActivity(activityPlan.getActivity().getIdActivity());
+            saveInstitutionPlan(activityPlanInstitution);
+            System.out.println("Guardado!!");
+        }
+    }
 
     /*
         Methods to register new activities

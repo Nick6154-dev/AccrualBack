@@ -21,4 +21,6 @@ public interface PlanRepository extends CrudRepository<Plan, Long> {
 
     Optional<List<Plan>> findAllByEditableIsAndPeriod(Boolean editable, Period period);
 
+    boolean existsPlanByPeriod(Period period);
+
 }

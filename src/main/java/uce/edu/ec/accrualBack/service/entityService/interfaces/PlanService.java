@@ -28,4 +28,6 @@ public interface PlanService {
 
     String setPlansEditableByPeriod(Period period);
 
+    boolean existsPlanByPeriod(Period period);
+
 }

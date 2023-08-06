@@ -8,16 +8,22 @@ import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Period;
 import uce.edu.ec.accrualBack.entity.Person;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class MailServiceImpl implements MailService {
 
     @Value("${env.mailFrom}")
     private String mailFrom;
+
+    @Value("${env.inProduction}")
+    private boolean inProduction;
 
     @Autowired
     private DocentService docentService;
@@ -34,16 +40,20 @@ public class MailServiceImpl implements MailService {
         String fullName = person.getName() + " " + person.getLastname();
         String message = "Por medio de la presente, me dirijo a usted para notificarle que el docente " +
                 fullName + " con C.I: " + person.getIdentification() + " ha presentado una solicitud de finiquito de su " +
-                "devengamiento para doctorados. Dicha solicitud ha sido realizada de acuerdo con los procedimientos y " +
-                "requisitos establecidos por la institución y las regulaciones vigentes.";
+                "devengamiento para doctorados.";
         String subject = "Solicitud finiquito - " + fullName;
         //Email to send is validator_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
     @Override
     public void sendSettlementApproveMail(Long idPerson, boolean approved) {
         Person person = personService.findById(idPerson);
+        String fullName = person.getName() + " " + person.getLastname();
         String response;
         if (approved) {
             response = "aprovado";
@@ -52,9 +62,13 @@ public class MailServiceImpl implements MailService {
         }
         String message = "Por medio de la presente, me dirijo a usted para notificarle que su solicitud de finiquito de " +
                 "devengamiento para doctorados ha sido " + response + ".";
-        String subject = "Respuesta solicitud finiquito";
+        String subject = "Respuesta solicitud finiquito - " + fullName;
         //Email to send is validator_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
     @Override
@@ -66,7 +80,11 @@ public class MailServiceImpl implements MailService {
                 "relacionadas con su devengamiento para su revisión.";
         String subject = "Actividades a revision - " + fullName;
         //Email to send is user_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
     @Override
@@ -88,7 +106,7 @@ public class MailServiceImpl implements MailService {
         if (period.getState() == 3) {
             modePeriodString = "etapa de validacion ";
         }
-        String message = "Estimado/a docente " + fullName +  " con CI: " + person.getIdentification() + ",\n" +
+        String message = "Estimado/a docente " + fullName + " con CI: " + person.getIdentification() + ",\n" +
                 "\n" +
                 "Me dirijo a usted con el propósito de informarle sobre la revisión del plan enviado" +
                 " correspondiente al periodo " + period.getValuePeriod() + ". Dicho plan ha sido revisado y su estado " +
@@ -99,24 +117,30 @@ public class MailServiceImpl implements MailService {
                 " a través del correo institucional con la dirección de doctorados.";
         String subject = "Estado Plan " + period.getValuePeriod() + " - " + fullName;
         //Email to send is user_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
     @Override
     public void sendNewUserNotificationMail(Long idPerson) {
         Person person = personService.findById(idPerson);
         String fullName = person.getName() + " " + person.getLastname();
-        String message = "Estimado/a docente " + fullName +  " con CI: " + person.getIdentification() + ",\n" +
+        String message = "Estimado/a docente " + fullName + " con CI: " + person.getIdentification() + ",\n" +
                 "\n" +
                 "Nos complace informarle que su registro en nuestro sistema ha sido exitoso. Sus credenciales de acceso " +
                 "son las siguientes: su nombre de usuario es su correo institucional (" + person.getEmail() + ") y su contraseña" +
                 " es su número de cédula (" + person.getIdentification() + "). Estas credenciales le permitirán acceder a todas" +
-                " las funcionalidades y recursos disponibles para los docentes en nuestra plataforma. Si tiene alguna pregunta o " +
-                "necesita asistencia adicional, no dude en ponerse en contacto con nuestro equipo de soporte. ¡Le deseamos" +
-                " mucho éxito en su experiencia con nuestra plataforma!";
+                " las funcionalidades y recursos disponibles para los docentes en nuestra plataforma.";
         String subject = "Registro Sistema Devengamiento - " + fullName;
         //Email to send is validator_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
     @Override
@@ -129,13 +153,17 @@ public class MailServiceImpl implements MailService {
                 " una decisión sobre dicha solicitud, ya sea aprobándola o denegándola.";
         String subject = "Solicitud registro nuevo docente - " + fullName;
         //Email to send is validator_role, should be the next function
-        sendMail(message, subject, "nikomont123@gmail.com");
+        if (inProduction) {
+            sendMail(message, subject, Arrays.asList("nikomont123@gmail.com", person.getEmail(), "mbgranjab@uce.edu.ec"));
+        } else {
+            sendMail(message, subject, Collections.singletonList("nikomont123@gmail.com"));
+        }
     }
 
-    private void sendMail(String message, String subject, String toMail) {
+    private void sendMail(String message, String subject, List<String> toMails) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(mailFrom);
-        mailMessage.setTo(toMail);
+        mailMessage.setTo(toMails.toArray(new String[0]));
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
         javaMailSender.send(mailMessage);

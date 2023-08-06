@@ -43,6 +43,8 @@ public class PlanInstitutionActivity {
 
     private Long idPeriod;
 
+    private String valuePeriod;
+
     public PlanInstitutionActivity() {
     }
 
@@ -93,5 +95,27 @@ public class PlanInstitutionActivity {
         this.idCareer = idCareer;
         this.idPerson = idPerson;
         this.idPeriod = idPeriod;
+    }
+
+    public PlanInstitutionActivity(String descriptionActivity, LocalDate startDate, LocalDate endDate, String evidences,
+                                   Long idActivityType, Long idActivitySubtype, String descriptionSubtype, Long idActivity,
+                                   String institutionName, String otherInstitutionName, String verificationLink,
+                                   Long idUniversity, Long idFaculty, Long idCareer, Long idPerson, String valuePeriod) {
+        this.descriptionActivity = descriptionActivity;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.evidences = evidences;
+        this.idActivityType = idActivityType;
+        this.idActivitySubtype = idActivitySubtype;
+        this.descriptionSubtype = descriptionSubtype;
+        this.idActivity = idActivity;
+        this.institutionName = institutionName;
+        this.otherInstitutionName = otherInstitutionName;
+        this.verificationLink = verificationLink;
+        this.idUniversity = idUniversity;
+        this.idFaculty = idFaculty;
+        this.idCareer = idCareer;
+        this.idPerson = idPerson;
+        this.valuePeriod = valuePeriod;
     }
 }

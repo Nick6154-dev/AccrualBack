@@ -124,4 +124,9 @@ public class PlanServiceImpl implements PlanService {
         return "Planes actualizados, ya se pueden activar las evidencias";
     }
 
+    @Override
+    public boolean existsPlanByPeriod(Period period) {
+        return repository.existsPlanByPeriod(period);
+    }
+
 }
