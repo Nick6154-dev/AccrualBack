@@ -22,4 +22,6 @@ public interface ValidatorService {
 
     byte[] generateExcelSelectDocentsActivitiesPlan(List<Long> idsPeople);
 
+    byte[] generateExcelDocentData(Long idPerson);
+
 }

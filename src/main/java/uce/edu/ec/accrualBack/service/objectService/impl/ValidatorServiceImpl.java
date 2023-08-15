@@ -48,6 +48,12 @@ public class ValidatorServiceImpl implements ValidatorService {
     @Autowired
     private StatePlanService statePlanService;
 
+    @Autowired
+    private AccrualDataService accrualDataService;
+
+    @Autowired
+    private NetworkService networkService;
+
     @Override
     public List<ValidatorObject> findAllPersonDocentPlan() {
         List<ValidatorObject> validatorObjects = new ArrayList<>();
@@ -172,7 +178,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         //Create a sheet
         Sheet sheet = workbook.createSheet(person.getName() + " " + person.getLastname());
         //Now we add activities plan about docent
-        docentContentExcelInformation(Collections.singletonList(person), sheet, 0);
+        personContentExcelInformation(Collections.singletonList(person), sheet, 0);
         //Adding period of this plan
         periodPlanDocentContent(sheet, plan, 3);
         //Let's start with the content, first personal information about docent
@@ -221,7 +227,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Docentes");
-        docentContentExcelInformation(peopleInPlan, sheet, 0);
+        personContentExcelInformation(peopleInPlan, sheet, 0);
         applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
         applyBorderStyle(sheet, createContentStyle(workbook), 1, sheet.getLastRowNum()
                 , 0, sheet.getRow(sheet.getLastRowNum()).getLastCellNum() - 1);
@@ -244,7 +250,7 @@ public class ValidatorServiceImpl implements ValidatorService {
             String fullName = person.getName() + " " + person.getLastname();
             Sheet sheet = workbook.createSheet(fullName);
             //Adding person information
-            docentContentExcelInformation(Collections.singletonList(person), sheet, 0);
+            personContentExcelInformation(Collections.singletonList(person), sheet, 0);
             Docent docent = docentService.findByIdPerson(person.getIdPerson());
             List<Plan> plans = planService.findByDocent(docent);
             int row = 3;
@@ -285,6 +291,53 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
+    @Override
+    public byte[] generateExcelDocentData(Long idPerson) {
+        Workbook workbook = new XSSFWorkbook();
+        Person person = personService.findById(idPerson);
+        String fullName = person.getName() + " " + person.getLastname();
+        Docent docent = docentService.findByIdPerson(person.getIdPerson());
+        Sheet sheet = workbook.createSheet(fullName);
+        //Adding person information
+        personContentExcelInformation(Collections.singletonList(person), sheet, 0);
+        adjustColumnRow(sheet.getRow(0), sheet);
+        adjustColumnRow(sheet.getRow(1), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
+        applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
+        //Adding docent information
+        docentContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
+                0, 2);
+        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
+                0, 2);
+        //Adding accrual data information
+        accrualDataContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
+                0, 4);
+        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
+                0, 4);
+        //Adding network information
+        networkContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
+                0, 2);
+        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
+                0, 2);
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            workbook.close();
+            return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void periodPlanDocentContent(Sheet sheet, Plan plan, int row) {
         Row headerPeriodPlan = sheet.createRow(row);
         headerPeriodPlan.createCell(0).setCellValue("PERIODO");
@@ -299,13 +352,13 @@ public class ValidatorServiceImpl implements ValidatorService {
         Row headerActivitiesPlan = sheet.createRow(row);
         headerActivitiesPlan.createCell(0).setCellValue("TIPO DE ACTIVIDAD");
         headerActivitiesPlan.createCell(1).setCellValue("SUBTIPO DE ACTIVIDAD");
-        headerActivitiesPlan.createCell(2).setCellValue("DESCRIPCION DE ACTIVIDAD");
+        headerActivitiesPlan.createCell(2).setCellValue("DESCRIPCIÓN DE ACTIVIDAD");
         headerActivitiesPlan.createCell(3).setCellValue("FECHA DE INICIO");
-        headerActivitiesPlan.createCell(4).setCellValue("FECHA DE FINALIZACION");
+        headerActivitiesPlan.createCell(4).setCellValue("FECHA DE FINALIZACIÓN");
         headerActivitiesPlan.createCell(5).setCellValue("EVIDENCIAS");
-        headerActivitiesPlan.createCell(6).setCellValue("DESCRIPCION GENERAL");
-        headerActivitiesPlan.createCell(7).setCellValue("INSTITUCION");
-        headerActivitiesPlan.createCell(8).setCellValue("ENLACE VERIFICACION");
+        headerActivitiesPlan.createCell(6).setCellValue("DESCRIPCIÓN GENERAL");
+        headerActivitiesPlan.createCell(7).setCellValue("INSTITUCIÓN");
+        headerActivitiesPlan.createCell(8).setCellValue("ENLACE VERIFICACIÓN");
         headerActivitiesPlan.createCell(9).setCellValue("UNIVERSIDAD");
         headerActivitiesPlan.createCell(10).setCellValue("FACULTAD");
         headerActivitiesPlan.createCell(11).setCellValue("CARRERA");
@@ -332,7 +385,7 @@ public class ValidatorServiceImpl implements ValidatorService {
             if (ap.getType().getIdActivityType() == 2) {
                 contentActivitiesPlan.createCell(numberCell).setCellValue(description.getDescription());
             } else {
-                contentActivitiesPlan.createCell(numberCell).setCellValue("Sin descripcion de la actividad");
+                contentActivitiesPlan.createCell(numberCell).setCellValue("Sin descripción de la actividad");
             }
             numberCell++;
             contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getStartDate().toString());
@@ -346,7 +399,7 @@ public class ValidatorServiceImpl implements ValidatorService {
             contentActivitiesPlan.createCell(numberCell).setCellValue(institution.getInstitutionName());
             numberCell++;
             if (otherInstitution == null) {
-                contentActivitiesPlan.createCell(numberCell).setCellValue("Sin enlace de verificacion");
+                contentActivitiesPlan.createCell(numberCell).setCellValue("Sin enlace de verificación");
             } else {
                 contentActivitiesPlan.createCell(numberCell).setCellValue(otherInstitution.getVerificationLink());
             }
@@ -368,19 +421,70 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    private void docentContentExcelInformation(List<Person> people, Sheet sheet, int row) {
+    private int docentContentExcelInformation(Docent docent, Sheet sheet, int row) {
         Row headerDocentInformation = sheet.createRow(row);
-        headerDocentInformation.createCell(0).setCellValue("NOMBRES");
-        headerDocentInformation.createCell(1).setCellValue("APELLIDOS");
-        headerDocentInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
-        headerDocentInformation.createCell(3).setCellValue("CEDULA/PASAPORTE");
+        headerDocentInformation.createCell(0).setCellValue("CATEGORIA");
+        headerDocentInformation.createCell(1).setCellValue("FACULTAD");
+        headerDocentInformation.createCell(2).setCellValue("MODALIDAD");
+        row += 1;
+        Row contentDocentInformation = sheet.createRow(row);
+        contentDocentInformation.createCell(0).setCellValue(docent.getCategory());
+        contentDocentInformation.createCell(1).setCellValue(docent.getFaculty());
+        contentDocentInformation.createCell(2).setCellValue(docent.getModality());
+        return row;
+    }
+
+    private void accrualDataContentExcelInformation(Docent docent, Sheet sheet, int row) {
+        AccrualData accrualData = accrualDataService.findByDocent(docent);
+        Row headerAccrualDataInformation = sheet.createRow(row);
+        if (accrualData.getIdAccrualData() != null) {
+            headerAccrualDataInformation.createCell(0).setCellValue("TIEMPO DE DEVENGAMIENTO");
+            headerAccrualDataInformation.createCell(1).setCellValue("ENLACE CONTRATO ADENDA");
+            headerAccrualDataInformation.createCell(2).setCellValue("FECHA LECTURA TESIS");
+            headerAccrualDataInformation.createCell(3).setCellValue("FECHA REINTEGRO");
+            headerAccrualDataInformation.createCell(4).setCellValue("ENLACE TESIS");
+            row += 1;
+            Row contentAccrualDataInformation = sheet.createRow(row);
+            contentAccrualDataInformation.createCell(0).setCellValue(accrualData.getAccrualTime());
+            contentAccrualDataInformation.createCell(1).setCellValue(accrualData.getContractAddendumLink());
+            contentAccrualDataInformation.createCell(2).setCellValue(accrualData.getReadingThesisDate().toString());
+            contentAccrualDataInformation.createCell(3).setCellValue(accrualData.getRefundDate().toString());
+            contentAccrualDataInformation.createCell(4).setCellValue(accrualData.getThesisLink());
+        } else {
+            headerAccrualDataInformation.createCell(0).setCellValue("NO TIENE CARGADO LOS DATOS DE DEVENGAMIENTO");
+        }
+    }
+
+    private void networkContentExcelInformation(Docent docent, Sheet sheet, int row) {
+        Network network = networkService.findByDocent(docent);
+        Row headerNetworkInformation = sheet.createRow(row);
+        if (network.getIdNetworks() != null) {
+            headerNetworkInformation.createCell(0).setCellValue("CEDIA");
+            headerNetworkInformation.createCell(1).setCellValue("ORCID");
+            headerNetworkInformation.createCell(2).setCellValue("RNI SENESCYT");
+            row += 1;
+            Row contentNetworkInformation = sheet.createRow(row);
+            contentNetworkInformation.createCell(0).setCellValue(network.getCedia());
+            contentNetworkInformation.createCell(1).setCellValue(network.getOrcidCode());
+            contentNetworkInformation.createCell(2).setCellValue(network.getRniSenesyt());
+        } else {
+            headerNetworkInformation.createCell(0).setCellValue("NO TIENE CARGADO LAS REDES");
+        }
+    }
+
+    private void personContentExcelInformation(List<Person> people, Sheet sheet, int row) {
+        Row headerPersonInformation = sheet.createRow(row);
+        headerPersonInformation.createCell(0).setCellValue("NOMBRES");
+        headerPersonInformation.createCell(1).setCellValue("APELLIDOS");
+        headerPersonInformation.createCell(2).setCellValue("CORREO INSTITUCIONAL");
+        headerPersonInformation.createCell(3).setCellValue("CÉDULA/PASAPORTE");
         for (Person person : people) {
             row += 1;
-            Row contentDocentInformation = sheet.createRow(row);
-            contentDocentInformation.createCell(0).setCellValue(person.getName());
-            contentDocentInformation.createCell(1).setCellValue(person.getLastname());
-            contentDocentInformation.createCell(2).setCellValue(person.getEmail());
-            contentDocentInformation.createCell(3).setCellValue(person.getIdentification());
+            Row contentPersonInformation = sheet.createRow(row);
+            contentPersonInformation.createCell(0).setCellValue(person.getName());
+            contentPersonInformation.createCell(1).setCellValue(person.getLastname());
+            contentPersonInformation.createCell(2).setCellValue(person.getEmail());
+            contentPersonInformation.createCell(3).setCellValue(person.getIdentification());
         }
     }
 

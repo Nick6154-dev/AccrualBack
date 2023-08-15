@@ -62,6 +62,19 @@ public class ValidatorController {
                 .body(excelBytes);
     }
 
+    @PostMapping("/generateDocentInformationExcel/{idPerson}")
+    public ResponseEntity<?> generateDocentInformationExcel(@PathVariable Long idPerson) {
+        byte[] excelBytes = validatorService.generateExcelDocentData(idPerson);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        Person personInformation = personService.findById(idPerson);
+        String fullNames = personInformation.getName() + " " + personInformation.getLastname();
+        headers.setContentDispositionFormData("attachment",  fullNames + ".xlsx");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelBytes);
+    }
+
     @PostMapping("/generateExcelDocentsInPlan")
     public ResponseEntity<?> generateExcelDocentsInPlan() {
         byte[] excelBytes = validatorService.generateExcelDocentsInPlan();
