@@ -7,7 +7,6 @@ import uce.edu.ec.accrualBack.entity.PeriodDocent;
 import uce.edu.ec.accrualBack.repository.PeriodDocentRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodDocentService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -7,8 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.entity.Person;
-import uce.edu.ec.accrualBack.entity.Plan;
-import uce.edu.ec.accrualBack.object.ValidatorObject;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
@@ -56,7 +54,7 @@ public class ValidatorController {
         String fullNames = person.getName() + " " + person.getLastname();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment",  fullNames + ".xlsx");
+        headers.setContentDispositionFormData("attachment", fullNames + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);
@@ -69,7 +67,7 @@ public class ValidatorController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         Person personInformation = personService.findById(idPerson);
         String fullNames = personInformation.getName() + " " + personInformation.getLastname();
-        headers.setContentDispositionFormData("attachment",  fullNames + ".xlsx");
+        headers.setContentDispositionFormData("attachment", fullNames + ".xlsx");
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(excelBytes);

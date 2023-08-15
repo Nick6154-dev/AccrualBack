@@ -15,8 +15,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uce.edu.ec.accrualBack.auth.filter.JWTAuthenticationFilter;
 import uce.edu.ec.accrualBack.auth.filter.JWTAuthorizationFilter;
-import uce.edu.ec.accrualBack.auth.service.JWTService;
 import uce.edu.ec.accrualBack.auth.service.AuthUserDetailsService;
+import uce.edu.ec.accrualBack.auth.service.JWTService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PeriodService;
 
 import java.util.ArrayList;

@@ -3,7 +3,6 @@ package uce.edu.ec.accrualBack.rest.entityController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Network;
@@ -11,7 +10,6 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.NetworkService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.UtilCommonsService;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 @RestController

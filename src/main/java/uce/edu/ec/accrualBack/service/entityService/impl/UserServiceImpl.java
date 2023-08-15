@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Role;
 import uce.edu.ec.accrualBack.entity.User;
 import uce.edu.ec.accrualBack.repository.UserRepository;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.RoleService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
 import java.util.List;

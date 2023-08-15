@@ -1,6 +1,5 @@
 package uce.edu.ec.accrualBack.service.objectService.interfaces;
 
-import uce.edu.ec.accrualBack.entity.Plan;
 import uce.edu.ec.accrualBack.object.ValidatorObject;
 
 import java.util.List;

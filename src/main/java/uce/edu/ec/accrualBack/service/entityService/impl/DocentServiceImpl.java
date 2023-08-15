@@ -5,13 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.AccrualData;
 import uce.edu.ec.accrualBack.entity.Docent;
-import uce.edu.ec.accrualBack.entity.Role;
-import uce.edu.ec.accrualBack.entity.User;
 import uce.edu.ec.accrualBack.repository.DocentRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.AccrualDataService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.RoleService;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.UserService;
 
 import java.util.*;
 import java.util.stream.Collectors;

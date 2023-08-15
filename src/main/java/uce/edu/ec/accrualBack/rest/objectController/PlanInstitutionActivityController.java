@@ -6,10 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uce.edu.ec.accrualBack.object.PlanInstitutionActivity;
-import uce.edu.ec.accrualBack.service.entityService.interfaces.*;
+import uce.edu.ec.accrualBack.service.entityService.interfaces.ActivityPlanService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.PlanInstitutionActivityService;
 
-import java.util.*;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/activityPlanAccrual")

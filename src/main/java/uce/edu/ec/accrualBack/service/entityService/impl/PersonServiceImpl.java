@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uce.edu.ec.accrualBack.entity.Docent;
 import uce.edu.ec.accrualBack.entity.Person;
-import uce.edu.ec.accrualBack.entity.User;
 import uce.edu.ec.accrualBack.repository.PersonRepository;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.DocentService;
 import uce.edu.ec.accrualBack.service.entityService.interfaces.PersonService;
@@ -45,8 +44,8 @@ public class PersonServiceImpl implements PersonService {
                 .map(user -> docentService.findByIdPerson(user.getIdPerson()))
                 .filter(
                         docent -> docentService.findAllDocentSettlementApproved()
-                        .stream()
-                        .anyMatch(aux -> !docent.equals(aux))
+                                .stream()
+                                .anyMatch(aux -> !docent.equals(aux))
                 ).collect(Collectors.toList());
         for (Docent docent : docents) {
             Map<String, Object> aux = new HashMap<>();

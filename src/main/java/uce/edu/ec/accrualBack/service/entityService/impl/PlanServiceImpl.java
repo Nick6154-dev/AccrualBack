@@ -13,7 +13,6 @@ import uce.edu.ec.accrualBack.service.entityService.interfaces.PlanService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

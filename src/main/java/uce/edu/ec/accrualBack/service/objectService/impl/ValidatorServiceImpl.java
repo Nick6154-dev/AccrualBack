@@ -2,6 +2,7 @@ package uce.edu.ec.accrualBack.service.objectService.impl;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -177,11 +178,11 @@ public class ValidatorServiceImpl implements ValidatorService {
         Workbook workbook = new XSSFWorkbook();
         //Create a sheet
         Sheet sheet = workbook.createSheet(person.getName() + " " + person.getLastname());
-        //Now we add activities plan about docent
+        //Let's start with the content, first personal information about docent
         personContentExcelInformation(Collections.singletonList(person), sheet, 0);
         //Adding period of this plan
         periodPlanDocentContent(sheet, plan, 3);
-        //Let's start with the content, first personal information about docent
+        //Now we add activities plan about docent
         if (!activityPlans.isEmpty()) {
             planDocentContentInformation(activityPlans, sheet, 5);
             applyBorderStyle(sheet, createContentStyle(workbook), 6, sheet.getLastRowNum()
@@ -200,6 +201,10 @@ public class ValidatorServiceImpl implements ValidatorService {
         adjustColumnRow(sheet.getRow(3), sheet);
         adjustColumnRow(sheet.getRow(4), sheet);
         adjustColumnRow(sheet.getRow(5), sheet);
+
+        //Adding signature
+        addSignature(workbook, sheet);
+
         try {
             //Save the workbook in a bytes array
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -280,6 +285,8 @@ public class ValidatorServiceImpl implements ValidatorService {
             adjustColumnRow(sheet.getRow(1), sheet);
             applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
             applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
+            //Adding signature
+            addSignature(workbook, sheet);
         }
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -429,7 +436,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         }
     }
 
-    private int docentContentExcelInformation(Docent docent, Sheet sheet, int row) {
+    private void docentContentExcelInformation(Docent docent, Sheet sheet, int row) {
         Row headerDocentInformation = sheet.createRow(row);
         headerDocentInformation.createCell(0).setCellValue("CATEGORIA");
         headerDocentInformation.createCell(1).setCellValue("FACULTAD");
@@ -439,7 +446,6 @@ public class ValidatorServiceImpl implements ValidatorService {
         contentDocentInformation.createCell(0).setCellValue(docent.getCategory());
         contentDocentInformation.createCell(1).setCellValue(docent.getFaculty());
         contentDocentInformation.createCell(2).setCellValue(docent.getModality());
-        return row;
     }
 
     private void accrualDataContentExcelInformation(Docent docent, Sheet sheet, int row) {
@@ -477,6 +483,43 @@ public class ValidatorServiceImpl implements ValidatorService {
             contentNetworkInformation.createCell(2).setCellValue(network.getRniSenesyt());
         } else {
             headerNetworkInformation.createCell(0).setCellValue("NO TIENE CARGADO LAS REDES");
+        }
+    }
+
+    private void addSignature(Workbook workbook, Sheet sheet) {
+        CellStyle leftStyle = workbook.createCellStyle();
+        leftStyle.setAlignment(HorizontalAlignment.LEFT);
+        leftStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        CellStyle centerStyle = workbook.createCellStyle();
+        centerStyle.setAlignment(HorizontalAlignment.CENTER);
+        centerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        CellStyle bottomBorderStyle = workbook.createCellStyle();
+        bottomBorderStyle.setBorderBottom(BorderStyle.THIN);
+        int firstRow = sheet.getLastRowNum() + 3;
+        int lastRow = sheet.getLastRowNum() + 3;
+        int firstCol = 3;
+        int lastCol = 4;
+        CellRangeAddress cellRangeFrom = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
+        CellRangeAddress cellRangeSignature1 = new CellRangeAddress(firstRow + 3, lastRow + 3, firstCol, lastCol);
+        CellRangeAddress cellRangeSignature2 = new CellRangeAddress(firstRow + 4, lastRow + 4, firstCol, lastCol);
+        sheet.addMergedRegion(cellRangeFrom);
+        sheet.addMergedRegion(cellRangeSignature1);
+        sheet.addMergedRegion(cellRangeSignature2);
+        Row row = sheet.createRow(firstRow);
+        Cell cell = row.createCell(firstCol);
+        cell.setCellValue("REVISADO Y APROBADO POR:");
+        cell.setCellStyle(leftStyle);
+        Row row2 = sheet.createRow(firstRow + 3);
+        Cell cell2 = row2.createCell(firstCol);
+        cell2.setCellValue("COORDINADOR UNIDAD DE");
+        cell2.setCellStyle(centerStyle);
+        Row row3 = sheet.createRow(firstRow + 4);
+        Cell cell3 = row3.createCell(firstCol);
+        cell3.setCellValue("SEGUIMIENTO DEVENGANTES UCE");
+        cell3.setCellStyle(centerStyle);
+        for (int col = firstCol; col <= lastCol; col++) {
+            CellRangeAddress borderRange = new CellRangeAddress(firstRow + 2, lastRow + 2, col, col);
+            RegionUtil.setBorderBottom(BorderStyle.THIN, borderRange, sheet);
         }
     }
 
