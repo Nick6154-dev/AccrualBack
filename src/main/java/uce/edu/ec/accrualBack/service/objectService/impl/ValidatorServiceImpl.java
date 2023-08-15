@@ -388,9 +388,17 @@ public class ValidatorServiceImpl implements ValidatorService {
                 contentActivitiesPlan.createCell(numberCell).setCellValue("Sin descripción de la actividad");
             }
             numberCell++;
-            contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getStartDate().toString());
+            if (ap.getActivity().getStartDate() != null) {
+                contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getStartDate().toString());
+            } else {
+                contentActivitiesPlan.createCell(numberCell).setCellValue("No ha seleccionado una fecha de comienzo");
+            }
             numberCell++;
-            contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getEndDate().toString());
+            if (ap.getActivity().getEndDate() != null) {
+                contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getEndDate().toString());
+            } else {
+                contentActivitiesPlan.createCell(numberCell).setCellValue("No ha seleccionado una fecha de comienzo");
+            }
             numberCell++;
             contentActivitiesPlan.createCell(numberCell).setCellValue(ap.getActivity().getEvidences());
             numberCell++;
