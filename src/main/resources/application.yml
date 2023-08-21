@@ -32,3 +32,4 @@ env:
   linkFront: http://localhost:8000/
   mailFrom: unknown
   inProduction: false
+  imagePath: logo.png

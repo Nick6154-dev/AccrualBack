@@ -1,10 +1,14 @@
 package uce.edu.ec.accrualBack.service.objectService.impl;
 
+import lombok.SneakyThrows;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uce.edu.ec.accrualBack.entity.*;
 import uce.edu.ec.accrualBack.object.ValidatorObject;
@@ -13,11 +17,18 @@ import uce.edu.ec.accrualBack.service.objectService.interfaces.MailService;
 import uce.edu.ec.accrualBack.service.objectService.interfaces.ValidatorService;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
 public class ValidatorServiceImpl implements ValidatorService {
+
+    @Value("${env.imagePath}")
+    private String imagePath;
 
     @Autowired
     private UniversityInstitutionService universityInstitutionService;
@@ -306,40 +317,52 @@ public class ValidatorServiceImpl implements ValidatorService {
         Docent docent = docentService.findByIdPerson(person.getIdPerson());
         Sheet sheet = workbook.createSheet(fullName);
         //Adding person information
-        personContentExcelInformation(Collections.singletonList(person), sheet, 0);
-        adjustColumnRow(sheet.getRow(0), sheet);
-        adjustColumnRow(sheet.getRow(1), sheet);
-        applyBorderStyle(sheet, createHeaderStyle(workbook), 0, 0, 0, 3);
-        applyBorderStyle(sheet, createContentStyle(workbook), 1, 1, 0, 3);
+        personContentExcelInformation(Collections.singletonList(person), sheet, 2);
+        adjustColumnRow(sheet.getRow(2), sheet);
+        adjustColumnRow(sheet.getRow(3), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), 2, 2, 0, 3);
+        applyBorderStyle(sheet, createContentStyle(workbook), 3, 3, 0, 3);
         //Adding docent information
         docentContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
-        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
-                0, 2);
-        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
-                0, 2);
+        applyStyle(workbook, sheet);
         //Adding accrual data information
-        accrualDataContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
-        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
-                0, 4);
-        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
-                0, 4);
+        accrualDataContentExcelInformation(docent, workbook, sheet, sheet.getLastRowNum() + 2);
         //Adding network information
-        networkContentExcelInformation(docent, sheet, sheet.getLastRowNum() + 2);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
-        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
-        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
-                0, 2);
-        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
-                0, 2);
+        networkContentExcelInformation(docent, workbook, sheet, sheet.getLastRowNum() + 2);
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
             workbook.close();
             return outputStream.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //Testing method
+    private void addHeaderContent(Workbook workbook, Sheet sheet) {
+        try {
+            InputStream inputStream = Files.newInputStream(Paths.get(imagePath));
+            byte[] imageBytes = IOUtils.toByteArray(inputStream);
+            inputStream.close();
+
+            int pictureIdx = workbook.addPicture(imageBytes, Workbook.PICTURE_TYPE_PNG);
+            CreationHelper creationHelper = workbook.getCreationHelper();
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+
+            int colStart = 0;
+            int colEnd = 2;
+            int rowStart = 0;
+            int rowEnd = 1;
+
+            ClientAnchor anchor = creationHelper.createClientAnchor();
+            anchor.setCol1(colStart);
+            anchor.setCol2(colEnd);
+            anchor.setRow1(rowStart);
+            anchor.setRow2(rowEnd);
+
+            Picture picture = drawing.createPicture(anchor, pictureIdx);
+            picture.resize();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -448,7 +471,7 @@ public class ValidatorServiceImpl implements ValidatorService {
         contentDocentInformation.createCell(2).setCellValue(docent.getModality());
     }
 
-    private void accrualDataContentExcelInformation(Docent docent, Sheet sheet, int row) {
+    private void accrualDataContentExcelInformation(Docent docent,Workbook workbook, Sheet sheet, int row) {
         AccrualData accrualData = accrualDataService.findByDocent(docent);
         Row headerAccrualDataInformation = sheet.createRow(row);
         if (accrualData.getIdAccrualData() != null) {
@@ -464,12 +487,18 @@ public class ValidatorServiceImpl implements ValidatorService {
             contentAccrualDataInformation.createCell(2).setCellValue(accrualData.getReadingThesisDate().toString());
             contentAccrualDataInformation.createCell(3).setCellValue(accrualData.getRefundDate().toString());
             contentAccrualDataInformation.createCell(4).setCellValue(accrualData.getThesisLink());
+            adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
+            adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
+            applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
+                    0, 4);
+            applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
+                    0, 4);
         } else {
             headerAccrualDataInformation.createCell(0).setCellValue("NO TIENE CARGADO LOS DATOS DE DEVENGAMIENTO");
         }
     }
 
-    private void networkContentExcelInformation(Docent docent, Sheet sheet, int row) {
+    private void networkContentExcelInformation(Docent docent,Workbook workbook, Sheet sheet, int row) {
         Network network = networkService.findByDocent(docent);
         Row headerNetworkInformation = sheet.createRow(row);
         if (network.getIdNetworks() != null) {
@@ -481,9 +510,19 @@ public class ValidatorServiceImpl implements ValidatorService {
             contentNetworkInformation.createCell(0).setCellValue(network.getCedia());
             contentNetworkInformation.createCell(1).setCellValue(network.getOrcidCode());
             contentNetworkInformation.createCell(2).setCellValue(network.getRniSenesyt());
+            applyStyle(workbook, sheet);
         } else {
             headerNetworkInformation.createCell(0).setCellValue("NO TIENE CARGADO LAS REDES");
         }
+    }
+
+    private void applyStyle(Workbook workbook, Sheet sheet) {
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum() - 1), sheet);
+        adjustColumnRow(sheet.getRow(sheet.getLastRowNum()), sheet);
+        applyBorderStyle(sheet, createHeaderStyle(workbook), sheet.getLastRowNum() - 1, sheet.getLastRowNum() - 1,
+                0, 2);
+        applyBorderStyle(sheet, createContentStyle(workbook), sheet.getLastRowNum(), sheet.getLastRowNum(),
+                0, 2);
     }
 
     private void addSignature(Workbook workbook, Sheet sheet) {
