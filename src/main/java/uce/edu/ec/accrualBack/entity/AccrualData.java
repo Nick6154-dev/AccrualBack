@@ -19,19 +19,15 @@ public class AccrualData {
     @Column(name = "id_datos_devengamiento")
     private Long idAccrualData;
 
-    @NotBlank
     @Column(name = "enlace_tesis")
     private String thesisLink;
 
-    @NotNull
     @Column(name = "fecha_lectura_tesis")
     private LocalDate readingThesisDate;
 
-    @NotNull
     @Column(name = "fecha_reintegro")
     private LocalDate refundDate;
 
-    @NotBlank
     @Column(name = "enlace_contrato_adenda")
     private String contractAddendumLink;
 
@@ -39,7 +35,6 @@ public class AccrualData {
     @Column(name = "finiquito")
     private Boolean settlement;
 
-    @NotBlank
     @Column(name = "observaciones")
     private String observations;
 
@@ -51,4 +46,11 @@ public class AccrualData {
     @JoinColumn(name = "id_docente")
     private Docent docent;
 
+    public AccrualData() {
+    }
+
+    public AccrualData(Boolean settlement, Integer accrualTime) {
+        this.settlement = settlement;
+        this.accrualTime = accrualTime;
+    }
 }

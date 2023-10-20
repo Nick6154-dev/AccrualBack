@@ -57,6 +57,7 @@ public class RegisterServiceImpl implements RegisterService {
         Map<Integer, String> response = validateEmailAndIdentification(registerObject);
         if (response.containsKey(400)) return response;
         Docent docent = registerNewDocent(registerObject);
+        accrualDataService.save(new AccrualData(false, 0), docent.getIdPerson());
         registerNewUser(docent);
         response.put(200, "Nuevo docente registrado con exito");
         return response;
@@ -88,7 +89,7 @@ public class RegisterServiceImpl implements RegisterService {
         for (Person person : people) {
             this.registerNewUserToDocentWithOutIt(person.getIdPerson());
         }
-        response.put(200, "Docentes registrados de una");
+        response.put(200, "Docentes registrados");
         return response;
     }
 
