@@ -194,6 +194,7 @@ public class PeriodServiceImpl implements PeriodService {
             response.put(400, "Se necesita enviar el estado a actualizar");
             return response;
         }
+        /*
         for (Long idPeriod : idPeriods) {
             if (!periodCanBeXState(idPeriod, state)) {
                 String stringState = "completo";
@@ -203,6 +204,7 @@ public class PeriodServiceImpl implements PeriodService {
                 return response;
             }
         }
+         */
         List<Long> idDocents;
         if (state != 1) {
             idDocents = userService.findAllByRolesIs(roleService.findRoleByRoleName("ROLE_USER"))
